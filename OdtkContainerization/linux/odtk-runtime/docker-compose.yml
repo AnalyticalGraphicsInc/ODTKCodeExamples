@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+    odtk-runtime:
+        image: ansys/odtk/odtk-runtime:7.5.0-centos7
+        build: 
+            context: .
+            args:
+                baseImage: centos:7
+        ports:
+            - 9393:9393
+        env_file: ../configuration/licensing.env

@@ -1,0 +1,1 @@
+Copy the `odtk_binaries_v${version}.tgz` and `odtk_data_v${version}.tgz` into this folder.

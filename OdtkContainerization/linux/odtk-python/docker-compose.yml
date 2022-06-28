@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+    odtk-python:
+        image: ansys/odtk/odtk-python:7.5.0-centos7
+        build:
+            context: .
+            args:
+                baseImage: ansys/odtk/odtk-runtime:7.5.0-centos7
+        env_file: ../configuration/licensing.env
