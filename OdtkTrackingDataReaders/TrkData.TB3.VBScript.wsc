@@ -1,0 +1,1918 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    progid="AGI.TrkData.TB3.VBScript.Example"
+    classid="{E159ADA5-247A-4d4a-B43B-B254ADF5C506}"
+    description="TrkData.TB3TrackingDataPrv"
+    version="1.00"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <property name="ReferenceYear">
+      <get internalName="GetRefYear"/>
+      <put internalName="SetRefYear"/>
+   </property>
+
+   <property name="DefaultClassification">
+      <get internalName="GetClassification"/>
+      <put internalName="SetClassification"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetAppConfig"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Dim m_sFileName   ' File name
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+
+    Dim m_sfileSysObj
+    Dim m_Stream
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+    m_sFileName = ""
+
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\CodeSamples\Extend\ODTK\" & "AGI.ODTK.ProgIDs.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_*.AgODObsSet"
+    Set pObsSet = CreateObject(ObjectStr)
+    pObsSet.Date.Unit = "UTCG"
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData*.AgODGenericObs"
+    Set pObs = CreateObject(ObjectStr)
+    pObs.Date.Unit = "UTCG"
+
+    Dim m_RefYr
+    m_RefYr = 2011
+
+    Dim m_classification
+    m_classification = "U"
+
+    Dim pAttrBuilder
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgAttrAutomation*.AgAttrBuilder"
+    Set pAttrBuilder = CreateObject(ObjectStr)
+
+    Dim m_scope
+    Set m_scope = pAttrBuilder.NewScope()
+
+    pAttrBuilder.AddIntDispatchProperty     _
+        m_scope,                            _
+        "ReferenceYear",                    _
+        "Reference Year",                   _
+        "ReferenceYear",                    _
+        0
+
+    pAttrBuilder.AddStringDispatchProperty  _
+        m_scope,                            _
+        "DefaultClassification",            _
+        "Security Classification",          _
+        "DefaultClassification",            _
+        0
+
+    Set pAttrBuilder = Nothing
+
+    '-------------------------------------------------------------------------
+    ' Following supports "SaveObs"
+    '-------------------------------------------------------------------------
+
+    Dim bHaveRange, bHaveDop, bHaveAz, bHaveEl, bHaveDec, bHaveRA, bHaveSBDec, bHaveSBRA
+    Dim bHaveSBAz, bHaveSBEl, bHaveSBRange
+
+    Dim bNewLine
+    bNewLine = False
+
+    Dim ObsDateStr
+
+    Dim RangeValue, ElValue, AzValue, DopValue, DecValue, RAValue, SBDecValue, SBRAValue, SBAzValue, SBElValue, SBRangeValue
+
+    Dim RgD_Sign, RRD_Sign, ElD_Sign, DecD_Sign, AzD_Sign, SBDecD_Sign, RAD_Sign
+    Dim SBAzD_Sign, SBElD_Sign
+
+    Dim YearOfEquinox, EquinoxEpoch
+
+   '-------------------------------------------------------------------------
+   ' Define equinox epoch constants
+   '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxEpoch = -1
+    const eJ2000Epoch          =  0
+    const eB1950Epoch          =  1
+    const eOfDate              =  2
+    const eYearOfObsJan0       =  3
+
+    '-------------------------------------------------------------------------
+    ' Define equinox type constants
+    '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxType     = -1
+    const eMeanEquatorAndEquinox  =  0
+    const eTrueEquatorAndEquinox  =  1
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector type constants
+    '-------------------------------------------------------------------------
+
+    const eNotUsed    = -1
+    const ePosOnly    = 0
+    const eVelOnly    = 1
+    const ePosVel     = 2
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector coordinate type constants
+    '-------------------------------------------------------------------------
+
+    const eCBI =  0
+    const eCBF =  1
+
+    Dim vehOut
+    Dim stnAnt
+    Dim stnOut
+    Dim antOut
+
+    Dim jday
+    Dim mam
+
+    Dim vehOutNext
+    Dim stnAntNext
+
+    Dim jdayNext
+    Dim mamNext
+
+    Dim foundBadVeh
+    foundBadVeh = False
+
+    Dim foundBadStn
+    foundBadStn = False
+
+    Dim logValue
+    Dim facID, satID
+    Dim RgScaleD, SBRgScaleD
+    Dim recType
+    Dim recTypes(9)
+    Dim nRecTypes
+
+    Dim XPos, XPos_Sign, XPosScaleD
+    Dim YPos, YPos_Sign, YPosScaleD
+    Dim ZPos, ZPos_Sign, ZPosScaleD
+
+
+   '-------------------------------------------------------------------------
+    Function GetFileName()
+   '-------------------------------------------------------------------------
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Classification property
+    '-------------------------------------------------------------------------
+
+    Function GetClassification()
+
+       GetClassification = m_classification
+
+    End Function
+
+    Function SetClassification(classification)
+
+       m_classification = classification
+
+    End Function
+
+   '-------------------------------------------------------------------------
+    ' ReferenceYear property
+    '-------------------------------------------------------------------------
+
+    Function GetRefYear()
+
+       GetRefYear = m_RefYr
+
+    End Function
+
+    Function SetRefYear(year)
+
+       m_RefYr = year
+
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+
+        If newFile Then
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+        Else
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        Dim numSets
+
+        Dim line
+
+        Dim recType
+
+        Dim satID, facID, Hr, Mi, ddd
+
+        Dim SeD, ElD, AzD, RgD, RRD, RAD, DecD, RgScaleD
+        Dim RA_HH, RA_MM, RA_SSS
+        Dim ValidAz, ValidEl, ValidRng, ValidRR, ValidDec, ValidRA
+        Dim ValidSBDec, ValidSBRA, ValidSBAz, ValidSBEl, ValidSBRng
+        Dim dateStr
+
+        numSets = 0
+        pObsSet.Clear
+
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+
+            line = m_Stream.ReadLine
+
+            ' check for valid line, otherwise skip it
+
+            if (left(line,2) = "))") then
+
+                recType    = Mid(line, 8, 1)
+                facID      = Mid(line, 9, 3)
+                satID      = Mid(line, 12, 5)
+
+                '-------------------------------------------------------------------------
+                ' Grab the time stamp.  This is common to many record types.
+                '-------------------------------------------------------------------------
+
+                if (recType <> 4 and recType <> 8 and recType <> 9) Then
+                    ddd = Mid(line, 17, 3)
+                    Hr  = Mid(line, 20, 2)
+                    Mi  = Mid(line, 22, 2)
+                    SeD = Mid(line, 24, 5)
+                End If
+
+                ValidAz    = False
+                ValidEl    = False
+                ValidRng   = False
+                ValidRR    = False
+                ValidDec   = False
+                ValidRA    = False
+                ValidSBDec = False
+                ValidSBRA  = False
+                ValidSBAz  = False
+                ValidSBEl  = False
+                ValidSBRng = False
+
+                RgD  = 0
+                RRD  = 0
+                RA_HH = 0
+                RA_MM = 0
+                RA_SSS = 0
+                DecD = 0
+                AzD  = 0
+                ElD  = 0
+                RgScaleD = 0
+
+                EquinoxEpoch = eDefaultEquinoxEpoch
+
+
+                '-------------------------------------------------------------------------
+                ' Start processing measurements based on record type. Note that the
+                ' measurement weights are ignored since they are not relevant to ODTK
+                '-------------------------------------------------------------------------
+
+                Select Case recType
+
+                    Case 0          ' Range Rate
+
+                        ValidRR = True
+
+                        RRD_Sign   = Mid(line, 29, 1)
+                        RRD        = Mid(line, 30, 7)
+
+                        If (RRD_Sign = 1) Then
+                            RRD = - RRD
+                        End If
+
+                    Case 1          ' Az & El
+
+                        ValidAz = True
+                        ValidEl = True
+
+                        ElD_Sign   = Mid(line, 29, 1)
+                        ElD        = Mid(line, 30, 6)
+
+                        If (ElD_Sign = 1) Then
+                            ElD = - ElD
+                        End If
+
+                        AzD        = Mid(line, 37, 7)
+
+                    Case 2          'Az, El, & Range
+
+                        ValidAz  = True
+                        ValidEl  = True
+                        ValidRng = True
+
+                        ElD_Sign   = Mid(line, 29, 1)
+                        ElD        = Mid(line, 30, 6)
+
+                        If (ElD_Sign = 1) Then
+                            ElD = - ElD
+                        End If
+
+                        AzD        = Mid(line, 37, 7)
+                        RgD        = Mid(line, 45, 7)
+                        RgScaleD   = Mid(line, 52, 1)
+
+                    Case 3          'Az, El, Range, & Doppler
+
+                        ValidAz  = True
+                        ValidEl  = True
+                        ValidRng = True
+                        ValidRR  = True
+
+                        ElD_Sign   = Mid(line, 29, 1)
+                        ElD        = Mid(line, 30, 6)
+
+                        If (ElD_Sign = 1) Then
+                            ElD = - ElD
+                        End If
+
+                        AzD        = Mid(line, 37, 7)
+
+                        RgD        = Mid(line, 45, 7)
+                        RgScaleD   = Mid(line, 52, 1)
+
+                        RRD_Sign   = Mid(line, 54, 1)
+                        RRD        = Mid(line, 55, 7)
+
+                        If (RRD_Sign = 1) Then
+                            RRD = - RRD
+                        End If
+
+                    Case 4          'Az, El, Range, & Doppler and all 4 rates of change
+
+                        ValidAz  = True
+                        ValidEl  = True
+                        ValidRng = True
+                        ValidRR  = True
+
+                        '-------------------------------------------------------------------------
+                        ' read and parse the second line in this record
+                        '-------------------------------------------------------------------------
+
+                        line = m_Stream.ReadLine
+
+                        ddd = Mid(line, 1, 3)
+                        Hr  = Mid(line, 4, 2)
+                        Mi  = Mid(line, 6, 2)
+                        SeD = Mid(line, 8, 5)
+
+                        ElD_Sign   = Mid(line, 13, 1)
+                        ElD        = Mid(line, 14, 6)
+
+                        If (ElD_Sign = 1) Then
+                            ElD = - ElD
+                        End If
+
+                        AzD        = Mid(line, 21, 7)
+
+                        RgD        = Mid(line, 29, 7)
+                        RgScaleD   = Mid(line, 36, 1)
+
+                        RRD_Sign   = Mid(line, 38, 1)
+                        RRD        = Mid(line, 39, 7)
+
+                        If (RRD_Sign = 1) Then
+                            RRD = - RRD
+                        End If
+
+                    Case 5 ' (Ground) Right Ascension and Declination
+
+                        ValidDec = True
+                        ValidRA  = True
+
+                        DecD_Sign   = Mid(line, 29, 1)
+                        DecD        = Mid(line, 30, 6)
+
+                        If (DecD_Sign) = 1 Then
+                            DecD = - DecD
+                        End If
+
+                        RA_HH       = Mid(line, 37, 2)
+                        RA_MM       = Mid(line, 39, 2)
+                        RA_SSS      = Mid(line, 41, 3)
+
+                        YearOfEquinox = Mid(line, 45, 1)
+
+                        Select Case YearOfEquinox
+                            Case 0
+                                EquinoxEpoch = eOfDate
+                            Case 1
+                                EquinoxEpoch = eYearOfObsJan0
+                            Case 2
+                                EquinoxEpoch = eJ2000Epoch
+                            Case 3
+                                EquinoxEpoch = eB1950Epoch
+                            Case Else
+                                EquinoxEpoch = eJ2000Epoch
+                        End Select
+
+                    Case 6          ' Range
+
+                        ValidRng = True
+
+                        ' Ignore the first character in column 29
+
+                        RgD        = Mid(line, 30, 7)
+                        RgScaleD   = Mid(line, 37, 1)
+
+                    Case 7          ' ECF Cartesian Position and Velocity Vectors
+
+                        ' Not currently supported
+
+                    Case 8 ' Space Based Azimuth, Elevation, and maybe Range
+
+                        ValidSBAz  = True
+                        ValidSBEl  = True
+
+                        '-------------------------------------------------------------------------
+                        ' read and parse the second line in this record
+                        '-------------------------------------------------------------------------
+
+                        line = m_Stream.ReadLine
+
+                        ddd = Mid(line, 1, 3)
+                        Hr  = Mid(line, 4, 2)
+                        Mi  = Mid(line, 6, 2)
+                        SeD = Mid(line, 8, 5)
+
+                        ElD_Sign   = Mid(line, 13, 1)
+                        ElD        = Mid(line, 14, 6)
+
+                        If (ElD_Sign = 1) Then
+                            ElD = - ElD
+                        End If
+
+                        AzD = Mid(line, 21, 7)
+
+                        ' Space based range values may be zero or blank as many sources don't 
+                        ' populate this field.  In which case the scale term is often blank.
+
+                        RgD = Mid(line, 29, 7)
+                        
+                        ' Check for blank values first so we don't throw an error trying to
+                        ' convert them to a double.
+                        
+                        If (RgD <> "       ") Then
+                            If (RgD <> 0) Then
+                                RgScaleD   = Mid(line, 36, 1)
+                                ValidSBRng = True
+                            Else
+                                RgScaleD = 0
+                            End If
+                        Else
+                            RgD = 0
+                            RgScaleD = 0
+                        End IF
+
+                        XPos_Sign  = Mid(line, 39, 1)
+                        XPos       = Mid(line, 40, 8)
+                        XPosScaleD = Mid(line, 48, 1)
+
+                        If (XPos_Sign = 1) Then
+                            XPos = - XPos
+                        End If
+
+                        YPos_Sign  = Mid(line, 49, 1)
+                        YPos       = Mid(line, 50, 8)
+                        YPosScaleD = Mid(line, 58, 1)
+
+                        If (YPos_Sign = 1) Then
+                            YPos = - YPos
+                        End If
+
+                        ZPos_Sign  = Mid(line, 59, 1)
+                        ZPos       = Mid(line, 60, 8)
+                        ZPosScaleD = Mid(line, 68, 1)
+
+                        If (ZPos_Sign = 1) Then
+                            ZPos = - ZPos
+                        End If
+
+                    Case 9 ' Space Based Right Ascension, Declination, and maybe Range
+
+                        ValidSBDec = True
+                        ValidSBRA  = True
+
+                        '-------------------------------------------------------------------------
+                        ' read and parse the second line in this record
+                        '-------------------------------------------------------------------------
+
+                        line = m_Stream.ReadLine
+
+                        ddd = Mid(line, 1, 3)
+                        Hr  = Mid(line, 4, 2)
+                        Mi  = Mid(line, 6, 2)
+                        SeD = Mid(line, 8, 5)
+
+                        DecD_Sign = Mid(line, 13, 1)
+                        DecD      = Mid(line, 14, 6)
+
+                        If (DecD_Sign = 1) Then
+                            DecD = - DecD
+                        End If
+
+                        RA_HH  = Mid(line, 21, 2)
+                        RA_MM  = Mid(line, 23, 2)
+                        RA_SSS = Mid(line, 25, 3)
+
+                        YearOfEquinox = Mid(line, 29, 1)
+
+                        Select Case YearOfEquinox
+                            Case 0
+                                EquinoxEpoch = eOfDate
+                            Case 1
+                                EquinoxEpoch = eYearOfObsJan0
+                            Case 2
+                                EquinoxEpoch = eJ2000Epoch
+                            Case 3
+                                EquinoxEpoch = eB1950Epoch
+                            Case Else
+                                EquinoxEpoch = eJ2000Epoch
+                        End Select
+
+                        ' Space based range values may be zero or blank as many sources don't 
+                        ' populate this field.  In which case the scale term is often blank.
+
+                        RgD = Mid(line, 30, 7)
+                        
+                        ' Check for blank values first so we don't throw an error trying to
+                        ' convert them to a double.
+                        
+                        If (RgD <> "       ") Then
+                            If (RgD <> 0) Then
+                                RgScaleD   = Mid(line, 37, 1)
+                                ValidSBRng = True
+                            Else
+                                RgScaleD = 0
+                            End If
+                        Else
+                            RgD = 0
+                            RgScaleD = 0
+                        End IF
+
+                        XPos_Sign  = Mid(line, 39, 1)
+                        XPos       = Mid(line, 40, 8)
+                        XPosScaleD = Mid(line, 48, 1)
+
+                        If (XPos_Sign = 1) Then
+                            XPos = - XPos
+                        End If
+
+                        YPos_Sign  = Mid(line, 49, 1)
+                        YPos       = Mid(line, 50, 8)
+                        YPosScaleD = Mid(line, 58, 1)
+
+                        If (YPos_Sign = 1) Then
+                            YPos = - YPos
+                        End If
+
+                        ZPos_Sign  = Mid(line, 59, 1)
+                        ZPos       = Mid(line, 60, 8)
+                        ZPosScaleD = Mid(line, 68, 1)
+
+                        If (ZPos_Sign = 1) Then
+                            ZPos = - ZPos
+                        End If
+
+                    Case Else
+                        ' Msgbox "Invalid recType = " & recType
+                End Select
+
+                '-------------------------------------------------------------------------
+                ' Convert measurements to engineering units
+                '-------------------------------------------------------------------------
+
+                AzD    = AzD    / 10000.0       ' convert to degrees
+                ElD    = ElD    / 10000.0       ' convert to degrees
+
+                DecD   = DecD   / 10000.0       ' convert to degrees
+
+                RgD    = RgD   * 10^(RgScaleD   - 5) ' convert to km
+                RRD    = RRD   / 100                 ' convert to m/sec
+                RAD    = 15 * (  RA_HH +   RA_MM/60.0 +   RA_SSS/36000.0)    ' convert to deg
+
+                '-------------------------------------------------------------------------
+                ' Format date in UTCJFOUR format.  This is the closest
+                ' representation to what was input and avoids messy date
+                ' conversion code.  Let ODTK do the work!
+                '-------------------------------------------------------------------------
+
+                SeD = SeD / 1000.0              ' Convert millisec to seconds
+
+                dateStr = ddd & "/" & m_RefYr & " " & Hr & ":" & Mi & ":" & SeD
+
+                '-------------------------------------------------------------------------
+                ' Initialize observation and obs set
+                '-------------------------------------------------------------------------
+
+                pObs.date.unit  = "UTCJFOUR"
+                pObs.date       = dateStr
+                pObs.timeOrigin = eGroundReceiveTime
+
+                pObs.TrackerIDs.Clear
+                pObs.TrackerIDs.Insert 0, facID  ' Facility must be first item
+                pObs.TrackerIDs.Insert 1, satID    ' Satellites follow Facility
+
+                '-------------------------------------------------------------------------
+                ' Initialize tracker vector as well.  It won't be used unless we have space
+                ' based measurements.  But don't populate it if it contains zeros, ODTK 
+                ' should use it's reference ephemeris instead.
+                '-------------------------------------------------------------------------
+
+                If ((ValidSBAz or ValidSBEl or ValidSBRng or ValidSBRA or ValidSBDec) and _
+                    (XPos <> 0 and YPos <> 0 and ZPos <> 0)) Then
+      
+                    XPos   = XPos  * 10^(XPosScaleD - 8) ' convert to meters
+                    YPos   = YPos  * 10^(YPosScaleD - 8) ' convert to meters
+                    ZPos   = ZPos  * 10^(ZPosScaleD - 8) ' convert to meters
+                    
+                    pObs.TrackerVector.CoordSystem = eCBF
+                    pObs.TrackerVector.ElmType     = ePosOnly
+    
+                    pObs.TrackerVector.X.Unit  = "m"
+                    pObs.TrackerVector.X.Value = Xpos
+    
+                    pObs.TrackerVector.Y.Unit  = "m"
+                    pObs.TrackerVector.Y.Value = Ypos
+    
+                    pObs.TrackerVector.Z.Unit  = "m"
+                    pObs.TrackerVector.Z.Value = Zpos
+
+                End If
+
+                ' let the facilities decide what these values are
+
+                pObs.EquinoxType  = eDefaultEquinoxType
+                pObs.EquinoxEpoch = EquinoxEpoch
+
+                pObsSet.Clear()
+                pObsSet.date.unit = "UTCJFOUR"
+                pObsSet.date      = dateStr
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// RANGE ///////////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidRng Then
+
+                    pObs.MeasureType = eMTRange
+                    pObs.value.Unit  = "km"
+                    pObs.value       = RgD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// DOPPLER /////////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidRR Then
+
+                    pObs.MeasureType = eMTDoppler
+                    pObs.value.Unit  = "m/sec"
+                    pObs.value       = RRD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// AZIMUTH /////////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidAz Then
+
+                    pObs.MeasureType = eMTAzimuth
+                    pObs.value.Unit  = "deg"
+                    pObs.value       = AzD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// ELEVATION ///////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidEl Then
+
+                    pObs.MeasureType = eMTElevation
+                    pObs.value.Unit  = "deg"
+                    pObs.value       = ElD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '////////////////////// RIGHT ASCENSION ///////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidRA Then
+
+                    pObs.MeasureType  = eMTRightAscension
+                    pObs.value.Unit   = "deg"
+                    pObs.value        = RAD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// DECLINATION /////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidDec Then
+
+                    pObs.MeasureType  = eMTDeclination
+                    pObs.value.Unit   = "deg"
+                    pObs.value        = DecD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '////////////////////SB RIGHT ASCENSION //////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidSBRA Then
+
+                    pObs.MeasureType  = eMTSBRightAscension
+                    pObs.value.Unit   = "deg"
+                    pObs.value        = RAD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '///////////////////////SB DECLINATION ///////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidSBDec Then
+
+                    pObs.MeasureType = eMTSBDeclination
+                    pObs.value.Unit  = "deg"
+                    pObs.value       = DecD
+
+                    pObsSet.Add pObs
+
+                End If
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// SB AZIMUTH //////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidSBAz Then
+
+                    pObs.MeasureType = eMTSBAzimuth
+                    pObs.value.Unit  = "deg"
+                    pObs.value       = AzD
+
+                    pObsSet.Add pObs
+
+                End If
+
+
+                '/////////////////////////////////////////////////////////////
+                '/////////////////////////// SB ELEVATION ////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidSBEl Then
+
+                    pObs.MeasureType = eMTSBElevation
+                    pObs.value.Unit  = "deg"
+                    pObs.value       = ElD
+
+                    pObsSet.Add pObs
+
+                End If
+
+
+                '/////////////////////////////////////////////////////////////
+                '///////////////////////SB Range /////////////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidSBRng Then
+
+                    pObs.MeasureType = eMTSBRange
+                    pObs.value.Unit  = "km"
+                    pObs.value       = RgD
+
+                    pObsSet.Add pObs
+
+                End If
+
+
+               '/// Any Valid Meas? ////
+
+                If pObsSet.Count > 0 Then
+                    numSets = numSets + 1
+                    setColl.Add pObsSet
+                End If
+            End if
+
+        Loop
+
+        GetObsSet = numSets
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+
+        Dim numSets
+
+        numSets = 0
+
+
+        'Set Defaults
+        pObs.Date.Unit = "UTCJFOUR"
+        pObs.Date = "153/2003 00:00:00.000"
+        pObs.TrackerIDs.Clear
+
+        'File supports range & Doppler independently, angles are saved as pairs,
+        'angles may also be saved with range and Doppler included
+
+        '-------------------------------------------------------------------------
+        ' Range
+        '-------------------------------------------------------------------------
+        pObs.MeasureType = eMTRange
+        pObs.value.Unit  = "m"
+        pObs.value       = 0.0
+
+        pObsSet.Clear
+        pObsSet.Add pObs
+        numSets = numSets + 1
+        setColl.Add pObsSet
+
+        '-------------------------------------------------------------------------
+        ' Doppler
+        '-------------------------------------------------------------------------
+        pObs.MeasureType = eMTDoppler
+        pObs.value.Unit  = "m/sec"
+        pObs.value       = 0.0
+
+        pObsSet.Clear
+        pObsSet.Add pObs
+        numSets = numSets + 1
+        setColl.Add pObsSet
+
+        '-------------------------------------------------------------------------
+        ' Azimuth/Elevation
+        '-------------------------------------------------------------------------
+        pObsSet.Clear
+
+        pObs.MeasureType = eMTAzimuth
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        pObs.MeasureType = eMTElevation
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        '-------------------------------------------------------------------------
+        ' SB Azimuth/Elevation
+        '-------------------------------------------------------------------------
+        pObsSet.Clear
+
+        pObs.MeasureType = eMTSBAzimuth
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        pObs.MeasureType = eMTSBElevation
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        '-------------------------------------------------------------------------
+        ' add SB Range to get SB Azimuth/Elevation/Range
+        '-------------------------------------------------------------------------
+        pObs.MeasureType = eMTSBRange
+        pObs.value.Unit  = "m"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        '-------------------------------------------------------------------------
+        ' Right Ascension/Declination
+        '-------------------------------------------------------------------------
+        pObsSet.Clear
+
+        pObs.MeasureType = eMTRightAscension
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        pObs.MeasureType = eMTDeclination
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        '-------------------------------------------------------------------------
+        ' SB Right Ascension/Declination
+        '-------------------------------------------------------------------------
+        pObsSet.Clear
+
+        pObs.MeasureType = eMTSBRightAscension
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        pObs.MeasureType = eMTSBDeclination
+        pObs.value.Unit  = "deg"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        '-------------------------------------------------------------------------
+        ' add SB Range to get SB Right Ascension/Declination/Range
+        '-------------------------------------------------------------------------
+        pObs.MeasureType = eMTSBRange
+        pObs.value.Unit  = "m"
+        pObs.value       = 0.0
+        pObsSet.Add pObs
+
+        setColl.Add pObsSet
+        numSets = numSets + 1
+
+        GetSupportedObsSet = numSets
+
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+
+        Dim bAtEnd
+        Dim pObs
+        Dim pObsValue
+
+        Dim nObsSaved
+        nObsSaved = 0
+
+        Dim obsValue
+
+        bHaveRange = false
+        bHaveDop   = false
+        bHaveAz    = false
+        bHaveEl    = false
+        bHaveDec   = false
+        bHaveRA    = false
+        bhaveSBDEC = false
+        bHaveSBRA  = false
+        bHaveSBAz  = false
+        bHaveSBEl  = false
+        bHaveSBRange = false
+
+        recType = 0
+        stnOut = 0
+        vehOut = 0
+
+        facID = 0
+        satID = 0
+
+        bAtEnd = pEnum.AtEnd
+
+        If (Not bAtEnd) Then
+
+            If m_sFileName = "" Then
+                If bAppend Then
+                    Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForAppending, True)
+                Else
+                    Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+                End If
+            End If
+
+            '-------------------------------------------------------------------------
+            ' Initialize first measurement before main loop
+            '-------------------------------------------------------------------------
+
+            set pObs    = pEnum.Next
+
+            jdayNext    = pObs.JulianDay
+            mamNext     = pObs.MinAfterMidnight
+            stnAntNext  = pObs.TrackerIDs.Item(0)
+            vehOutNext  = pObs.TrackerIDs.Item(1)
+
+            facID  = stnAntNext
+            satID    = vehOutNext
+
+            ' Set the date unit to be UTCJFOUR.  That way we don't have to do any hard
+            ' calendar math, worrying about leap years and such.
+
+            pObs.Date.Unit = "UTCJFOUR"
+            ObsDateStr   = CStr(pObs.Date)
+
+        End If
+
+        '-------------------------------------------------------------------------
+        ' Main Loop:
+        '  Cycle through all measurements
+        '  When measurement Time or TrackerIds change - write record to file
+        '-------------------------------------------------------------------------
+
+
+        Do While Not bAtEnd
+
+            '-------------------------------------------------------------------------
+            ' Write Out New Record
+            '-------------------------------------------------------------------------
+
+            If bNewLine And (bHaveRange Or bHaveDop Or bHaveAz Or bHaveEl Or bHaveDec Or bHaveRA Or bHaveSBDec Or bHaveSBRA Or bHaveSBAz Or bHaveSBEl or bHaveSBRange) Then
+                nObsSaved = nObsSaved + WriteObs()
+            End If
+
+            '-------------------------------------------------------------------------
+            ' Convert Generic Obs format to Output TB3.1 format
+            '-------------------------------------------------------------------------
+
+            jday    = jdayNext
+            mam     = mamNext
+            vehOut  = vehOutNext
+            antOut  = stnAntNext
+
+            set pObsValue   = pObs.Value
+            pObs.Date.Unit  = "UTCJFOUR"
+            ObsDateStr      = CStr(pObs.Date)
+
+            If pObs.MeasureType = eMTRange Then
+
+                RangeValue = pObsValue.Value / 1000.0       ' kilometers
+                logValue   = Int(log(RangeValue)/log(10))
+                RangeValue = RangeValue * 10^(6-logValue)
+                RgScaleD   = logValue - 1
+                bHaveRange = True
+
+            End If
+
+            If pObs.MeasureType = eMTSBRange Then
+
+                ' Value can be zero since many existing systems force this field to zero or it
+                ' can be blank
+                
+                If pObsValue.Value > 1 Then
+                
+                    SBRangeValue = pObsValue.Value / 1000.0       ' kilometers
+                    logValue     = Int(log(SBRangeValue)/log(10))
+    
+                    ' Check for case where SB Range value is less than 10 km.
+                    ' If so, we have to adjust exponent to fit in the format
+                    ' because it doesn't support negative values.
+    
+                    if (logValue = 0) Then
+                        logValue = 1
+                        SBRangeValue = SBRangeValue / 10
+                    End If
+    
+                    SBRangeValue = SBRangeValue * 10^(6-logValue)
+                    SBRgScaleD   = logValue - 1
+                    bHaveSBRange = True
+                    
+                Else
+                    SBRangeValue = 0
+                    SBRgScaleD   = 0
+                End If
+            
+
+            End If
+
+            If pObs.MeasureType = eMTDoppler Then
+
+               DopValue   = CDbl(100.0 * pObsValue.Value)    ' cm/sec
+               If (DopValue > 0.0) Then
+                    RRD_Sign = 0
+               Else
+                    RRD_Sign = 1
+               End If
+
+               DopValue = Abs(DopValue)
+               bHaveDop   = True
+
+            End If
+
+            If ((pObs.MeasureType = eMTAzimuth) or _
+                (pObs.MeasureType = eMTElevation) or _
+                (pObs.MeasureType = eMTSBAzimuth) or _
+                (pObs.MeasureType = eMTSBElevation) or _
+                (pObs.MeasureType = eMTDeclination) or _
+                (pObs.MeasureType = eMTSBDeclination)) Then
+
+                obsValue = 10000 * pObsValue.Value      ' millidegrees
+
+                Select Case pObs.MeasureType
+
+                    Case eMTAzimuth
+
+                        If (obsValue > 0.0) Then
+                            AzD_Sign = 0
+                        Else
+                            AzD_Sign = 1
+                        End If
+
+                        AzValue = Abs(obsValue)
+                        bHaveAz = True
+
+                    Case eMTElevation
+
+                        If (obsValue > 0.0) Then
+                            ElD_Sign = 0
+                        Else
+                            ElD_Sign = 1
+                        End If
+
+                        ElValue = Abs(obsValue)
+                        bHaveEl = True
+
+                    Case eMTSBAzimuth
+
+                        If (obsValue > 0.0) Then
+                            SBAzD_Sign = 0
+                        Else
+                            SBAzD_Sign = 1
+                        End If
+
+                        SBAzValue = Abs(obsValue)
+                        bHaveSBAz = True
+
+                    Case eMTSBElevation
+
+                        If (obsValue > 0.0) Then
+                            SBElD_Sign = 0
+                        Else
+                            SBElD_Sign = 1
+                        End If
+
+                        SBElValue = Abs(obsValue)
+                        bHaveSBEl = True
+
+                    Case eMTDeclination
+
+                        If (obsValue > 0.0) Then
+                            DecD_Sign = 0
+                        Else
+                            DecD_Sign = 1
+                        End If
+
+                        DecValue = Abs(obsValue)
+                        bHaveDec = True
+
+                    Case eMTSBDeclination
+
+                        If (obsValue > 0.0) Then
+                            SBDecD_Sign = 0
+                        Else
+                            SBDecD_Sign = 1
+                        End If
+
+                        SBDecValue = Abs(obsValue)
+                        bHaveSBDec = True
+
+                End Select
+
+           End If
+
+           If (pObs.MeasureType = eMTRightAscension) Or (pObs.MeasureType = eMTSBRightAscension) Then
+
+                Dim hours, minutes, tenthsOfSeconds
+                Dim temp
+
+                If (pObsValue.Value >= 0) Then
+                    temp = pObsValue.Value / 15.0
+                Else
+                    temp = (pObsValue.Value + 360) / 15.0
+                End If
+
+                hours = Int(temp)
+
+                temp = (temp - hours) * 60
+                minutes = Int(temp)
+
+                temp = (temp - minutes) * 600       ' goto tenths of seconds
+                tenthsOfSeconds = Int(temp + 0.5)
+
+                obsValue = hours*100000 + minutes*1000 + tenthsOfSeconds
+
+                Select Case pObs.EquinoxEpoch
+                    Case eOfDate
+                        YearOfEquinox = 0
+                    Case eYearOfObsJan0
+                        YearOfEquinox = 1
+                    Case eJ2000Epoch
+                        YearOfEquinox = 2
+                    Case eB1950Epoch
+                        YearOfEquinox = 3
+                    Case Else
+                        YearOfEquinox = 2
+                End Select
+
+                If pObs.MeasureType = eMTRightAscension Then
+                    bHaveRA = True
+                    RAValue = obsValue
+                Else
+                    bHaveSBRA = True
+                    SBRAValue = obsValue
+                End If
+
+            End If
+
+            ' Check to see if we have space based measurements.  If so, then
+            ' calculate the tracker vector.
+
+            if (bHaveSBAz or bHaveSBEl or bHaveSBRA or bHaveSBDec or bHaveSBRange) then
+
+                XPos = pObs.TrackerVector.X.Value
+                If (XPos > 0.0) Then
+                    XPos_Sign = 0
+                Else
+                    XPos_Sign = 1
+                End If
+
+                XPos       = Abs(XPos)
+                logValue   = Int(log(XPos)/log(10))
+                XPos       = XPos * 10^(6-logValue)
+                XPosScaleD = logValue - 1
+
+                YPos = pObs.TrackerVector.Y.Value
+                If (YPos > 0.0) Then
+                    YPos_Sign = 0
+                Else
+                    YPos_Sign = 1
+                End If
+
+                YPos       = Abs(YPos)
+                logValue   = Int(log(YPos)/log(10))
+                YPos       = YPos * 10^(6-logValue)
+                YPosScaleD = logValue - 1
+
+                ZPos = pObs.TrackerVector.Z.Value
+                If (ZPos > 0.0) Then
+                    ZPos_Sign = 0
+                Else
+                    ZPos_Sign = 1
+                End If
+
+                ZPos       = Abs(Zpos)
+                logValue   = Int(log(ZPos)/log(10))
+                ZPos       = ZPos * 10^(6-logValue)
+                ZPosScaleD = logValue - 1
+
+            End If
+
+            '-------------------------------------------------------------------------
+            ' Get Next Obs (if any) and determine if we should write out existing data
+            '-------------------------------------------------------------------------
+
+            bAtEnd = pEnum.AtEnd
+            If Not bAtEnd Then
+                set pObs    = pEnum.Next
+                stnAntNext  = pObs.TrackerIds.Item(0)
+                vehOutNext  = pObs.TrackerIDs.Item(1)
+                jdayNext    = pObs.JulianDay
+                mamNext     = pObs.MinAfterMidnight
+
+                bNewLine = (jday   <> jdayNext)   Or _
+                           (mam    <> mamNext )   Or _
+                           (vehOut <> vehOutNext) Or _
+                           (antOut <> stnAntNext)
+
+            Else
+                nObsSaved = nObsSaved + WriteObs()   ' write out last line
+            End If
+
+        Loop
+
+        SaveObs = nObsSaved
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetAppConfig method
+    '-------------------------------------------------------------------------
+
+    Function GetAppConfig()
+        Set GetAppConfig = m_scope
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' Support Routines for SaveObs Function
+    '-------------------------------------------------------------------------
+
+    Function WriteObs()
+
+        Dim nObsSaved
+        nObsSaved = 0
+
+        Dim goodIds
+        goodIds = True
+
+        Dim goodObs
+        goodObs = True
+
+        Dim mDate, mHHMMSS, hour, minute, second
+        Dim satID, facID, ddd, dddhhmmsssssStr, rangeStr
+        Dim CS
+
+        Dim line
+
+        If vehOut > 99999 Then
+            goodIds = False
+            If Not foundBadVeh Then
+                MsgBox "Satellite ID does not fit into TB3.1 format: " & vehOut
+                foundBadVeh = True
+            End If
+        End IF
+
+        If (antOut > 999) Then
+            goodIds = False
+            If Not foundBadStn Then
+                MsgBox "Station ID does not fit into TB3.1 format: " & antOut
+                foundBadStn = True
+            End If
+        End If
+
+        If goodIds And (bHaveRange Or bHaveDop Or bHaveEl Or bHaveRA Or bHaveDec Or bHaveSBRA Or bHaveSBDec Or bHaveSBAz Or bHaveSBEl or bHaveSBRange) Then
+
+            ' Parse observation date string, typically something like 291/2005 21:56:39.0
+            ' Break up the day and time into their component parts
+
+            mDate   = Split(obsDateStr)
+            mHHMMSS = Split(mDate(1), ":")
+            ddd     = split(mDate(0),"/")(0)
+            hour    = mHHMMSS(0)
+            minute  = mHHMMSS(1)
+            second  = Int(1000 * mHHMMSS(2))
+
+            dddhhmmsssssStr = Field(ddd, 3, "0") & Field (hour, 2, "0") & Field (minute, 2, "0") & Field (second, 5, "0")
+
+            ' write out current set(s) of measurement data
+            ' one set could be subset of {Az/El, Range, Doppler}
+            ' one set could be {RA/Dec}
+            ' one set could be {SBRA/SBDec}
+            ' one set could be {SBEl/SBAz}
+            ' one set could be {SBRA/SBDec/SBRng}
+            ' one set could be {SBEl/SBAz/SBRng}
+
+            nRecTypes = 0
+
+            ' set values to be invalid if the obs were not created
+
+            If (bHaveRange And bHaveDop And bHaveAz And bHaveEl) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 3
+                bHaveRange = false
+                bHaveDop   = false
+                bHaveAz    = false
+                bHaveEl    = false
+            End If
+
+            If (bHaveRange And bHaveAz And bHaveEl) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 2
+                bHaveRange = false
+                bHaveAz    = false
+                bHaveEl    = false
+            End If
+
+            If (bHaveAz And bHaveEl) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 1
+                bHaveAz = false
+                bHaveEl = false
+            End If
+
+            If (bHaveRange) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 6
+                bHaveRange = false
+            End If
+
+            If (bHaveDop) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 0
+                bHaveDop = false
+            End If
+
+            If (bHaveRA And bHaveDec) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 5
+                bHaveRA  = false
+                bHaveDec = false
+            End If
+
+            If (bHaveSBAz And bHaveSBEl) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 8
+                bHaveSBAz  = false
+                bHaveSBEl = false
+                bHaveSBRange = false
+            End If
+
+            If (bHaveSBRA And bHaveSBDec) Then
+                nRecTypes = nRecTypes + 1
+                recTypes(nRecTypes) = 9
+                bHaveSBRA  = false
+                bHaveSBDec = false
+                bHaveSBRange = false
+            End If
+
+            Dim n
+            For n=1 to nRecTypes
+
+                recType = recTypes(n)
+
+                '-------------------------------------------------------------------------
+                ' Build common fields for all record types.  ODTK doesn't have the concept
+                ' of a message number or type of track, so we'll use some default values
+                '-------------------------------------------------------------------------
+
+                line =  "))" & m_classification          & _
+                        Field(1,                 3, "0") & _
+                        Field(4,                 1, "0") & _
+                        Field(recType,           1, " ") & _
+                        Field(AntOut,            3, "0") & _
+                        Field(vehOut,            5, "0")
+
+                If (recType <> 4 and recType <> 8 and recType <> 9) Then
+                    line = line & dddhhmmsssssStr
+                End If
+
+                Select Case recType
+
+                    Case 0          ' Doppler only
+
+                        line = line                              & _
+                                Field(RRD_Sign,          1, "0") & _
+                                Field(DopValue,          7, "0") & _
+                                " "
+
+                        CS = CheckSum (line, 37)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 1
+
+                    Case 1          ' Az and El
+
+                        line = line                              & _
+                                Field(ElD_Sign,          1, " ") & _
+                                Field(ElValue,           6, "0") & _
+                                " "                              & _
+                                Field(AzValue,           7, "0") & _
+                                " "
+
+                        CS = CheckSum (line, 44)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 2
+
+                    Case 2          ' Az, El & Range
+
+                        line = line                             & _
+                                Field(ElD_Sign,         1, " ") & _
+                                Field(ElValue,          6, "0") & _
+                                " "                             & _
+                                Field(AzValue,          7, "0") & _
+                                " "                             & _
+                                Field(RangeValue,       7, "0") & _
+                                Field(RgScaleD,         1, " ") & _
+                                " "
+
+                        CS = CheckSum (line, 53)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 3
+
+                    Case 3          ' Az, El, Range, & Doppler
+
+                        line = line                              & _
+                                Field(ElD_Sign,          1, " ") & _
+                                Field(ElValue,           6, "0") & _
+                                " "                              & _
+                                Field(AzValue,           7, "0") & _
+                                " "                              & _
+                                Field(RangeValue,        7, "0") & _
+                                Field(RgScaleD,          1, " ") & _
+                                " "                              & _
+                                Field(RRD_Sign,          1, "0") & _
+                                Field(DopValue,          7, "0") & _
+                                " "
+
+                        CS = CheckSum (line, 62)
+
+                         line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 4
+
+                    '-------------------------------------------------------------------------
+                    ' Note that type 4 isn't supported by ODTK since we do not generate
+                    ' Az and El rates as measurements
+                    '-------------------------------------------------------------------------
+
+                    Case 4          ' Az, El, Range, & Doppler & rates
+
+                        line = line & " "
+
+                        CS = CheckSum (line, 16)
+                        line_with_CS = line                      & _
+                                       Field(CS,        1, " ")
+
+                         m_Stream.WriteLine(line_with_CS)
+
+                         line = dddhhmmsssssStr                  & _
+                                Field(ElD_Sign,          1, " ") & _
+                                Field(ElValue,           6, "0") & _
+                                " "                              & _
+                                Field(AzValue,           7, "0") & _
+                                " "                              & _
+                                Field(RangeValue,        7, "0") & _
+                                Field(RgScaleD,          1, " ") & _
+                                " "                              & _
+                                Field(RRD_Sign,          1, "0") & _
+                                Field(DopValue,          7, "0") & _
+                                " "
+
+                        CS = CheckSum (line, 67)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 4
+
+                    Case 5          ' Ground RA and Dec
+
+                        line = line                             & _
+                                Field(DecD_Sign,        1, " ") & _
+                                Field(DecValue,         6, "0") & _
+                                " "                             & _
+                                Field(RAValue,          7, "0") & _
+                                " "                             & _
+                                Field(YearOfEquinox,    1, " ") & _
+                                " "
+
+                        CS = CheckSum (line, 45)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 2
+
+                    Case 6          ' Range only
+
+                        line = line                             & _
+                                "0"                             & _
+                                Field(RangeValue,       7, "0") & _
+                                Field(RgScaleD,         1, " ") & _
+                                " "
+
+                        CS = CheckSum (line, 38)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 1
+
+                    Case 8          ' SB Az, El, and maybe Range
+
+                        line = line & " "
+
+                        CS = CheckSum (line, 16)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+
+                        ' if value is zero, then force blanks with a blank for the scaling.
+        
+                        If SBRangeValue = 0 Then
+                            rangeStr = "        "
+                        Else
+                            nObsSaved = nObsSaved + 1
+                            rangeStr = Field(SBRangeValue,      7, "0") & _
+                                       Field(SBRgScaleD,        1, "0")
+                            SBRangeValue = 0 ' to avoid duplication in type 9 record
+                        End If
+
+                        line = dddhhmmsssssStr & _
+                                Field(SBElD_Sign,       1, " ") & _
+                                Field(SBElValue,        6, "0") & _
+                                " "                             & _
+                                Field(SBAzValue,        7, "0") & _
+                                " "                             & _
+                                rangeStr                        & _
+                                "  "                            & _
+                                Field(XPos_Sign,        1, " ") & _
+                                Field(XPos,             8, "0") & _
+                                Field(XPosScaleD,       1, " ") & _
+                                Field(YPos_Sign,        1, " ") & _
+                                Field(YPos,             8, "0") & _
+                                Field(YPosScaleD,       1, " ") & _
+                                Field(ZPos_Sign,        1, " ") & _
+                                Field(ZPos,             8, "0") & _
+                                Field(ZPosScaleD,       1, " ") & _
+                                " "
+
+                        CS = CheckSum (line, 68)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 2
+
+                    Case 9          ' SB RA, Dec and Range
+
+                        line = line & " "
+
+                        CS = CheckSum (line, 16)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+
+                        ' if value is zero, then force blanks with a blank for the scaling.
+        
+                        If SBRangeValue = 0 Then
+                            rangeStr = "        "
+                        Else
+                            nObsSaved = nObsSaved + 1
+                            rangeStr = Field(SBRangeValue,      7, "0") & _
+                                       Field(SBRgScaleD,        1, "0")
+                            SBRangeValue = 0 ' to avoid duplication in type 8 record
+                        End If
+
+                        line =  dddhhmmsssssStr & _
+                                Field(SBDecD_Sign,      1, " ") & _
+                                Field(SBDecValue,       6, "0") & _
+                                " "                             & _
+                                Field(SBRAValue,        7, "0") & _
+                                " "                             & _
+                                Field(YearOfEquinox,    1, " ") & _
+                                rangeStr                        & _
+                                " "                             & _
+                                Field(XPos_Sign,        1, " ") & _
+                                Field(XPos,             8, "0") & _
+                                Field(XPosScaleD,       1, " ") & _
+                                Field(YPos_Sign,        1, " ") & _
+                                Field(YPos,             8, "0") & _
+                                Field(YPosScaleD,       1, " ") & _
+                                Field(ZPos_Sign,        1, " ") & _
+                                Field(ZPos,             8, "0") & _
+                                Field(ZPosScaleD,       1, " ") & _
+                                " "
+
+                        CS = CheckSum (line, 68)
+
+                        line = line & Field(CS, 1, " ") & "$$"
+
+                        m_Stream.WriteLine(line)
+                        nObsSaved = nObsSaved + 2
+
+                    Case Else
+                        ' Msgbox "Invalid recType = " & recType
+
+                End Select
+            Next
+        End If
+
+        bNewLine   = False
+        bHaveRange = False
+        bHaveDop   = False
+        bHaveAz    = False
+        bHaveEl    = False
+        bHaveDec   = False
+        bHaveRA    = False
+        bHaveSBDec = False
+        bHaveSBRA  = False
+        bHaveSBAz  = False
+        bHaveSBEl  = False
+        bHaveSBRange = False
+
+        WriteObs = nObsSaved
+    End Function
+
+    Function Field(val, Width, Fill)
+        Dim count
+        Dim stringVal
+
+        ' Convert all numbers to longs to get rid of decimal components
+
+        stringVal = CStr(CLng(val))
+        count     = Len(stringVal)
+
+        If count = width Then
+            Field = stringVal
+        Else
+            If count < width Then
+                Field = String(width-count, Fill) & stringVal
+            Else
+                Field = String(width, "*")
+            End If
+        End If
+
+    End Function
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+    Function CheckSum(line, Width)
+
+        Dim totalSum
+        totalSum = 0
+        Dim i
+        Dim charValue
+
+        For i=1 to Width
+            charValue = Mid(line, i, 1)
+            If (charValue = "-") Then
+                totalSum = totalSum - 1
+            Else
+                If (charValue >= "0" and charValue <= "9") then
+                    totalSum = totalSum + int(charValue)
+                End If
+            End If
+        Next
+        CheckSum = totalSum Mod 10
+
+    End Function
+
+]]>
+</script>
+
+</component>

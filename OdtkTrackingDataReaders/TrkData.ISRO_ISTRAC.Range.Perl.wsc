@@ -1,0 +1,565 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="ISTRAC Binary Range and Doppler Format"
+    progid="TrkData.ISRO_ISTRAC.Range.Perl.wsc"
+    version="1.00"
+    classid="{53a18458-370d-4553-9e72-1dbd2dc8d938}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+
+
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+    <!-- New method added to support ODTK 6.1.1 -->
+
+    <method name="CloseFile"/>
+
+</public>
+
+<script language="PerlScript">
+<![CDATA[
+
+    #-------------------------------------------------------------------------
+    # Member variables
+    #-------------------------------------------------------------------------
+
+    # Must be running under Perl 5.6.1 for support of the Win32:OLE package.
+
+    require 5.6.1;
+
+    use strict;
+    use File::Glob ':glob';
+    use Win32;
+    use Win32::TieRegistry( Delimiter=>"/", ArrayValues=>0 );
+    use Win32::OLE;
+    use Win32::OLE::Variant;
+    use Time::HiRes;
+    use Time::LocalTime;
+    use Date::Calc qw(Add_Delta_Days);
+    use DateTime;
+    
+    my $read;
+
+    #-------------------------------------------------------------------------
+    # Establish a few handy constants
+    #-------------------------------------------------------------------------
+
+    use constant eMTRange               => 1;
+    use constant eMTDoppler             => 2;
+    use constant eMTAzimuth             => 11;
+    use constant eMTElevation           => 12;
+    use constant eMaxMT                 => 13;
+
+    use constant eGroundReceiveTime     => 0;
+    use constant eSatelliteTransmitTime => 1;
+    use constant eGroundTransmitTime    => 2;
+    use constant eSatelliteReceiveTime  => 3;
+
+    use constant AgCMinRange => 50;
+    use constant AgCMaxRange => 100000;
+
+    # Define a blocking factor for how many lines we read at a time
+    # from the file.
+
+    use constant AgCBlockingFactor => 50;
+
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to pop up message boxes to
+    # assist in debugging.
+    #-------------------------------------------------------------------------
+
+    use constant AgCDebugFlag => 0;
+
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to log all functions calls from ODTK into
+    # this script.
+    #-------------------------------------------------------------------------
+
+    use constant AgCLogCalls => 0;
+
+    #-------------------------------------------------------------------------
+    # Now for a few global vars ...
+    #-------------------------------------------------------------------------
+
+    my ($regValue) = GetRegKey();
+
+    my $ODDBFilename;
+
+    $ODDBFilename = $regValue . "/CodeSamples/Extend/ODTK/" . "AGI.ODTK.ProgIDs.txt";
+    #Win32::MsgBox "ODDBFilename = $ODDBFilename\n";
+    open (IFH, "< $ODDBFilename");
+    my $AgODObsSetStr = <IFH>;
+    chomp $AgODObsSetStr;
+    my $AgODGenericObsStr = <IFH>;
+    chomp $AgODGenericObsStr;
+    close (IFH);
+
+
+    my $pObs = Win32::OLE->new("$AgODGenericObsStr");
+    my $pObsSet = Win32::OLE->new("$AgODObsSetStr") or die "new failed\n";
+
+    my $filename = "";
+    my $vehid = 0;
+    my $index = 0;
+    my $firstObs = 1;
+    my $satelliteID = "unknown";
+    my $facilityName = "unknown";
+    my $facilityID = "unknown";
+
+
+    #-------------------------------------------------------------------------
+    # Filename property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetFileName
+    {
+        LogCalls("GetFileName", $filename);
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "GetFileName $filename", 0;
+        }
+
+        return $filename;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsMultipleTrackers property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsMultipleTrackers
+    {
+        # Used only when SaveObs is supported (GetSupportsSave returns true), - stub out
+
+        LogCalls("GetSupportsMultipleTrackers");
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "GetSupportsMultipleTrackers", 0;
+        }
+
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsSave property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsSave
+    {
+        # Writing out observation files is not supported
+
+        LogCalls("GetSupportsSave");
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "GetSupportsSave", 0;
+        }
+
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # Reset method
+    #-------------------------------------------------------------------------
+
+    sub Reset
+    {
+
+        LogCalls("Reset", $filename);
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox  "Reset ${filename}", 0;
+        }
+
+        SkipHeader();
+
+        # Reset first observation flag (for debugging purposes)
+
+        $firstObs = 1;
+
+    }
+
+    #-------------------------------------------------------------------------
+    # OpenFile method
+    #-------------------------------------------------------------------------
+
+    sub OpenFile
+    {
+        my ( $newVal, $newFile ) = @_ ;
+
+        $filename = $newVal;
+
+
+        LogCalls("OpenFile", $filename);
+
+        if ($newFile)
+        {
+            open(FP, ">$filename") or die "Unable to create file $filename for writing\n";
+        }
+        else
+        {
+            open(FP, "<$filename") or die "Unable to open file $filename for reading\n";
+        }
+
+        # Set the file to operate in binary mode, otherwise you will get burned
+        # by UNIX vs WINDOWS line ending differences;
+
+        binmode(FP);
+
+        # Read in header info and capture the satelliteID and facilityID. If you get
+        # to the measurements, stop reading.
+
+
+
+
+        SkipHeader();
+
+    }
+
+    #-------------------------------------------------------------------------
+    # CloseFile method
+    #-------------------------------------------------------------------------
+
+    sub CloseFile
+    {
+        close(FP);
+    }
+
+    #-------------------------------------------------------------------------
+    # GetObsSet method
+    #-------------------------------------------------------------------------
+
+    sub GetObsSet
+    {
+        # Grab my obsSet collection so I know what to add obsSets to
+
+        my $setCollection = $_[0];
+
+        my ($line, $daytime, $azimuth, $elevation, $range, $rangerate);
+        my ($year, $dateGMT);
+        my ($station);
+
+        # Keep track of the number of observation sets.
+        my($num_obsSets) = 0;
+
+        # Keep track of the number of observations.
+        my($num_read) = 0;
+
+
+
+
+		#---------------------------------------------------------------
+		# HEADER RECORD
+		#---------------------------------------------------------------
+
+		read(FP, $read, 90);
+
+		my ($sourceCode, $destCode, $scID, $msgMode, $msgType, $msgSubType, $blockCount, $ttcpID, $mToneFreq, $sampleRate, $intTime, $measNum, $unused, $calValue, $timeStamp);
+		my ($year, $month, $day, $doy, $hms, $hour, $minute, $second, $nSec, $time);
+
+		$sourceCode	= unpack("C", reverse (substr ($read,  0, 1)));
+		$destCode	= unpack("C", reverse (substr ($read,  1, 1)));
+		$scID		= unpack("C", reverse (substr ($read, 2, 1)));
+
+		$msgMode	= unpack("C", reverse (substr ($read, 3, 1)));
+		$msgType	= unpack("C", reverse (substr ($read, 4, 1)));
+		$msgSubType = unpack("C", reverse (substr ($read, 5, 1)));
+		$blockCount = unpack("C", reverse (substr ($read, 6, 2)));
+		$ttcpID 	= unpack("C", reverse (substr ($read, 8, 1)));
+		$mToneFreq 	= unpack("C", reverse (substr ($read, 9, 1)));
+		$sampleRate	= unpack("C", reverse (substr ($read, 10, 1)));
+		$intTime 	= unpack("C", reverse (substr ($read, 11, 1)));
+		$measNum 	= unpack("C", reverse (substr ($read, 12, 1)));
+		$unused 	= unpack("C", reverse (substr ($read, 13, 1)));
+		$calValue 	= unpack("C", reverse (substr ($read, 14, 4)));
+
+		$year		= unpack("H", reverse (substr ($read, 18, 1))) . unpack("h", reverse (substr ($read, 18, 1))) . unpack("H", reverse (substr ($read, 19, 1))) . unpack("h", reverse (substr ($read, 19, 1)));
+		$doy		= unpack("h", reverse (substr ($read, 20, 1))) . unpack("H", reverse (substr ($read, 21, 1))) . unpack("h", reverse (substr ($read, 21, 1)));
+		$hms		= unpack("H", reverse (substr ($read, 22, 1))) . unpack("h", reverse (substr ($read, 22, 1))) . ':' . unpack("H", reverse (substr ($read, 23, 1))) . unpack("h", reverse (substr ($read, 23, 1)))  . ':' . unpack("H", reverse (substr ($read, 24, 1))) . unpack("h", reverse (substr ($read, 24, 1)));
+		$hour		= unpack("H", reverse (substr ($read, 22, 1))) . unpack("h", reverse (substr ($read, 22, 1)));
+		$minute		= unpack("H", reverse (substr ($read, 23, 1))) . unpack("h", reverse (substr ($read, 23, 1)));
+		$second		= unpack("H", reverse (substr ($read, 24, 1))) . unpack("h", reverse (substr ($read, 24, 1)));
+		$nSec		= unpack("H", reverse (substr ($read, 25, 1))) . unpack("h", reverse (substr ($read, 25, 1))) . unpack("H", reverse (substr ($read, 26, 1))) . unpack("h", reverse (substr ($read, 26, 1)));
+
+
+		# build DateTime from doy
+		($year, $month, $day) = Add_Delta_Days($year, 1, 1, int($doy) - 1);
+
+		my $epochDateTime;
+		$epochDateTime = DateTime->new(
+					year       => $year,
+					month      => $month,
+					day        => $day,
+					hour       => $hour,
+					minute     => $minute,
+					second     => $second,
+					nanosecond => $nSec*100000.0);
+
+
+		#-------------------------------------------------------------------------
+		# Initialize observation set
+		#-------------------------------------------------------------------------
+
+		$pObsSet->Clear;
+		$pObsSet->{Date}->{unit} = "ISO-YMD";
+		$pObsSet->{Date}         = $epochDateTime->format_cldr("yyyy-MM-dd'T'HH:mm:ss.SSSS") . $epochDateTime->millisecond();
+
+#msgbox($epochDateTime->format_cldr("yyyy-MM-dd'T'HH:mm:ss.SSSS"));
+#$time = $epochDateTime + DateTime::Duration->new( nanoseconds => 100000000 );
+#$time = $epochDateTime;
+#$time->add(seconds => 0.1);
+#msgbox($time->format_cldr("yyyy-MM-dd'T'HH:mm:ss.SSSS"));
+
+
+		#---------------------------------------------------------------
+		# DATA RECORD
+		#---------------------------------------------------------------
+
+		my ($meas, $measValue);
+		my ($meas1L, $meas1H, $meas2L, $meas2H, $meas3L, $meas3H, $meas4L, $meas4H, $meas5L, $meas5H, $meas6L, $meas6H);
+
+		my $startingByte = 27;
+
+		for (my $i=0; $i<$measNum; $i++)
+		{
+			#-------------------------------------------------------------------------
+			# Build correct date string
+			#-------------------------------------------------------------------------
+
+			$time = $epochDateTime + DateTime::Duration->new( nanoseconds => $i*100000000 );
+
+			$pObs->Clear;
+			$pObs->{Date}->{unit} = "ISO-YMD";
+			$pObs->{Date}         = $time->format_cldr("yyyy-MM-dd'T'HH:mm:ss.SSSS");
+			$pObs->{TimeOrigin}   = eGroundReceiveTime;
+
+			#-------------------------------------------------------------------------
+			# Set up facility and satellite IDs
+			# In TrackerIDs list: facility must come first
+			#-------------------------------------------------------------------------
+
+			$pObs->{TrackerIDs}->Clear();
+			$pObs->{TrackerIDs}->Insert(0, 12345);
+			$pObs->{TrackerIDs}->Insert(1, $scID);
+
+
+			#-------------------------------------------------------------------------
+			# build measurement value
+			#-------------------------------------------------------------------------
+
+			$meas1L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 0, 1))));
+			$meas1H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 0, 1))));
+			$meas2L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 1, 1))));
+			$meas2H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 1, 1))));
+			$meas3L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 2, 1))));
+			$meas3H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 2, 1))));
+			$meas4L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 3, 1))));
+			$meas4H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 3, 1))));
+			$meas5L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 4, 1))));
+			$meas5H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 4, 1))));
+			$meas6L = hex unpack("H", ( reverse (substr ($read,  $startingByte + 5, 1))));
+			$meas6H = hex unpack("h", ( reverse (substr ($read,  $startingByte + 5, 1))));
+
+			#-------------------------------------------------------------------------
+			# Create range measurement
+			#-------------------------------------------------------------------------
+			if ($msgSubType == 1)
+			{
+				#$meas = 0.1*$meas5L + 0.01*$meas4H + 0.001*$meas4L + 0.0001*$meas3H + 0.00001*$meas3L + 0.000001*$meas2H + 0.0000001*$meas2L + 0.00000001*$meas1H + 0.000000001*$meas1L;
+				$meas = 0.1*$meas1L + 0.01*$meas1H + 0.001*$meas2L + 0.0001*$meas2H + 0.00001*$meas3L + 0.000001*$meas3H + 0.0000001*$meas4L + 0.00000001*$meas4H + 0.000000001*$meas5L;
+				$range = $meas*299792.458;
+
+				if ($range >= AgCMinRange && $range < AgCMaxRange)
+				{
+
+					$pObs->{MeasureType}   = eMTRange;
+					$pObs->{value}->{unit} = "km";
+					$pObs->{value}         = $range;
+
+					$pObsSet->Add($pObs);
+					$num_read++;
+				}
+			}
+
+
+			#-------------------------------------------------------------------------
+			# Create range rate measurement
+			#-------------------------------------------------------------------------
+			if ($msgSubType == 3)
+			{
+				# build measurements in Hz
+				$meas = 10000000.0*$meas6L + 1000000.0*$meas5H + 100000.0*$meas5L + 10000.0*$meas4H + 1000.0*$meas4L + 100.0*$meas3H + 10.0*$meas3L + 1.0*$meas2H + 0.1*$meas2L + 0.01*$meas1H + 0.001*$meas1L;
+
+
+
+				$pObs->{MeasureType}   = eMTDoppler;
+				$pObs->{value}->{unit} = "cm/sec";
+				$pObs->{value}         = $meas;
+
+				$pObsSet->Add($pObs);
+				$num_read++;
+
+			} 
+
+			$startingByte+=6;
+		}
+
+
+
+		if ($pObsSet->Count > 0)
+		{
+			$setCollection->Add($pObsSet);
+			$num_obsSets++;
+		}
+
+
+        LogCalls("GetObsSet", "$num_read obs returned from $filename");
+
+        return $num_obsSets;
+    }
+
+    #-------------------------------------------------------------------------
+    # GetSupportedObsSet method
+    #    - only needed when SaveObs is supported - stub out
+    #-------------------------------------------------------------------------
+
+    sub GetSupportedObsSet
+    {
+        # Grab my collection so I know what to add observations to
+
+        my $setCollection = $_[0];
+
+        LogCalls("GetSupportedObsSet");
+
+        my $nbSets = 0;
+
+        return $nbSets;
+    }
+
+    #-------------------------------------------------------------------------
+    # SaveObs method
+    #-------------------------------------------------------------------------
+
+    sub SaveObs
+    {
+        # Not supported
+
+        LogCalls("SaveObs");
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "SaveObs", 0;
+        }
+    }
+
+    #-------------------------------------------------------------------------
+    # GetRegKey method
+    #    - return InstallHome registry key of the active ODTK application
+    #-------------------------------------------------------------------------
+
+    sub GetRegKey
+    {
+        my $ODTK;
+        my $class_obj;
+        if($class_obj = Win32::OLE->GetActiveObject("ODTK.Application"))
+        {
+           $ODTK = $class_obj->Personality;
+        }
+        my $regValue = $ODTK->Application->STKHome->Value;
+        #Win32::MsgBox "$regValue", 0;
+        return $regValue;
+    }
+
+
+    my $logfile = "C:\\temp\\ODTKreaderlog.txt";
+    my $logfileOpened = 0;
+
+    #-------------------------------------------------------------------------
+    # SkipHeader method
+    #    - Skips past all header data and position ourself for the data
+    #-------------------------------------------------------------------------
+
+    sub SkipHeader()
+    {
+
+        # reset the file pointer to the beginning of the file
+        seek FP, 0, 0;
+
+		# skip undocumented header
+		read(FP, $read, 90);
+    }
+
+    #-------------------------------------------------------------------------
+    # LogCalls method
+    #    - Logs time stamp and function call
+    #-------------------------------------------------------------------------
+
+    sub LogCalls
+    {
+        my $timestamp;
+
+        if (AgCLogCalls)
+        {
+            my ($functionName) = $_[0];
+            my ($otherdata) = $_[1];
+
+#           if ( !$logfileOpened)
+            {
+                open(LOG, ">>$logfile") or die "Unable to open $logfile for appending.";
+                $logfileOpened = 1;
+            }
+
+            $timestamp = Time::HiRes::time;
+            printf LOG "%f\t%s\t\t%s\n", $timestamp,$functionName,$otherdata;
+            close LOG;
+        }
+    }
+
+]]>
+</script>
+
+</component>

@@ -1,0 +1,411 @@
+<?xml version="1.0"?>
+
+<!-- ======================================== -->
+<!--  This WSC is designed to read RapidEye   -->
+<!--  custom tracking data format             -->
+<!--                                          -->
+<!--  author: jens ramrath, agi               -->
+<!--  date: 17 nov 2011                       -->
+<!-- ======================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="reads RapidEye tracking data files"
+    progid="TrkDataReader.RapidEye.ODTK6.wsc"
+    version="1.00"
+    classid="{E346EEAA-0B06-4fbc-B408-923C6E2849DD}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+	'-------------------------------------------------------------------------
+	' Member variables
+	'-------------------------------------------------------------------------
+
+	Option explicit
+
+	Const ForReading   = 1
+	Const ForWriting   = 2
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    Const eMTGPSNav_C1		  = 81
+    Const eMTEphPos           = 151
+	
+	Const eXComp	= 0
+	Const eYComp	= 1
+    Const eZComp	= 2
+    Const eXDComp	= 3
+    Const eYDComp	= 4
+    Const eZDComp	= 5
+    
+
+	Const eGroundReceiveTime     = 0
+	Const eSatelliteTransmitTime = 1
+	Const eGroundTransmitTime    = 2
+	Const eSatelliteReceiveTime  = 3
+
+
+	'-------------------------------------------------------------------------
+	' define some global variables we'll be using
+	'-------------------------------------------------------------------------
+
+	Dim m_sfileSysObj, m_Stream, m_sFileName
+
+	Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+	m_sFileName       = ""
+
+	'-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+	'-------------------------------------------------------------------------
+
+	Dim version
+	version = "6.0"
+
+	Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+	versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+	GetRegKey(versionStr)
+
+	ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+	Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+	Dim pObsSet
+	ObjectStr = textFile.ReadLine
+	Set pObsSet = CreateObject(ObjectStr)
+
+	Dim pObs
+	ObjectStr = textFile.ReadLine
+	Set pObs = CreateObject(ObjectStr)
+
+	'-------------------------------------------------------------------------
+	' Function GetFileName()
+	'-------------------------------------------------------------------------
+
+	Function GetFileName()
+
+	   GetFileName = m_sFileName
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsSave property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsSave()
+
+	   GetSupportsSave = False
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsMultipleTrackers property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsMultipleTrackers()
+
+	   GetSupportsMultipleTrackers = True
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' Reset method
+	'-------------------------------------------------------------------------
+
+	Function Reset()
+
+		if m_sFileName <> "" Then
+
+			Dim newVal
+			newVal = m_sFileName
+			OpenFile newVal, False
+
+		End if
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' OpenFile method
+	'-------------------------------------------------------------------------
+
+	Function OpenFile(newVal, newFile)
+
+		If m_sFileName <> "" Then
+			m_Stream.Close
+			m_sFileName = ""
+		End If
+
+		m_sFileName = newVal
+
+		If newFile Then        
+			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+		Else        
+			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+		End If
+
+	End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+		Dim line, numSets
+		Dim splitData, facID, satID
+        Dim value
+
+		numSets = 0
+        pObsSet.Clear
+
+		Dim debug
+		debug = 0
+
+
+		' ***** read data *****
+		Do Until m_Stream.AtEndOfStream 
+					'or numSets > 0
+
+			' ***** parse measurement data *****
+			' data format:
+			
+			' Column 1 & 2:           GPS packet ID 
+			' Columns 3-5:            Latitude, longitude, and altitude. Not used by default 
+			' Columns 6-8:            Velocity (East, North, Up). Not used by default 
+			' Columns 9-11:           Position x, y, and z 
+			' Columns 12-14:          Velocity Vx, Vy, Vz 
+			' Column 15:              GPS week 
+			' Column 16:              GPS seconds 
+			' Column 17:              GPS clock bias 
+			' Column 18:              GPS clock bias rate 
+			' Column 19:              Number of GPS satellites used in position fix 
+			' Column 20:              GDOP 
+			' Column 21:              Validity of position fix (0= No position fix, 1=2D fix, 2=3D fix) 
+			'
+			' sample data			
+			' 10      0 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 1124226.8750000000 -1404203.7500000000 6768080.5000000000 -7113.3779296875 2173.8122558594 1620.2662353516 1612 175304.9999997951 2.524439e+000 -4.174012e+001    4 11.5000000000    2
+			' 10      0 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 695998.3125000000 -1269090.0000000000 6851136.0000000000 -7156.2431640625 2328.5239257813 1146.8575439453 1612 175365.0000012382 -7.315258e-001 -4.842778e+001    4 5.0999999046    2
+			' 10      0 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 624413.6250000000 -1245681.1250000000 6862205.0000000000 -7160.3593750000 2353.3835449219 1067.7208251953 1612 175374.9999999374 -1.701561e+000 -4.953674e+001    4 5.0999999046    2
+			' 10      0 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 0.0000000000 552793.3750000000 -1222024.1250000000 6872486.5000000000 -7163.6386718750 2378.0505371094 987.9923095703 1612 175384.9999999942 -4.668593e-001 -5.031676e+001    4 5.0999999046    2
+
+			line = Trim(m_Stream.ReadLine)
+
+			if line <> "" then
+				Dim lineSplit
+				lineSplit = GetData(line)
+
+
+				Dim xPos, yPos, zPos
+				Dim xVel, yVel, zVel
+				Dim gpsWeek, gpsSec, gpsClockBias, gpsClockBiasRate, valid
+
+
+				xPos		= lineSplit(8)
+				yPos		= lineSplit(9)
+				zPos		= lineSplit(10)
+
+				xVel		= lineSplit(11)
+				yVel		= lineSplit(12)
+				zVel		= lineSplit(13)
+
+				gpsWeek		= lineSplit(14)
+				gpsSec		= lineSplit(15)
+				gpsClockBias= lineSplit(16)
+				gpsClockBiasRate= lineSplit(17)
+				valid		= lineSplit(20)
+
+				' ignore all non-3D fixes
+				if valid = 2 then
+	
+					Dim gpsTime
+					gpsTime = gpsWeek & ":" & gpsSec
+
+					'-------------------------------------------------------------------------
+					' Initialize observation and obs set
+					'-------------------------------------------------------------------------
+					pObsSet.Clear()
+					pObsSet.Date.Unit	= "GPS"
+					pObsSet.Date.Value	= gpsTime
+
+					pObs.Date.Unit	= "GPS"
+					pObs.Date.Value	= gpsTime
+
+					pObs.TimeOrigin	= eGroundReceiveTime
+
+
+					' specify tracker and trackee
+					pObs.TrackerIDs.Clear()
+					pObs.TrackerIDs.Insert 0, 800  		' Facility must be first item
+					'pObs.TrackerIDs.Insert 1, satID			' Satellite follows Facility
+
+
+					' xPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "m"
+					pObs.Value.Value		= xPos
+					pObs.CartesianComponent	= eXComp
+					pObsSet.Add pObs
+
+					' yPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "m"
+					pObs.Value.Value		= yPos
+					pObs.CartesianComponent	= eYComp
+					pObsSet.Add pObs
+
+					' zPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "m"
+					pObs.Value.Value		= zPos
+					pObs.CartesianComponent	= eZComp
+					pObsSet.Add pObs
+
+
+	'				' xVel
+	'				pObs.MeasureType		= eMTGPSNav_C1
+	'				pObs.Value.Unit			= "m/sec"
+	'				pObs.Value.Value		= xVel
+	'				pObs.CartesianComponent	= eXDComp
+	'				pObsSet.Add pObs
+	'
+	'				' yVel
+	'				pObs.MeasureType		= eMTGPSNav_C1
+	'				pObs.Value.Unit			= "m/sec"
+	'				pObs.Value.Value		= yVel
+	'				pObs.CartesianComponent	= eYDComp
+	'				pObsSet.Add pObs
+	'
+	'				' zPos
+	'				pObs.MeasureType		= eMTGPSNav_C1
+	'				pObs.Value.Unit			= "m/sec"
+	'				pObs.Value.Value		= zVel
+	'				pObs.CartesianComponent	= eZDComp
+	'				pObsSet.Add pObs
+
+					if debug <> 0 then
+						msgbox("Time: " & gpsTime & (Chr(13)& Chr(10)) & "X: " & xPos & (Chr(13)& Chr(10)) & "Y: " & yPos & (Chr(13)& Chr(10)) & "Z: " & zPos)
+					end if
+
+
+					'-------------------------------------------------------------------------
+					' Any Valid Meas? 
+					'-------------------------------------------------------------------------
+
+					If pObsSet.Count > 0 Then
+						numSets = numSets + 1
+						setColl.Add pObsSet
+					End If
+					
+				End If		' end valid == 2
+				
+			End If			' end line <> ""	
+			
+		Loop
+
+        GetObsSet = numSets
+
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+		
+    End Function
+
+
+
+
+    '-------------------------------------------------------------------------
+	' split data on spaces
+    '-------------------------------------------------------------------------
+
+	Private Function GetData(strSource)    
+		With CreateObject("vbscript.regexp")        
+			.Global = True        
+			.Pattern = "\s+"        
+			GetData = Split(.Replace(strSource, " "), " ")    
+		End With
+	End Function 
+
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        GetSupportedObsSet = 0
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+	Function SaveObs(pEnum, bAppend)
+		SaveObs = 0
+	End Function
+
+
+	Function GetRegKey (regKey)
+		Dim objShell
+		Set objShell = CreateObject("WScript.Shell")
+		regValue = objShell.RegRead(regKey)
+		Set objShell = nothing
+	End Function
+
+]]>
+</script>
+
+</component>
+

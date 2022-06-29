@@ -1,0 +1,518 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================== -->
+<!--  ODTK data reader for SRI formatted measurements      -->
+<!--                                                       -->
+<!--  author: Tom Johnson 22 Sep 2014                      -->
+<!-- ===================================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="SRI Format reader"
+    progid="WscVBS.SRI.OD6.wsc"
+    version="1.00"
+    classid="{6250E95A-B728-4110-A41D-A8E4CA35E440}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+  <method name="CloseFile"/>
+
+  <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+   '-------------------------------------------------------------------------
+   ' Define equinox epoch constants
+   '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxEpoch = -1
+    const eJ2000Epoch          =  0
+    const eB1950Epoch          =  1
+    const eOfDate              =  2
+    const eYearOfObsJan0       =  3
+
+    '-------------------------------------------------------------------------
+    ' Define equinox type constants
+    '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxType     = -1
+    const eMeanEquatorAndEquinox  =  0
+    const eTrueEquatorAndEquinox  =  1
+    const eTrueEquatorMeanEquinox =  2
+    const eICRFEquinoxType		  =  3
+	
+    '-------------------------------------------------------------------------
+	' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+
+    Dim m_sfileSysObj, m_Stream, m_sFileName, m_Satellite, m_Facility, m_MeasType
+
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+    m_sFileName = ""
+
+    '-------------------------------------------------------------------------
+	' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+
+    dim oRegExp, oMatches, oMatch
+
+	Set oRegExp = new RegExp
+
+    '-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+
+    Set pObsSet = CreateObject(ObjectStr)
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+
+
+    ' Define the speed of light (m/s)
+
+    const AgCSpeedOfLight = 2.997924580000000E+08
+	
+   '-------------------------------------------------------------------------
+   ' Function GetFileName()
+   '-------------------------------------------------------------------------
+
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+
+        If newFile Then
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+        Else
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+        End If
+
+    End Function
+
+	'-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        Dim numSets, line, fields, format, dateStr, satID, facID, isUCT
+		Dim trackerID, autotrack, azimuth, elevation, range, doppler
+		Dim iono_corr, tropo_corr, pulse_count, pulse_width, prf, snr
+		Dim interval, rcs
+		Dim xmt_freq, rcv_freq, i
+		Dim ra, dec, coord_sys, integration, vis_mag
+
+        numSets = 0
+        pObsSet.Clear
+		pObs.Date.unit  = "ISO-YMD"
+		pObsSet.Date.unit  = "ISO-YMD"
+		pObs.TimeOrigin = eGroundReceiveTime
+						
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+			
+            line = m_Stream.ReadLine
+
+			' Make sure we skip any comments
+			
+			oRegExp.Pattern = "^\s*#"
+		    set oMatches = oRegExp.Execute(line)
+		    if (oMatches.Count = 0) then
+			
+				fields = split(line, ",")
+				
+				' Sample observation line below. A full description of the format is 
+				' in the interface document between AGI and SRI.
+				' 1, 2014-09-18T23:45:43.100333, pfisr, 00134, 1, 0, 121.610000, 68.040000, 927672.693050, 1022.329951, 0.000000, 0.000000, 1, 0.001900, 50.000000, 25.073354, 449000000.000000, 449000000.000000
+				
+				' Clean up the white space.
+				
+				for i = 0 to UBound(fields)
+					fields(i) = trim(fields(i))
+				next
+				
+				' Check to see if we got the first 5 fields correctly
+				
+				if (UBound(fields) > 4) then
+								
+					format  	= fields(0)
+					dateStr 	= fields(1)				
+					facID   	= fields(2)
+					satID   	= fields(3)				
+					isUCT   	= fields(4)
+					
+					pObs.Date = dateStr
+					pObsSet.Date = dateStr
+					
+					' Bit of a hard coded hack here.
+					
+					if (facID = "pfisr") then
+						trackerID = 5001
+					elseif (facID = "ATA") then
+						trackerID = 5002
+					elseif (facID = "TFN-AQWA-0M4A-KB29") then
+						trackerID = 6001
+					elseif (facID = "lsc_aqwa_0m4a_kb81") then
+						trackerID = 6002			
+					elseif (facID = "lsc_aqwa_0m4a_kb93") then
+						trackerID = 6002	
+					end if
+						
+					pObs.TrackerIDs.Clear
+					pObs.TrackerIDs.Insert 0, trackerID
+					pObs.TrackerIDs.Insert 1, CLng(satID)
+										
+					if (format = 1 and UBound(fields) >= 17) then
+					
+						autotrack	= fields(5)
+						azimuth     = fields(6)
+						elevation	= fields(7)
+						range     	= fields(8)
+						doppler     = fields(9)
+						iono_corr  	= fields(10)
+						tropo_corr  = fields(11)
+						pulse_count	= fields(12)
+						pulse_width = fields(13)
+						interval	= fields(14)
+						snr		  	= fields(15)
+						rcs		  	= fields(16)
+						xmt_freq    = fields(17)
+						rcv_freq    = fields(18)
+						
+						'pObs.LinkFreqs.clear()
+						'pObs.LinkFreqs.insert 0, xmt_freq
+						'pObs.LinkFreqs.insert 1, rcv_freq
+						
+						' Check to see if ionosphere and troposphere corrections have already been applied. 
+						' If so, then we don't want ODTK to apply them again.
+						
+						if (iono_corr <> 0) then  
+							pObs.ModelIon = false
+						end if
+						
+						if (tropo_corr <> 0) then  
+							pObs.ModelTropo = false
+						end if
+						
+						
+						'/// Range ///
+						
+						pObs.MeasureType  = eMTRange
+						pObs.value.Unit   = "m"
+						pObs.value        = range
+						pObsSet.Add pObs
+
+						'/// Doppler ///
+						
+						pObs.MeasureType  = eMTDoppler
+						pObs.value.Unit   = "m/sec"
+						pObs.value        = doppler
+						'pObs.Doppler_dt   = 
+						pObsSet.Add pObs
+						
+						if (autotrack = 1) then
+						
+							'/// Azimuth ///
+							
+							pObs.MeasureType  = eMTAzimuth
+							pObs.value.Unit   = "deg"
+							pObs.value        = azimuth
+							pObsSet.Add pObs
+							
+							'/// Elevation ///
+							
+							pObs.MeasureType  = eMTElevation
+							pObs.value.Unit   = "deg"
+							pObs.value        = elevation
+							pObsSet.Add pObs
+						end if
+						
+						numSets = numSets + 1
+						setColl.Add pObsSet
+						
+					end if
+					
+					' RF RA/DEC format
+					
+					if (format = 2 and UBound(fields) >= 12) then
+					
+						coord_sys	= fields(5)
+						ra     		= fields(6)
+						dec			= fields(7)
+						frequency  	= fields(8)
+						bandwidth   = fields(9)
+						integration = fields(10)
+						vis_mag     = fields(11)
+								
+						if (coord_sys = 0) then ' are we J2000 frame?
+						
+							pObs.EquinoxEpoch = eJ2000Epoch
+							pObs.EquinoxType = eMeanEquatorAndEquinox
+							
+						elseif (coord_sys = 1) then ' are we ICRF
+						
+							pObs.EquinoxEpoch = eJ2000Epoch
+							pObs.EquinoxType = eICRFEquinoxType
+							
+						elseif (coord_sys = 2) then ' are we TEME of Date?
+						
+							pObs.EquinoxEpoch = eOfDate
+							pObs.EquinoxType = eTrueEquatorMeanEquinox
+							
+						end if ' if we aren't any of these then we'll use the ODTK defaults
+							
+						'/// Right Ascension ///
+						
+						pObs.MeasureType  = eMTRightAscension
+						pObs.value.Unit   = "deg"
+						pObs.value        = ra
+						pObsSet.Add pObs
+
+						'/// Declination ///
+						
+						pObs.MeasureType  = eMTDoppler
+						pObs.value.Unit   = "deg"
+						pObs.value        = dec
+						pObsSet.Add pObs
+												
+						numSets = numSets + 1
+						setColl.Add pObsSet
+					
+					end if
+					
+					' Optical RA/DEC format
+					
+					if (format = 3 and UBound(fields) >= 8) then
+					
+						coord_sys	= fields(5)
+						ra     		= fields(6)
+						dec			= fields(7)
+						vis_mag     = fields(8)
+								
+						if (coord_sys = 0) then ' are we J2000 frame?
+						
+							pObs.EquinoxEpoch = eJ2000Epoch
+							pObs.EquinoxType = eMeanEquatorAndEquinox
+							
+						elseif (coord_sys = 1) then ' are we ICRF
+						
+							pObs.EquinoxEpoch = eJ2000Epoch
+							pObs.EquinoxType = eICRFEquinoxType
+							
+						elseif (coord_sys = 2) then ' are we TEME of Date?
+						
+							pObs.EquinoxEpoch = eOfDate
+							pObs.EquinoxType = eTrueEquatorMeanEquinox
+							
+						end if ' if we aren't any of these then we'll use the ODTK defaults
+							
+						'/// Right Ascension ///
+						
+						pObs.MeasureType  = eMTRightAscension
+						pObs.value.Unit   = "deg"
+						pObs.value        = ra
+						pObsSet.Add pObs
+
+						'/// Declination ///
+						
+						pObs.MeasureType  = eMTDeclination
+						pObs.value.Unit   = "deg"
+						pObs.value        = dec
+						pObsSet.Add pObs
+												
+						numSets = numSets + 1
+						setColl.Add pObsSet
+					
+					end if
+				end if			
+			end if
+        Loop
+
+        GetObsSet = numSets
+
+    End Function
+    
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+	    Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+]]>
+</script>
+
+</component>
+

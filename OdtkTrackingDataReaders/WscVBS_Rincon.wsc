@@ -1,0 +1,414 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================== -->
+<!--  Copyright 2006, Analytical Graphics, Inc.            -->
+<!--                                                       -->
+<!--  This file sets up the ODTK reader for AFTest         -->
+<!--                                                       -->
+<!--  http://www.guidgenerator.com/                        -->
+<!--                                                       -->
+<!--  dvallado  14 jan 2014                                -->
+<!-- ===================================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="Rincon Format"
+    progid="WscVBS_Rincon.wsc"
+    version="1.00"
+    classid="{d2112e25-2282-4893-a00b-bbe02f2dfd52}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="CloseFile"/>
+   
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+    
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+    Const eMTGround_TDOA      =  133   
+    Const eMTGround_FDOA      =  134 
+
+    '-------------------------------------------------------------------------
+    ' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+    
+    Dim m_sfileSysObj, m_Stream, m_sFileName
+    
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+    
+    m_sFileName       = ""
+
+    ' Define the speed of light (m/s)
+
+    const AgCSpeedOfLight = 2.997924580000000E+08
+
+    '-------------------------------------------------------------------------
+    ' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+    
+    dim oRegExp, oMatches, oMatch
+    
+    Set oRegExp = new RegExp
+
+
+    '-------------------------------------------------------------------------
+    ' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+    
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+    
+    Set pObsSet = CreateObject(ObjectStr)
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+
+   '-------------------------------------------------------------------------
+   ' Function GetFileName()
+   '-------------------------------------------------------------------------
+    
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+            
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+    
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+        If newFile Then        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+        Else        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)          
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+        
+    End Function
+    
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        dim date, line, year, mon, day, hours, mins, secs, range, station, satellite
+        dim deltaRng, deltaRngRate, sen1, sen2, numsets, meas_type, freq, emitter
+        
+        numSets = 0
+        pObsSet.Clear
+        
+        
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+
+            line = m_Stream.ReadLine
+            
+            '-------------------------------------------------------------------------
+            ' parse the line (see sample below'
+            '
+            '2015:03:02::19:15:33.991604 -2.500329146650375e+06 2.195919796358400e+01 8.673039011862309e+01 2.723750796880507e-04 CTU_ESP 0.0 CCH_ESP 0.0 78001 4199000000.024214267731 2015:03:02::19:20:03.764960 20.19 0 0 0
+            '-------------------------------------------------------------------------
+
+            oRegExp.pattern = "^\s?(\d{4}):(\d{2}):(\d{2})::(\d{2}):(\S+):(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S{3})\S+\s+\S+\s+(\S{3})\S+\s+\S+\s+(\S+)\s+(\S+)"
+            oRegExp.global = false
+            set oMatches = oRegExp.Execute(line)
+  
+            if oMatches.Count > 0 then
+            
+                year         = oMatches(0).submatches(0) 
+                mon          = oMatches(0).submatches(1) 
+                day          = oMatches(0).submatches(2) 
+                hours        = oMatches(0).submatches(3) 
+                mins         = oMatches(0).submatches(4) 
+                secs         = oMatches(0).submatches(5) 
+                deltaRng     = oMatches(0).submatches(6) ' Delta Range = TDOA * C
+                deltaRngRate = oMatches(0).submatches(8) ' Delta Range Rate = FDOA * c / frequency
+                sen1         = oMatches(0).submatches(10) 
+                sen2         = oMatches(0).submatches(11) 
+                satellite    = oMatches(0).submatches(12) 
+                freq         = oMatches(0).submatches(13) 
+                                
+                ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+                ' EACH SATELLITE HAS TWO EMMITERS> NEED TO FIGURE OUT WHICH ONE THIS MEASUREMENT GOES WITH
+                ' Spacecraft                        TLM1 Frequency  TLM2 Frequency
+                ' F1 (702SPA1) On-station TM path   4194.5 MHz      4197.0 MHz
+                ' F1 (702SPA1) Back-up TM path      4194.5 MHz      4197.0 MHz
+                ' F2 (702SPB1) On-station TM path   4199.0 MHz      4199.8 MHz
+                ' F2 (702SPB1) Back-up TM path      4199.0 MHz      4199.8 MHz
+                '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+				
+                if satellite = 78001 or satellite = 79001 then
+                    if freq < 4199400000 then
+                        emitter = 780010
+                    else
+                        emitter = 780011
+                    end if
+                end if
+                
+                if satellite = 78000 or satellite = 79000 then
+                    if freq < 4196500000 then
+                        emitter = 780000
+                    else
+                        emitter = 780001
+                    end if
+                end if
+
+                ' msgbox(deltaRng & " " & deltaRngRate & " " & freq)
+                
+                ' diagnostic   = 1.0 * oMatches(0).submatches(12) 
+
+				'-------------------------------------------------------------------------
+				' Reassemble the date into a UTCJFOUR format.  This is the closest
+				' representation to what was input and avoids messy date
+				' conversion code.  Let ODTK do the work!
+				'-------------------------------------------------------------------------
+				
+				date =  year & "/" & mon & "/" & day & " " & hours & ":" & mins & ":" & secs
+
+				'-------------------------------------------------------------------------
+				' Initialize observation and obs set
+				'-------------------------------------------------------------------------
+				
+				pObsSet.Clear()
+				pObsSet.Date.unit = "YYYY/MM/DD"
+				pObsSet.Date      = date
+				
+				'-------------------------------------------------------------------------
+				' Initialize observation
+				'-------------------------------------------------------------------------
+				
+				pObs.Date.unit = "YYYY/MM/DD"
+				pObs.Date      = date
+				pObs.TimeOrigin = eGroundReceiveTime
+
+				'-------------------------------------------------------------------------
+				' Set up facility and satellite IDs
+				' In TrackerIDs list: facility must come first
+				'-------------------------------------------------------------------------
+				pObs.TrackerIDs.Clear()
+				
+				Select Case sen1
+					 case "CTU"  sen1 = 991
+					 case "CDE"  sen1 = 992
+					 case "CCH"  sen1 = 993
+				end select
+				Select Case sen2
+					 case "CTU"  sen2 = 991
+					 case "CDE"  sen2 = 992
+					 case "CCH"  sen2 = 993
+				end select
+				
+				' For TDOA, TDOA Dot and FDOA measurements, 
+				' the first tracking ID is the ID of the emitter, 
+				' the second (path 1) and third (path 2) IDs are the IDs of the relay satellites and 
+				' the fourth ID is the ID of the receive station. 
+				' The measurements are time tagged based on signal reception on path 1 and are computed as (path 2 minus path 1).
+				
+				station = sen1 & sen2
+				
+				pObs.TrackerIDs.Insert 0, emitter    
+				pObs.TrackerIDs.Insert 1, sen2          
+				pObs.TrackerIDs.Insert 2, station   
+
+				pObs.MeasureType  = eMTGround_TDOA
+				pObs.value.Unit   = "sec"
+				pObs.value        = -deltaRng / AgCSpeedOfLight 
+				pObsSet.Add pObs
+
+				pObs.MeasureType  = eMTGround_FDOA
+				pObs.value.Unit   = "Hz"
+				pObs.value        = deltaRngRate * freq / AgCSpeedOfLight 
+				pObsSet.Add pObs  
+				
+				'-------------------------------------------------------------------------
+				' Any Valid Meas? 
+				'-------------------------------------------------------------------------
+				
+				If pObsSet.Count > 0 Then
+					numSets = numSets + 1
+					setColl.Add pObsSet
+				End If
+                 
+            End If  
+            
+        Loop
+        
+        GetObsSet = numSets
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+        Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+]]>
+</script>
+
+</component>
+

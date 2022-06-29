@@ -1,0 +1,494 @@
+<?xml version="1.0"?>
+
+<!-- ======================================== -->
+<!--  This WSC is designed to read Bundeswehr -->
+<!--  custom tracking data format             -->
+<!--                                          -->
+<!--  author: jens ramrath, agi               -->
+<!--  date: 21 dec 2011                       -->
+<!-- ======================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="reads Bundeswehr tracking data files"
+    progid="TrkDataReader.Bundeswehr.ODTK6.wsc"
+    version="1.00"
+    classid="{4C3F1F30-7B3B-45c5-8F36-51CCB9FA9138}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+	'-------------------------------------------------------------------------
+	' Member variables
+	'-------------------------------------------------------------------------
+
+	Option explicit
+
+	Const ForReading   = 1
+	Const ForWriting   = 2
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    Const eMTGPSNav_C1		  = 81
+    Const eMTEphPos           = 151
+	
+	Const eXComp	= 0
+	Const eYComp	= 1
+    Const eZComp	= 2
+    Const eXDComp	= 3
+    Const eYDComp	= 4
+    Const eZDComp	= 5
+    
+    
+    Const eCBFCoordSys 		= 0 
+	Const eCBICoordSys 		= 1 
+	Const eJ2000CoordSys 	= 2 
+	Const eICRFCoordSys 	= 3 
+   
+
+	Const eGroundReceiveTime     = 0
+	Const eSatelliteTransmitTime = 1
+	Const eGroundTransmitTime    = 2
+	Const eSatelliteReceiveTime  = 3
+
+
+	'-------------------------------------------------------------------------
+	' define some global variables we'll be using
+	'-------------------------------------------------------------------------
+
+	Dim m_sfileSysObj, m_Stream, m_sFileName
+
+	Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+	m_sFileName       = ""
+
+	'-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+	'-------------------------------------------------------------------------
+
+	Dim version
+	version = "6.0"
+
+	Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+	versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+	GetRegKey(versionStr)
+
+	ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+	Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+	Dim pObsSet
+	ObjectStr = textFile.ReadLine
+	Set pObsSet = CreateObject(ObjectStr)
+
+	Dim pObs
+	ObjectStr = textFile.ReadLine
+	Set pObs = CreateObject(ObjectStr)
+
+	'-------------------------------------------------------------------------
+	' Function GetFileName()
+	'-------------------------------------------------------------------------
+
+	Function GetFileName()
+
+	   GetFileName = m_sFileName
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsSave property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsSave()
+
+	   GetSupportsSave = False
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsMultipleTrackers property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsMultipleTrackers()
+
+	   GetSupportsMultipleTrackers = True
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' Reset method
+	'-------------------------------------------------------------------------
+
+	Function Reset()
+
+		if m_sFileName <> "" Then
+
+			Dim newVal
+			newVal = m_sFileName
+			OpenFile newVal, False
+
+		End if
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' OpenFile method
+	'-------------------------------------------------------------------------
+
+	Function OpenFile(newVal, newFile)
+
+'		If m_sFileName <> "" Then
+'			m_Stream.Close
+'			m_sFileName = ""
+'		End If
+
+		m_sFileName = newVal
+
+'		If newFile Then        
+'			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+'		Else        
+'			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+'		End If
+
+
+
+	End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+	Dim firstRun
+	firstRun = 0
+
+
+    Function GetObsSet(setColl)
+		Dim line, numSets
+		Dim splitData, facID, satID
+        Dim value
+
+		numSets = 0
+        pObsSet.Clear
+
+		Dim debug
+		debug = 0
+
+		if firstRun = 0 then
+
+			' *********************************
+			' ***** read measurement file *****
+			' *********************************
+			' sample format:
+
+			' <?xml version="1.0" encoding="ISO8859-1" standalone="no" ?>
+			' <root>
+			' 
+			'   <EphemerisFile signature="2139315719" type="sbs::entity::EphemerisFile">
+			'     <satelliteId type="UnsignedLong">1</satelliteId>
+			'     <numberOfEphemerisPoints type="UnsignedLong">820</numberOfEphemerisPoints>
+			'     <pointStepsize type="Double">1.000000000000e+000</pointStepsize>
+			'     <scenarioEpochBegin type="LongLong">4321041020251799552</scenarioEpochBegin>
+			'     <scenarioEpochEnd type="LongLong">4321044537830014976</scenarioEpochEnd>
+			'     <statevectorEpoch type="LongLong">4320644659194888192</statevectorEpoch>
+			'     <centralBody type="String">Earth</centralBody>
+			'     <coordinateSystem type="String">J2000</coordinateSystem>
+			'     <ephemerisList signature="974989118" type="_sequence_sbs::entity::Ephemeris">
+			'       <size type="UnsignedInteger">820</size>
+			'       <ephemerisList_element count="0" signature="271274335" type="sbs::entity::Ephemeris">
+			'         <epoch type="LongLong">4321041020251799552</epoch>
+			'         <positionECI signature="1504222534" type="sbs::entity::Vector3D">
+			'           <x type="Double">-2.821711981791e+002</x>
+			'           <y type="Double">1.138471989137e+003</y>
+			'           <z type="Double">6.745904940532e+003</z>
+			'         </positionECI>
+			'         <velocityECI signature="1504222534" type="sbs::entity::Vector3D">
+			'           <x type="Double">7.154095148247e+000</x>
+			'           <y type="Double">-2.551427781746e+000</y>
+			'           <z type="Double">7.306611099793e-001</z>
+			'         </velocityECI>
+			'         <positionLLA signature="2250112156" type="sbs::entity::Coordinate">
+			'           <latitude type="Double">8.019655935894e+001</latitude>
+			'           <longitude type="Double">-7.948320234245e+001</longitude>
+			'           <altitude type="Double">4.897371034669e+002</altitude>
+			'         </positionLLA>
+			'       </ephemerisList_element>
+			' 
+			'       <ephemerisList_element count="819" signature="271274335" type="sbs::entity::Ephemeris">
+			'         <epoch type="LongLong">4321044537830014976</epoch>
+			'         <positionECI signature="1504222534" type="sbs::entity::Vector3D">
+			'           <x type="Double">4.910063028064e+003</x>
+			'           <y type="Double">-1.114231676655e+003</y>
+			'           <z type="Double">4.651990655885e+003</z>
+			'         </positionECI>
+			'         <velocityECI signature="1504222534" type="sbs::entity::Vector3D">
+			'           <x type="Double">4.637682361070e+000</x>
+			'           <y type="Double">-2.564599632317e+000</y>
+			'           <z type="Double">-5.485310772107e+000</z>
+			'         </velocityECI>
+			'         <positionLLA signature="2250112156" type="sbs::entity::Coordinate">
+			'           <latitude type="Double">4.291467139244e+001</latitude>
+			'           <longitude type="Double">1.603890370642e+002</longitude>
+			'           <altitude type="Double">4.867518988559e+002</altitude>
+			'         </positionLLA>
+			'       </ephemerisList_element>
+			'     </ephemerisList>
+			'   </EphemerisFile>
+			' 
+			' </root>
+
+
+			'-------------------------------------------------------------------------
+			' read the file
+			'-------------------------------------------------------------------------
+			Dim xmlDoc
+			Set xmlDoc = CreateObject("Microsoft.XMLDOM")
+			xmlDoc.async="false"
+			xmlDoc.load(m_sFileName)
+
+
+			'-------------------------------------------------------------------------
+			' header
+			'-------------------------------------------------------------------------
+			satID = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("satelliteId").Item(0).text
+
+			Dim numberOfEphemerisPoints
+			numberOfEphemerisPoints = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("numberOfEphemerisPoints").Item(0).text
+
+			Dim pointStepsize 
+			pointStepsize = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("pointStepsize").Item(0).text
+
+			Dim scenarioEpochBegin 
+			scenarioEpochBegin = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("scenarioEpochBegin").Item(0).text
+
+			Dim scenarioEpochEnd 
+			scenarioEpochEnd = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("scenarioEpochEnd").Item(0).text
+
+			Dim statevectorEpoch
+			statevectorEpoch = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("statevectorEpoch").Item(0).text
+
+			Dim centralBody
+			centralBody = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("centralBody").Item(0).text
+
+			Dim coordinateSystem
+			coordinateSystem = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("coordinateSystem").Item(0).text
+
+
+			'-------------------------------------------------------------------------
+			' measurements
+			'-------------------------------------------------------------------------
+			Dim ephemerisList
+			ephemerisList = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("ephemerisList").Item(0).text
+
+			Dim node, nodes
+			Set nodes = xmlDoc.getElementsByTagName("EphemerisFile").Item(0).getElementsByTagName("ephemerisList").Item(0)
+
+			for each node in nodes.childNodes
+
+				if node.nodename = "ephemerisList_element" then
+					Dim epoch
+					epoch = node.getElementsByTagName("epoch").Item(0).text
+
+					Dim gpsTime
+					gpsTime = wtf2UsefulEpoch(epoch)
+
+					Dim xPos, yPos, zPos
+					xPos = node.getElementsByTagName("positionECI/x").Item(0).text
+					yPos = node.getElementsByTagName("positionECI/y").Item(0).text
+					zPos = node.getElementsByTagName("positionECI/z").Item(0).text
+
+					Dim xVel, yVel, zVel
+					xVel = node.getElementsByTagName("velocityECI/x").Item(0).text
+					yVel = node.getElementsByTagName("velocityECI/y").Item(0).text
+					zVel = node.getElementsByTagName("velocityECI/z").Item(0).text
+
+
+					'-------------------------------------------------------------------------
+					' Initialize observation and obs set
+					'-------------------------------------------------------------------------
+					pObsSet.Clear()
+					pObsSet.Date.Unit	= "GPS"
+					pObsSet.Date.Value	= gpsTime
+
+					pObs.Date.Unit	= "GPS"
+					pObs.Date.Value	= gpsTime
+
+					pObs.TimeOrigin	= eGroundReceiveTime
+
+
+					' specify tracker and trackee
+					pObs.TrackerIDs.Clear()
+					'pObs.TrackerIDs.Insert 0, 1  		' Facility must be first item
+					pObs.TrackerIDs.Insert 0, satID		' Satellite follows Facility
+
+
+					' xPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "km"
+					pObs.Value.Value		= xPos
+					pObs.CartesianComponent	= eXComp
+					pObs.CartesianCoordSys	= eJ2000CoordSys
+					pObsSet.Add pObs
+
+					' yPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "km"
+					pObs.Value.Value		= yPos
+					pObs.CartesianComponent	= eYComp
+					pObs.CartesianCoordSys	= eJ2000CoordSys
+					pObsSet.Add pObs
+
+					' zPos
+					pObs.MeasureType		= eMTGPSNav_C1
+					pObs.Value.Unit			= "km"
+					pObs.Value.Value		= zPos
+					pObs.CartesianComponent	= eZComp
+					pObs.CartesianCoordSys	= eJ2000CoordSys
+					pObsSet.Add pObs
+
+
+					if debug <> 0 then
+						msgbox("Time: " & gpsTime & (Chr(13)& Chr(10)) & "X: " & xPos & (Chr(13)& Chr(10)) & "Y: " & yPos & (Chr(13)& Chr(10)) & "Z: " & zPos)
+					end if
+					'-------------------------------------------------------------------------
+					' Any Valid Meas? 
+					'-------------------------------------------------------------------------
+
+					If pObsSet.Count > 0 Then
+						numSets = numSets + 1
+						setColl.Add pObsSet
+					End If			
+
+				end if
+			next
+		end if
+
+		firstRun = firstRun + 1
+
+		if firstRun > 1 then
+			numSets = 0
+		end if
+
+        GetObsSet = numSets
+
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+
+		
+    End Function
+
+
+
+    '-------------------------------------------------------------------------
+	' convert epoch to something useful (GPS)
+    '-------------------------------------------------------------------------
+	Function wtf2UsefulEpoch(epoch)
+		Dim longHex
+		longHex = Dec2Hex(epoch)
+		
+		Dim shortHex
+		shortHex = Left(longHex, 8)
+		
+		Dim gpsSec
+		gpsSec = CLng("&h" & shortHex)
+		
+		wtf2UsefulEpoch = "0:" & gpsSec	
+	End Function
+
+
+	Private Function Dec2Hex(TempDec)
+		Dim TNo
+		Dec2Hex = "" 
+		Do 
+			TNo = TempDec - (Fix(TempDec / 16) * 16) 
+			If TNo > 9 Then 
+				Dec2Hex = Chr(55 + TNo) & Dec2Hex 
+			Else 
+				Dec2Hex = TNo & Dec2Hex 
+			End If 
+			TempDec = Fix(TempDec / 16) 
+		Loop Until (TempDec = 0) 
+	End Function 
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        GetSupportedObsSet = 0
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+	Function SaveObs(pEnum, bAppend)
+		SaveObs = 0
+	End Function
+
+
+	Function GetRegKey (regKey)
+		Dim objShell
+		Set objShell = CreateObject("WScript.Shell")
+		regValue = objShell.RegRead(regKey)
+		Set objShell = nothing
+	End Function
+
+]]>
+</script>
+
+</component>
+

@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+
+<!-- this script reads Harris csv 3-legged doppler data into ODTK -->
+<!-- author: jens ramrath                                         -->
+<!-- date: 21 nov 2016                                            -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="Harris 3L doppler format"
+    progid="WscVBS_Harris_csv.wsc"
+    version="1.00"
+    classid="{CC02D24B-A14F-42dc-9B4C-E903094B6A66}">
+</registration>
+
+<public>
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="CloseFile"/>
+   
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+    
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMT1WBistaticRange  = 3
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    
+    Const eMT3LDoppler        = 105
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+    Const eMTGround_TDOA      =  133   
+    Const eMTGround_FDOA      =  134 
+
+    '-------------------------------------------------------------------------
+    ' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+    Dim m_sfileSysObj, m_Stream, m_sFileName
+    
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+    
+    m_sFileName       = ""
+
+    ' Define the speed of light (m/s)
+    const AgCSpeedOfLight = 2.997924580000000E+08
+
+    '-------------------------------------------------------------------------
+    ' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+    dim oRegExp, oMatches, oMatch
+    
+    Set oRegExp = new RegExp
+
+
+    '-------------------------------------------------------------------------
+    ' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+    
+    Set pObsSet = CreateObject(ObjectStr)
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+
+   '-------------------------------------------------------------------------
+   ' Function GetFileName()
+   '-------------------------------------------------------------------------
+    Dim satellite
+    
+    Function GetFileName()
+
+       GetFileName = m_sFileName      
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+            
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+    Function OpenFile(newVal, newFile)
+    
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+        If newFile Then        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+        Else        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+        
+    End Function
+    
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+    Function GetObsSet(setColl)
+
+		dim dateTime, range, rangeRate, rangeRate3L, rangeRateIntTime
+		dim stationTxID, satelliteID, stationRxID, SatellteTranspID
+		Dim refFreq, tropFlag, ionFlag
+		
+        dim line, station
+        dim deltaRng, deltaRngRate, sen1, sen2, numsets, meas_type, freq, emitter
+        
+        numSets = 0
+        pObsSet.Clear
+        
+        
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+
+            line = m_Stream.ReadLine
+            
+            '-------------------------------------------------------------------------
+            ' parse the data (see sample below)
+			'			
+			' # DAS Receiver ID,1234,,,,,,,,,,
+			' # Time (UTC),Bistatic range (ns),Bistatic range rate (ns/s),3L Range rate (Hz),Range rate integration time (s),Tx antenna ID,Satellite ID,Rx antenna ID,Satellte transponder ID ,Reference frequency (MHz),Tropo modelling flag,Iono modelling flag
+			' 2017-01-25T19:20:30.45.000000000,265461701.9,-78.86,-180.385,1,1350,1411,10,3,2287.5,1,1
+			' 2017-01-25T19:20:30.46.000000000,265461623,-78.87,-180.415,1,1350,1411,10,3,2287.5,1,1
+            '-------------------------------------------------------------------------
+
+			' throw out comments
+			if left(Trim(line), 1) <> "#" AND left(Trim(line), 1) <> "," then
+				Dim lineSplit
+				lineSplit = Split(line, ",")
+
+				dateTime = lineSplit(0)			' DateTime (UTC)
+				range = lineSplit(1)			' Bistatic range (ns)
+				rangeRate = lineSplit(2)		' Bistatic range rate (ns/s)
+				rangeRate3L = lineSplit(3)		' 3L Range rate (Hz)
+				rangeRateIntTime = lineSplit(4)	' Range rate integration time (s)
+				stationTxID = lineSplit(5)		' Tx antenna ID
+				satelliteID = lineSplit(6)		' Satellite ID
+				stationRxID = lineSplit(7)		' Rx antenna ID
+				satellteTranspID = lineSplit(8)	' Satellte transponder ID
+				refFreq = lineSplit(9)			' Reference frequency (MHz)
+				tropFlag = lineSplit(10)		' Tropo modelling flag
+				ionFlag = lineSplit(11)			' Iono modelling flag
+				
+
+				'-------------------------------------------------------------------------
+				' Initialize observation and obs set
+				'-------------------------------------------------------------------------
+				pObsSet.Clear()
+				pObsSet.Date.unit = "ISO-YMD"
+				pObsSet.Date      = dateTime
+
+				'-------------------------------------------------------------------------
+				' Initialize observation
+				'-------------------------------------------------------------------------
+				pObs.Date.unit  = "ISO-YMD"
+				pObs.Date       = dateTime
+				pObs.TimeOrigin = eGroundReceiveTime
+
+				'-------------------------------------------------------------------------
+				' Set up facility and satellite IDs
+				' In TrackerIDs list: facility must come first
+				'-------------------------------------------------------------------------
+				pObs.TrackerIDs.Clear()
+
+				pObs.TrackerIDs.Insert 0, stationTxID
+				pObs.TrackerIDs.Insert 1, satellteTranspID
+				pObs.TrackerIDs.Insert 2, stationRxID
+
+				pObs.MeasureType  = eMT1WBistaticRange
+				pObs.value.Unit   = "m"
+				pObs.value        = range * AgCSpeedOfLight / 1000.0 / 1000.0 / 1000.0		' conver ns to m
+				pObsSet.Add pObs
+
+				pObs.MeasureType  = eMT3LDoppler
+				pObs.Doppler_Dt   = rangeRateIntTime
+				pObs.Fref         = refFreq * 1000.0 * 1000.0	' convert MHz to Hz
+				pObs.ModelIon     = tropFlag * (-1.0)			' in vbs, -1 = true and 0 = false
+				pObs.ModelTrop    = ionFlag * (-1.0)			' in vbs, -1 = true and 0 = false
+				pObs.value.Unit   = "Hz"
+				pObs.value        = rangeRate3L
+				pObsSet.Add pObs
+
+				
+				'-------------------------------------------------------------------------
+				' Any Valid Meas? 
+				'-------------------------------------------------------------------------
+				If pObsSet.Count > 0 Then
+					numSets = numSets + 1
+					setColl.Add pObsSet
+				End If
+
+			 end if		' ignore comment
+            
+        Loop
+        
+        GetObsSet = numSets
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+        Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+]]>
+</script>
+
+</component>
+

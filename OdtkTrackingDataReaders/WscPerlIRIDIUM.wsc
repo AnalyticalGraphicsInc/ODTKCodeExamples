@@ -1,0 +1,700 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="IRIDIUM Format"
+    progid="WscPerlIRIDIUM.wsc"
+    version="1.00"
+    classid="{F6AB33C5-3EBE-4cd0-9C85-781699E66C05}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="PerlScript">
+<![CDATA[
+
+    #-------------------------------------------------------------------------
+    # Member variables
+    #-------------------------------------------------------------------------
+
+    # Must be running under Perl 5.6.1 for support of the Win32:OLE package.
+
+    require 5.6.1;
+
+    use strict;
+    use Win32;
+    use Win32::TieRegistry( Delimiter=>"/", ArrayValues=>0 );
+    use Win32::OLE;
+    use Win32::OLE::Variant;
+    use Time::HiRes;
+    use Time::LocalTime;
+    use POSIX qw(floor);
+
+    #-------------------------------------------------------------------------
+    # Establish a few handy constants
+    #-------------------------------------------------------------------------
+
+    use constant eMTRange               => 1;
+    use constant eMTDoppler             => 2;
+    use constant eMTAzimuth             => 11;
+    use constant eMTElevation           => 12;
+    use constant eMaxMT                 => 13;
+
+    use constant eGroundReceiveTime     => 0;
+    use constant eSatelliteTransmitTime => 1;
+    use constant eGroundTransmitTime    => 2;
+    use constant eSatelliteReceiveTime  => 3;
+
+    use constant AgCMinRange => 5.0e4;
+    use constant AgCMaxRange => 1.0e8;
+
+    # Define a blocking factor for how many lines we read at a time
+    # from the file.
+
+    use constant AgCBlockingFactor => 500;
+
+	# Define the speed of light (m/s)
+
+	use constant AgCSpeedOfLight => 2.997924580000000E+08;
+
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to pop up message boxes to
+    # assist in debugging.
+    #-------------------------------------------------------------------------
+
+    use constant AgCDebugFlag => 0;
+
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to log all functions calls from ODTK into
+    # this script.
+    #-------------------------------------------------------------------------
+
+    use constant AgCLogCalls => 0;
+
+    #-------------------------------------------------------------------------
+    # Now for a few global vars ...
+    #-------------------------------------------------------------------------
+
+    my ($regValue) = GetRegKey();
+
+    my $ODDBFilename;
+
+    $ODDBFilename = $regValue . "/ODTK/AppData/Scripts/MeasProviders/WindowsScriptComponents/" . "CreatODDBObjects.txt";
+    #Win32::MsgBox "ODDBFilename = $ODDBFilename\n";
+    open (IFH, "< $ODDBFilename");
+    my $AgODObsSetStr = <IFH>;
+    chomp $AgODObsSetStr;
+    my $AgODGenericObsStr = <IFH>;
+    chomp $AgODGenericObsStr;
+    close (IFH);
+
+	my $pObsSet = Win32::OLE->new("$AgODObsSetStr") or die "new failed\n";
+    my $pRangeObs = Win32::OLE->new("$AgODGenericObsStr") or die "new failed";
+    my $pAngleObs = Win32::OLE->new("$AgODGenericObsStr") or die "new failed";
+
+    my $filename = "";
+    my $firstObs = 1;
+
+    #-------------------------------------------------------------------------
+    # Filename property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetFileName
+    {
+    	LogCalls("GetFileName", $filename);
+
+        if (AgCDebugFlag)
+        {
+            #Win32::MsgBox "GetFileName $filename", 0;
+        }
+
+        return $filename;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsMultipleTrackers property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsMultipleTrackers
+    {
+        # Used only when SaveObs is supported (GetSupportsSave returns true), - stub out
+
+    	LogCalls("GetSupportsMultipleTrackers");
+
+        if (AgCDebugFlag)
+        {
+        	#Win32::MsgBox "GetSupportsMultipleTrackers", 0;
+        }
+
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsSave property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsSave
+    {
+        # Writing out observation files is not supported
+
+    	LogCalls("GetSupportsSave");
+
+        if (AgCDebugFlag)
+        {
+            #Win32::MsgBox "GetSupportsSave", 0;
+        }
+
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # Reset method
+    #-------------------------------------------------------------------------
+
+    sub Reset
+    {
+
+    	LogCalls("Reset", $filename);
+
+        if (AgCDebugFlag)
+        {
+            #Win32::MsgBox  "Reset ${filename}", 0;
+        }
+
+		SkipHeader();
+
+        # Reset first observation flag (for debugging purposes)
+
+        $firstObs = 1;
+
+    }
+
+    #-------------------------------------------------------------------------
+    # OpenFile method
+    #-------------------------------------------------------------------------
+
+    sub OpenFile
+    {
+        my ( $newVal, $newFile ) = @_ ;
+
+        $filename = $newVal;
+
+    	LogCalls("OpenFile", $filename);
+
+        if ($newFile)
+        {
+            open(FP, ">$filename") or die "Unable to create file $filename for writing\n";
+        }
+        else
+        {
+            open(FP, "<$filename") or die "Unable to open file $filename for reading\n";
+        }
+
+		# Set the file to operate in binary mode, otherwise you will get burned
+		# by UNIX vs WINDOWS line ending differences;
+
+		binmode(FP);
+
+    }
+
+    #-------------------------------------------------------------------------
+    # GetObsSet method
+    #-------------------------------------------------------------------------
+
+    sub GetObsSet
+    {
+        # Grab my obsSet collection so I know what to add obsSets to
+
+        my $setCollection = $_[0];
+
+        my ($line);
+        my ($ETid, $SVid, $TOADscale, $TOADJDate, $TOADsecs, $TODTscale, $TODTJdate, $TODTsecs);
+   		my ($DTOAsv , $DTOAet, $anglescale, $angleJDate, $anglesecs, $autotrack, $azimuth, $elevation);
+   		my ($linkID, $rangeFlag, $anglesFlag, $clockFlag, $clockcompFlag, $estRangeFlag, $Nframes);
+   		my ($deltaRange, $range, $DTOAfirst, $i);
+   		my ($deltaDays, $wholeWeeks, $seconds);
+
+		# Keep track of the number of observation sets.
+		my($num_obsSets) = 0;
+
+        while (($num_obsSets < AgCBlockingFactor) and ($line = <FP>))
+        {
+            #-------------------------------------------------------------------------
+            # Parse input record
+            #
+            # Sample input line below
+            # 0 249 1 SV067 2 2453749 3370.150294866562 2 2453749 3370.142 -1.312e-05 0.001404797 2 2453749 3370.226600000858 1 3.946259320106183 0.1435184169346427 1 1 1 1 0 0 2 54.08798402128741 4.75e-08 379
+            #-------------------------------------------------------------------------
+
+
+            chomp $line;
+
+            if ($line =~ m|
+            	^(\d)				# Real time tracking data flag, typically 0
+            	\s+
+            	(\d+)				# TTAC site identifier for Satellite Control (Comet)
+            	\s+
+            	(\d+)				# ET identifier for Orbit Services
+            	\s+SV
+            	(\d+)				# SV identifier
+            	\s+
+            	(\d)				# time-of-day time scale flag for following Julian Day and Seconds "2" identifies the related time is in GPST
+            	\s+
+            	(\S+)				# TOAD Julian date
+            	\s+
+            	(\S+)				# TOAD Julian time of day in seconds
+            	\s+
+            	(\d)				# time-of-day time scale flag for following Julian Day and Seconds "2" identifies the related time is in GPST
+            	\s+
+            	(\S+)				# TODT Julian date
+            	\s+
+            	(\S+)				# TODT Julian time of day in seconds
+            	\s+
+            	(\S+)				# DTOA SV (from satellite)
+            	\s+
+            	(\S+)				# DTOA ET (from earth terminal)
+            	\s+
+            	(\d)				# time-of-day time scale flag for following Julian Day and Seconds "2" identifies the related time is in GPST
+            	\s+
+            	(\S+)				# Angle Julian date
+            	\s+
+            	(\S+)				# Angle Julian time of day in seconds
+            	\s+
+            	(\d)				# autotrack flag
+            	\s+
+            	(\S+)				# azimuth (radians)
+            	\s+
+            	(\S+)				# elevation (radians)
+            	\s+
+            	(\d)				# link ID flag 1 = primary, 2 = secondary
+            	\s+
+            	(\d)				# range data good flag 1 = good, 0 = bad, will be 0 for 2nd link
+            	\s+
+            	(\d)				# angles data good flag 1 = good, 0 = bad, will be 0 for 2nd link
+            	\s+
+            	(\d)				# clock data good flag 1 = good, 0 = bad, will be 0 for 2nd link
+            	\s+
+            	(\d)				# clock range compensation flag 1 = using range compensation, 0 = not compensating for lack of dtoa on 2nd link
+            	\s+
+            	(\d)				# estimated range flag (secondary link only) meters
+            	\s+
+            	(\d)				# number of k-band frames that have elapsed between tranmission from SV to receipt on ground
+            	\s+
+            	(\S+)				# delta range primary (half of difference between the time from the ground to SV transmission and SV to ground transmission) = (SV_to_ground - ground_2_SV)/2, units = meters
+   				|x)
+   			{
+
+   				$ETid          =  $3;
+   				$SVid          =  $4;
+   				$TOADscale     =  $5;
+   				$TOADJDate     =  $6;
+   				$TOADsecs      =  $7;
+   				$TODTscale     =  $8;
+   				$TODTJdate     =  $9;
+   				$TODTsecs      = $10;
+   				$DTOAsv        = $11;
+   				$DTOAet        = $12;
+   				$anglescale    = $13;
+   				$angleJDate    = $14;
+   				$anglesecs     = $15;
+   				$autotrack     = $16;
+   				$azimuth       = $17;
+   				$elevation     = $18;
+   				$linkID        = $19;
+   				$rangeFlag     = $20;
+   				$anglesFlag    = $21;
+   				$clockFlag     = $22;
+   				$clockcompFlag = $23;
+   				$estRangeFlag  = $24;
+   				$Nframes       = $25;
+   				$deltaRange    = $26;
+
+				#-------------------------------------------------------------------------
+				# Because there are different time stamps for the DTOA data and the angle
+				# data, we'll have to create two observation sets.
+				#-------------------------------------------------------------------------
+
+				#-------------------------------------------------------------------------
+				# Create range measurement
+				#-------------------------------------------------------------------------
+
+				$range = AgCSpeedOfLight/2.0 * (0.009 * $Nframes + $DTOAsv - $DTOAet);
+
+				$pRangeObs->{TimeOrigin}    = eGroundReceiveTime;
+				$pRangeObs->{MeasureType}   = eMTRange;
+				$pRangeObs->{value}->{unit} = "m";
+				$pRangeObs->{value}         = $range;
+
+  				#-------------------------------------------------------------------------
+  				# Set up facility and satellite IDs
+  				# In TrackerIDs list: facility must come first
+  				#-------------------------------------------------------------------------
+
+  				$pRangeObs->{TrackerIDs}->Clear();
+  				$pRangeObs->{TrackerIDs}->Insert(0, $ETid);
+  				$pRangeObs->{TrackerIDs}->Insert(1, $SVid);
+
+				#-------------------------------------------------------------------------
+   				# Check to see if DTOA time stamp is using GPS time.  If so, we need to convert
+   				# it.  The beginning of the GPS clock is 6 Jan 1980 00:00:00 UTC which
+   				# corresponds to 2444244.5 Julian.
+ 				#-------------------------------------------------------------------------
+
+   				if ($TOADscale = 2)
+   				{
+   					# Calculate number of days since GPS time zero.
+
+   					$deltaDays = $TOADJDate - 2444244.5;
+
+   					# Convert it to GPS weeks.
+
+   					$wholeWeeks = POSIX::floor($deltaDays / 7);
+
+   					# Calculate number of seconds into the week.
+
+   					$seconds = ($deltaDays - $wholeWeeks * 7) * 86400 + $TOADsecs;
+
+   					$pRangeObs->{date}->{unit} = "GPS";
+   					$pRangeObs->{date}->{value} = "$wholeWeeks:$seconds";
+
+   				}
+   				else
+   				{
+					$pRangeObs->{date}->{unit} = "Julian";
+					$pRangeObs->{date}->{value} = $TOADJDate;
+   				}
+
+
+				#-------------------------------------------------------------------------
+				# Create angle measurement.  Since there are two of them, we'll just
+				# set up a common skeleton first.
+				#-------------------------------------------------------------------------
+
+				$pAngleObs->{TimeOrigin} = eGroundReceiveTime;
+
+  				#-------------------------------------------------------------------------
+  				# Set up facility and satellite IDs
+  				# In TrackerIDs list: facility must come first
+  				#-------------------------------------------------------------------------
+
+  				$pAngleObs->{TrackerIDs}->Clear();
+  				$pAngleObs->{TrackerIDs}->Insert(0, $ETid);
+  				$pAngleObs->{TrackerIDs}->Insert(1, $SVid);
+
+				#-------------------------------------------------------------------------
+   				# Check to see if the angle time stamp is using GPS time.  If so, we need to convert
+   				# it.  The beginning of the GPS clock is 6 Jan 1980 00:00:00 UTC which
+   				# corresponds to 2444244.5 Julian.
+				#-------------------------------------------------------------------------
+
+   				if ($anglescale = 2)
+   				{
+   					# Calculate number of days since GPS time zero.
+
+   					$deltaDays = $angleJDate - 2444244.5;
+
+   					# Convert it to GPS weeks.
+
+   					$wholeWeeks = POSIX::floor($deltaDays / 7);
+
+   					# Calculate number of seconds into the week.
+
+   					$seconds = ($deltaDays - $wholeWeeks * 7) * 86400 + $anglesecs;
+
+   					$pAngleObs->{date}->{unit} = "GPS";
+   					$pAngleObs->{date}->{value} = "$wholeWeeks:$seconds";
+
+   				}
+   				else
+   				{
+					$pAngleObs->{date}->{unit} = "Julian";
+					$pAngleObs->{date}->{value} = $angleJDate;
+   				}
+
+
+				#-------------------------------------------------------------------------
+   				# Now we have to check to see which measurements come first, the DTOA or
+   				# the angle data.  ODTK wants them to come in in time order. Before we compare
+   				# though we have to set the units to something that makes sense for numerical
+   				# comparisons.
+				#-------------------------------------------------------------------------
+
+   				$pRangeObs->{date}->{unit} = "ModJDate";
+   				$pAngleObs->{date}->{unit} = "ModJDate";
+
+   				if ($pRangeObs->{date}->{value} < $pAngleObs->{date}->{value})
+   				{
+   					$DTOAfirst = 1;
+   				}
+   				else
+   				{
+   					$DTOAfirst = 0;
+   				}
+
+   				# Run the loop twice so we can process the measurements in the
+   				# right order.
+
+   				for ($i=0; $i<2; $i++)
+   				{
+					#-------------------------------------------------------------------------
+					# Initialize observation set
+					#-------------------------------------------------------------------------
+
+					$pObsSet->Clear();
+
+   					if ($DTOAfirst)
+   					{
+						#-------------------------------------------------------------------------
+						# Let's process the range data
+						#-------------------------------------------------------------------------
+
+   						if ($rangeFlag == 1)
+   						{
+   							# Set time stamp to match the range time stamp
+
+							$pObsSet->{date}->{unit}  = $pRangeObs->{date}->{unit};
+							$pObsSet->{date}->{value} = $pRangeObs->{date}->{value};
+
+							#-------------------------------------------------------------------------
+							# Add range measurement
+							#-------------------------------------------------------------------------
+
+							if ($range >= AgCMinRange and $range < AgCMaxRange)
+							{
+								$pObsSet->Add($pRangeObs);
+
+								$setCollection->Add($pObsSet);
+								$num_obsSets++;
+							}
+						}
+
+						# Reset the flag so the other measurements get processed
+
+						$DTOAfirst = 0;
+
+					}
+					else
+					{
+						#-------------------------------------------------------------------------
+						# Now let's process the angle data
+						#-------------------------------------------------------------------------
+
+						if ($anglesFlag == 1)
+						{
+							#-------------------------------------------------------------------------
+							# Initialize observation set
+							#-------------------------------------------------------------------------
+
+							$pObsSet->{date}->{unit}  = $pAngleObs->{date}->{unit};
+							$pObsSet->{date}->{value} = $pAngleObs->{date}->{value};
+
+							#-------------------------------------------------------------------------
+							# Create azimuth measurement
+							#-------------------------------------------------------------------------
+
+							$pAngleObs->{MeasureType}   = eMTAzimuth;
+							$pAngleObs->{value}->{unit} = "rad";
+							$pAngleObs->{value}         = $azimuth;
+
+							$pObsSet->Add($pAngleObs);
+
+							#-------------------------------------------------------------------------
+							# Create elevation measurement
+							#-------------------------------------------------------------------------
+
+							$pAngleObs->{MeasureType}   = eMTElevation;
+							$pAngleObs->{value}->{unit} = "rad";
+							$pAngleObs->{value}         = $elevation;
+
+							$pObsSet->Add($pAngleObs);
+
+							$setCollection->Add($pObsSet);
+							$num_obsSets++;
+						}
+
+						# Reset the flag so the other measurements get processed
+
+						$DTOAfirst = 1;
+					}
+				}
+
+				#-------------------------------------------------------------------------
+				# Debug code
+				#-------------------------------------------------------------------------
+
+				if ($firstObs)
+				{
+					$firstObs = 0;
+
+					if (AgCDebugFlag)
+					{
+						Win32::MsgBox  "   DTOA Date:  ${TOADJDate} JDate ${TOADsecs} seconds\n" .
+						               "  Angle Date:  ${angleJDate} JDate ${anglesecs} seconds\n" .
+						               "  Delta Days:  ${deltaDays} \n" .
+						               " Whole weeks:  ${wholeWeeks}\n" .
+						               "     seconds:  ${seconds}\n" .
+						               "         GPS:  $wholeWeeks:$seconds\n" .
+									   "  Station ID:  ${ETid}\n" .
+									   "Satellite ID:  ${SVid}\n" .
+								       "      DTOAsv:  ${DTOAsv}\n" .
+							           "      DTOAet:  ${DTOAet}\n" .
+							           "           N:  ${Nframes}\n" .
+							           "     Azimuth:  ${azimuth}\n" .
+							           "   Elevation:  ${elevation}\n" .
+							           "       Range:  ${range}", 0;
+
+					}
+				}
+			}
+			else
+			{
+				LogCalls("GetObsSet","couldn't handle this line ->'$_'");
+			}
+
+        }
+
+    	LogCalls("GetObsSet", "$num_obsSets obs sets returned from $filename");
+
+        return $num_obsSets;
+    }
+
+    #-------------------------------------------------------------------------
+    # GetSupportedObsSet method
+    #    - only needed when SaveObs is supported - stub out
+    #-------------------------------------------------------------------------
+
+    sub GetSupportedObsSet
+    {
+        # Grab my collection so I know what to add observations to
+
+        my $setCollection = $_[0];
+
+    	LogCalls("GetSupportedObsSet");
+
+	  	my $nbSets = 0;
+
+        return $nbSets;
+    }
+
+    #-------------------------------------------------------------------------
+    # SaveObs method
+    #-------------------------------------------------------------------------
+
+    sub SaveObs
+    {
+        # Not supported
+
+    	LogCalls("SaveObs");
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "SaveObs", 0;
+        }
+    }
+
+    #-------------------------------------------------------------------------
+    # GetRegKey method
+    #    - return InstallHome registry key of the active ODTK application
+    #-------------------------------------------------------------------------
+
+    sub GetRegKey
+    {
+        my $ODTK;
+        my $class_obj;
+        if($class_obj = Win32::OLE->GetActiveObject("ODTK.Application"))
+        {
+           $ODTK = $class_obj->Personality;
+        }
+        my $regValue = $ODTK->Application->STKHome->Value;
+		#Win32::MsgBox "$regValue", 0;
+        return $regValue;
+    }
+
+
+    my $logfile = "C:\\temp\\ODTKreaderlog.txt";
+    my $logfileOpened = 0;
+
+    #-------------------------------------------------------------------------
+    # SkipHeader method
+    #    - Skips past all header data and position ourself for the data
+    #-------------------------------------------------------------------------
+
+	sub SkipHeader()
+	{
+        # reset the file pointer to the beginning of the file
+
+        seek FP, 0, 0;
+
+   	}
+
+    #-------------------------------------------------------------------------
+    # LogCalls method
+    #    - Logs time stamp and function call
+    #-------------------------------------------------------------------------
+
+    sub LogCalls
+    {
+    	my $timestamp;
+
+    	if (AgCLogCalls)
+    	{
+			my ($functionName) = $_[0];
+			my ($otherdata) = $_[1];
+
+#			if ( !$logfileOpened)
+			{
+				open(LOG, ">>$logfile") or die "Unable to open $logfile for appending.";
+				$logfileOpened = 1;
+			}
+
+			$timestamp = Time::HiRes::time;
+			printf LOG "%f\t%s\t\t%s\n", $timestamp,$functionName,$otherdata;
+			close LOG;
+		}
+    }
+
+]]>
+</script>
+
+</component>

@@ -1,0 +1,758 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="ORBITAL OASYS ASCII Format"
+    progid="WscPerlORBITAL_ASCII_RANGE_OASYS.wsc"
+    version="1.00"
+    classid="{A18A2838-2E20-4909-A571-2D4993F77215}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+   	
+</public>
+
+<script language="PerlScript">
+<![CDATA[
+
+    #-------------------------------------------------------------------------
+    # Member variables
+    #-------------------------------------------------------------------------
+
+    # Must be running under Perl 5.6.1 for support of the Win32:OLE package.
+
+    require 5.6.1;
+
+    use strict;
+    use Win32;
+    use Win32::TieRegistry( Delimiter=>"/", ArrayValues=>0 );
+    use Win32::OLE;
+    use Win32::OLE::Variant;
+    use Time::HiRes;
+    use Time::LocalTime;
+
+    #-------------------------------------------------------------------------
+    # Establish a few handy constants
+    #-------------------------------------------------------------------------
+
+    use constant eMTRange               => 1;
+    use constant eMTDoppler             => 2;
+    use constant eMTAzimuth             => 11;
+    use constant eMTElevation           => 12;
+    use constant eMaxMT                 => 13;
+
+    use constant eGroundReceiveTime     => 0;
+    use constant eSatelliteTransmitTime => 1;
+    use constant eGroundTransmitTime    => 2;
+    use constant eSatelliteReceiveTime  => 3;
+
+    use constant AgCMinRange => 50;
+    use constant AgCMaxRange => 100000;
+
+    # Define a blocking factor for how many lines we read at a time
+    # from the file.
+
+    use constant AgCBlockingFactor => 50;
+
+	# Define the speed of light (km/s).
+	
+	use constant AgCSpeedOfLight => 299792.4580;
+		
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to pop up message boxes to
+    # assist in debugging.
+    #-------------------------------------------------------------------------
+
+    use constant AgCDebugFlag => 0;
+
+    #-------------------------------------------------------------------------
+    # Set this flag to true (1) to log all functions calls from ODTK into
+    # this script.
+    #-------------------------------------------------------------------------
+
+    use constant AgCLogCalls => 0;     
+
+    #-------------------------------------------------------------------------
+    # Now for a few global vars ...
+    #-------------------------------------------------------------------------
+
+    my ($regValue) = GetRegKey();
+       
+    my $ODDBFilename;
+       
+    $ODDBFilename = $regValue . "/ODTK/AppData/Scripts/MeasProviders/WindowsScriptComponents/" . "CreatODDBObjects.txt";
+    #Win32::MsgBox "ODDBFilename = $ODDBFilename\n";
+    open (IFH, "< $ODDBFilename");
+    my $AgODObsSetStr = <IFH>;
+    chomp $AgODObsSetStr;
+    my $AgODGenericObsStr = <IFH>;
+    chomp $AgODGenericObsStr;
+    close (IFH);
+    
+	my $pObsSet = Win32::OLE->new("$AgODObsSetStr") or die "new failed\n";
+    my $pObs = Win32::OLE->new("$AgODGenericObsStr");
+    my $filename = "";
+    my $vehid = 0;
+    my $index = 0;
+    my $firstObs = 1;
+    my $satellite;
+    my $satelliteID = "unknown";
+    my $facilityName = "unknown";
+    my $facilityID = "unknown";
+
+    # Arbitrary station names mapped to ids.
+    
+    my (%station_ids) = ( 'FUCINO',   100,
+                          'FILLMORE', 101,
+                          'URALLA',   102,
+                          '14m_bel',  103,
+			  '12.5m_crk',104,
+                          '13m_Hbk',  105,
+                    );
+
+    my (%spacecraft_ids) = (	'TK2',   1000,
+    				'HZ2',	 1001,
+		                   );
+
+
+    my (%tk2_tone_delay_table) = (	1,	-0.432,
+					2,	0.641,
+					3,	0.196,
+					4,	1.991,
+					5,	11.525,
+					6,	57.505,
+		                         );
+
+    my (%fucino_cal_table) = (	1,	248.377014,
+				2,	248.570496,
+				3,	249.554382,
+				4,	254.420425,
+				5,	278.749359,
+				6,	248.339539,
+				7,	40.47261985,
+                        );
+                        
+    my (%fillmore_cal_table) = (1,	248.12851,
+				2,	248.332657,
+				3,	249.298401,
+				4,	254.168747,
+				5,	278.487091,
+				6,	248.068253,
+				7,	40.0377123,
+                        );
+ 
+	my (%uralla_cal_table) = (	1,	248.092911,	
+ 					2,	248.52179,	
+ 					3,	249.411102,	
+ 					4,	254.398819,	
+ 					5,	278.776642,	
+ 					6,	255.764236,	
+ 					7,	40.344185,
+                         );
+
+ 	my (%tone_table) = (		1,	1.78,	
+ 					2,	8.89,	
+ 					3,	44.44,	
+ 					4,	222.22,	
+ 					5,	1111.11,	
+ 					6,	5555.56,	
+ 					7,	27777.78,
+                         );
+                       
+	my (%unit_table) = ('DEGREES',        'deg',
+						'KILOMETERS',     'km',
+						'NAUTICAL_MILES', 'nm',
+						'COUNTS',         'counts'
+					   );
+						
+						
+    #-------------------------------------------------------------------------
+    # Filename property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetFileName
+    {
+    	LogCalls("GetFileName", $filename);
+    	
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "GetFileName $filename", 0;
+        }
+
+        return $filename;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsMultipleTrackers property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsMultipleTrackers
+    {
+        # Used only when SaveObs is supported (GetSupportsSave returns true), - stub out
+
+    	LogCalls("GetSupportsMultipleTrackers");
+        
+        if (AgCDebugFlag)
+        {
+        	Win32::MsgBox "GetSupportsMultipleTrackers", 0;
+        }
+        
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # SupportsSave property [read-only]
+    #-------------------------------------------------------------------------
+
+    sub GetSupportsSave
+    {
+        # Writing out observation files is not supported
+
+    	LogCalls("GetSupportsSave");
+
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "GetSupportsSave", 0;
+        }
+
+        return 0;
+    }
+
+    #-------------------------------------------------------------------------
+    # Reset method
+    #-------------------------------------------------------------------------
+
+    sub Reset
+    {
+    
+    	LogCalls("Reset", $filename);
+    	
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox  "Reset ${filename}", 0;
+        }
+
+		SkipHeader();
+
+        # Reset first observation flag (for debugging purposes)
+        
+        $firstObs = 1;
+
+    }
+
+    #-------------------------------------------------------------------------
+    # OpenFile method
+    #-------------------------------------------------------------------------
+
+    sub OpenFile
+    {
+        my ( $newVal, $newFile ) = @_ ;
+        my ( $stationFound, $satelliteFound);
+
+        $filename = $newVal;
+
+    	LogCalls("OpenFile", $filename);
+
+        if ($newFile)
+        {
+            open(FP, ">$filename") or die "Unable to create file $filename for writing\n";
+        }
+        else
+        {
+            open(FP, "<$filename") or die "Unable to open file $filename for reading\n";
+        }
+
+		# Set the file to operate in binary mode, otherwise you will get burned 
+		# by UNIX vs WINDOWS line ending differences;
+		
+		binmode(FP);
+		
+        # Read in header info and capture the satelliteID and facilityID. If you get
+        # to the measurements, stop reading.
+        
+        $stationFound = 0;
+        $satelliteFound = 0;
+        
+        while (<FP>)
+        {        	
+            chomp;
+            
+            # Look for station information
+          
+            if (m| 
+            	^STATION:		# look for STATION: keyword
+            	\s*				# skip past any white space
+            	(\S*)			# grab the characters identifying the station
+            	|x)
+            {
+            	$facilityName = $1;
+                $facilityID = $station_ids{$facilityName};
+                $stationFound = 1;
+                
+				#Win32::MsgBox "Found station $1\n", 0;          
+            }
+            elsif (m|
+				^SPACECRAFT:	# look for SPACECRAFT: keyword
+				\s*				# skip past any white space
+				(\S*)			# grab the characters identifying the satellite
+				|x)
+            {
+                $satellite = $1;
+                $satelliteID = $spacecraft_ids{$satellite};
+				$satelliteFound = 1;
+				
+				#Win32::MsgBox "Found satellite $1\n", 0;
+				
+            }
+            
+            if ($stationFound && $satelliteFound)
+            {
+            	last;
+            }
+        }
+        
+		
+		if (!$stationFound || !$satelliteFound)
+		{	
+			# File is not compatible with this reader.
+			
+			die "File does not contain station and satellite information\n";
+		}
+		
+		SkipHeader();
+
+    }
+
+    #-------------------------------------------------------------------------
+    # GetObsSet method
+    #-------------------------------------------------------------------------
+
+    sub GetObsSet
+    {
+        # Grab my obsSet collection so I know what to add obsSets to
+
+        my $setCollection = $_[0];
+
+        my ($line, $day, $time, $obsType, $obsValue, $obsUnit, $unit);
+        my ($year, @dateUTCJFOUR);
+        my ($station, @sc_path_cal, @ground_cal, $i, @tone, @phase_lag);
+        my ($num_measurements, $corrected_phase_lag);
+
+		# Keep track of the number of observation sets.
+		my($num_obsSets) = 0;
+
+
+        # Keep track of the number of observations.
+        my($num_read) = 0;
+        
+        my ($foundTrackingData) = 0;
+
+		#-------------------------------------------------------------------------
+		# Read in all the calibration data
+		#-------------------------------------------------------------------------
+		
+        while ($_ = <FP> and !$foundTrackingData)
+        {
+            chomp;
+                       
+            if (m|CALIBRATION:\s+(\S+)|)
+            {
+				#-------------------------------------------------------------------------
+            	# check to see if this is a spacecraft calibration
+				#-------------------------------------------------------------------------
+            	
+            	if ($1 eq $satellite)
+            	{
+			while (<FP>)
+			{
+				# Look for a calibration line
+
+				if (m|TONE_(\d+)\s+(\S+)|)
+				{
+					$sc_path_cal[$1] = $2;
+
+					#Win32::MsgBox "Spacecraft ${satellite} calibration\n" .
+					#			  "Tone: $1\n" .
+					#			  "Value: $2\n", 0;
+				}
+
+				# Bail out once we've processed tone 7
+
+				if ($1 == 7)
+				{
+					last;
+				}
+			}
+		}
+				
+				#-------------------------------------------------------------------------
+				# Check to see if this is ground station calibration data
+				#-------------------------------------------------------------------------
+
+				elsif ($1 eq $facilityName)
+				{
+					while (<FP>)
+					{
+						# Look for a calibration line
+
+						if (m|TONE_(\d+)\s+(\S+)|)
+						{
+							$ground_cal[$1] = $2;
+							
+							#Win32::MsgBox "Ground ${facilityName} calibration\n" .
+							#			  "Tone: $1\n" .
+							#			  "Value: $2\n", 0;
+							
+						}
+						
+						# Bail out once we get to the tracking data.
+						
+						elsif (m|TRACKING DATA|)
+						{
+							$foundTrackingData = 1;
+							last;
+						}
+					}
+					
+				}				
+            }
+		}
+			
+		#-------------------------------------------------------------------------
+		# Let's read in all the tone data now
+		#-------------------------------------------------------------------------
+	
+		$i = 0;
+		
+        while (<FP>)
+        {
+            chomp;
+
+            if (m|
+            	^(\d{4})/(\d{3})				# YYYY/DDD
+            	\s+
+            	(\S+)							# HH:MM:SS.SSS
+            	\s+
+            	TONE_(\d)						# Tone number
+            	\s+
+            	(\S+)							# phase difference
+   				|x)
+   			{			
+   				$year = $1;
+   				$day = $2;		
+   				$time = $3;
+   				$tone[$i] = $4;
+   				$phase_lag[$i] = $5;
+   				
+				# Reassemble the date from a YYYY/DDD format to a DDD/YYYY format.
+
+				$dateUTCJFOUR[$i] = "${day}/${year} $time";
+				
+				$i++;
+			}
+		}
+		
+		$num_measurements = $i;
+		
+		#-------------------------------------------------------------------------
+		# Time to generate range measurements.
+		#-------------------------------------------------------------------------
+		
+		my ($previous_range, $lamda, $fractional_lag, $range);
+		
+		my ($initial_guess) = 37500.0;
+		
+		for ($i=0; $i < $num_measurements; $i++)
+		{
+			if ($tone[$i] == 1)
+			{
+				$previous_range = $initial_guess;
+			}
+
+			# Correct phase measurement using ground and spacecraft calibration values
+			
+			$corrected_phase_lag = $phase_lag[$i] - ($ground_cal[$tone[$i]] + $sc_path_cal[$tone[$i]]);
+
+			$fractional_lag = $corrected_phase_lag / 360.0;
+			$lamda = AgCSpeedOfLight / $tone_table{$tone[$i]};
+			$range = $lamda/2 * ($fractional_lag + int(2* $previous_range/$lamda - $fractional_lag + 0.5));
+
+			if (AgCDebugFlag)
+			{
+				Win32::MsgBox "Range info:\n" .
+						  "Tone: ${tone[$i]}\n" .
+						  "phase lag: ${phase_lag[$i]}\n" .
+						  "Range: $range\n", 0;
+			}
+
+
+			$previous_range = $range;
+
+			# if we are processing tone 7, it's time to output the actual range measurement.
+
+			if ($tone[$i] == 7)
+			{
+
+				$obsType = "RANGE";
+
+				#-------------------------------------------------------------------------
+				# Initialize observation set
+				#-------------------------------------------------------------------------
+
+				$pObsSet->Clear;
+				$pObsSet->{Date}->{unit} = "UTCJFOUR";
+				$pObsSet->{Date}         = $dateUTCJFOUR[$i];
+
+				#-------------------------------------------------------------------------
+				# Build correct date string
+				#-------------------------------------------------------------------------
+
+				$pObs->{Date}->{unit} = "UTCJFOUR";
+				$pObs->{Date}         = $dateUTCJFOUR[$i];
+				$pObs->{TimeOrigin}   = eGroundReceiveTime;
+
+				#-------------------------------------------------------------------------
+				# Set up facility and satellite IDs
+				# In TrackerIDs list: facility must come first
+				#-------------------------------------------------------------------------
+
+				$pObs->{TrackerIDs}->Clear();
+				$pObs->{TrackerIDs}->Insert(0, $facilityID);
+				$pObs->{TrackerIDs}->Insert(1, $satelliteID);
+
+				#-------------------------------------------------------------------------
+				# Create azimuth measurement
+				#-------------------------------------------------------------------------
+
+				if ($obsType eq "AZIMUTH")
+				{
+					$pObs->{MeasureType}   = eMTAzimuth;
+					$pObs->{value}->{unit} = $unit;
+					$pObs->{value}         = $obsValue;
+
+					$pObsSet->Add($pObs);
+					$num_read++;
+				}
+
+				#-------------------------------------------------------------------------
+				# Create elevation measurement
+				#-------------------------------------------------------------------------
+
+				elsif ($obsType eq "ELEVATION")
+				{
+					$pObs->{MeasureType}   = eMTElevation;
+					$pObs->{value}->{unit} = $unit;
+					$pObs->{value}         = $obsValue;
+
+					$pObsSet->Add($pObs);                
+					$num_read++;
+				}
+
+				#-------------------------------------------------------------------------
+				# Create range measurement
+				#-------------------------------------------------------------------------
+
+				elsif ($obsType eq "RANGE")
+				{
+					$pObs->{MeasureType}   = eMTRange;
+					$pObs->{value}->{unit} = "km";
+					$pObs->{value}         = $range;
+
+					$pObsSet->Add($pObs);
+					$num_read++;
+				}
+
+				if ($pObsSet->Count > 0)
+				{
+					$setCollection->Add($pObsSet);
+					$num_obsSets++;
+				}
+
+
+				if ($firstObs)
+				{
+					$firstObs = 0;
+
+					if (AgCDebugFlag)
+					{
+						Win32::MsgBox	"Date:   ${dateUTCJFOUR[$i]}\n" .
+								"Station ID:   ${facilityID}\n" .
+								"Station:   ${facilityName}\n" .
+								"Observation Type:   ${obsType}\n" .
+								"Observation Value:   ${range}\n" .
+								"Observation Units:   ${obsUnit}", 0;
+					}
+				}
+			}
+        }
+        
+    	LogCalls("GetObsSet", "$num_read obs returned from $filename");    	
+#    	if ($num_read == 0)
+#    	{
+#    		LogCalls("0 observations from line", "'$line'");
+#    	}
+    	
+		
+        return $num_obsSets;        
+    }
+
+    #-------------------------------------------------------------------------
+    # GetSupportedObsSet method
+    #    - only needed when SaveObs is supported - stub out
+    #-------------------------------------------------------------------------
+
+    sub GetSupportedObsSet
+    {
+        # Grab my collection so I know what to add observations to
+
+        my $setCollection = $_[0];
+
+    	LogCalls("GetSupportedObsSet");
+
+	  	my $nbSets = 0;	
+
+        return $nbSets;
+    }
+
+    #-------------------------------------------------------------------------
+    # SaveObs method
+    #-------------------------------------------------------------------------
+
+    sub SaveObs
+    {
+        # Not supported
+
+    	LogCalls("SaveObs");
+    	
+        if (AgCDebugFlag)
+        {
+            Win32::MsgBox "SaveObs", 0;
+        }
+    }
+
+    #-------------------------------------------------------------------------
+    # GetRegKey method
+    #    - return InstallHome registry key of the active ODTK application
+    #-------------------------------------------------------------------------
+
+    sub GetRegKey
+    {
+        my $ODTK;
+        my $class_obj; 
+        if($class_obj = Win32::OLE->GetActiveObject("ODTK.Application"))
+        {
+           $ODTK = $class_obj->Personality;
+        }   
+        my $regValue = $ODTK->Application->STKHome->Value;
+		#Win32::MsgBox "$regValue", 0;
+        return $regValue;
+    }
+    
+    
+    my $logfile = "C:\\temp\\ODTKreaderlog.txt";    
+    my $logfileOpened = 0;
+
+    #-------------------------------------------------------------------------
+    # SkipHeader method
+    #    - Skips past all header data and position ourself for the data
+    #-------------------------------------------------------------------------
+
+	sub SkipHeader()
+	{	
+		my $numChars;
+		
+        # reset the file pointer to the beginning of the file
+        
+        seek FP, 0, 0;
+
+        # skip the header lines
+        
+#		while (<FP>)
+#        {          
+#           	# Look for a YYYY/MM/DD data stamp in the beginning of the line
+#        	
+#        	if (m|^\d{4}/\d{2}/\d{2}|)  
+#        	{        	          		
+#        		# reset file position to the beginning of the line
+#        		
+#        		$numChars = length();
+#        		
+#        		Win32::MsgBox("line '$_', $numChars"); 
+#          		seek FP, -($numChars), 1; 
+#          		
+#          		last;
+#            }
+#        }
+	}
+	
+    #-------------------------------------------------------------------------
+    # LogCalls method
+    #    - Logs time stamp and function call
+    #-------------------------------------------------------------------------
+    
+    sub LogCalls
+    {   
+    	my $timestamp;
+    	
+    	if (AgCLogCalls)
+    	{
+			my ($functionName) = $_[0];
+			my ($otherdata) = $_[1];
+
+#			if ( !$logfileOpened)
+			{
+				open(LOG, ">>$logfile") or die "Unable to open $logfile for appending.";
+				$logfileOpened = 1;
+			}
+
+			$timestamp = Time::HiRes::time;
+			printf LOG "%f\t%s\t\t%s\n", $timestamp,$functionName,$otherdata;
+			close LOG;
+		}
+    }    	
+    	
+]]>
+</script>
+
+</component>
