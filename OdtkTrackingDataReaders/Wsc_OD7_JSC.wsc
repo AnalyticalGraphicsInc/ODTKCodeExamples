@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+
+<!-- =================================== -->
+<!--  This WSC is designed to read JSC   -->
+<!--  Chandrayaan tracking data          -->
+<!--                                     -->
+<!--  author: jens ramrath               -->
+<!--  date: 26 oct 2009                  -->
+<!-- =================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="reads JSC files"
+    progid="Wsc_OD7_JSC.wsc"
+    version="1.00"
+    classid="{04BFE368-96F1-4CDC-A9AE-B7B201939ED1}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+	'-------------------------------------------------------------------------
+	' Member variables
+	'-------------------------------------------------------------------------
+
+	Option explicit
+
+	Const ForReading   = 1
+	Const ForWriting   = 2
+
+	Const eMTRange            = 1
+	Const eMTRightAscension   = 18
+	Const eMTDeclination      = 19
+
+	Const eGroundReceiveTime     = 0
+	Const eSatelliteTransmitTime = 1
+	Const eGroundTransmitTime    = 2
+	Const eSatelliteReceiveTime  = 3
+
+	Const eDefaultEquinoxType	= -1
+	Const eMeanEquatorAndEquinox	= 0
+	Const eTrueEquatorAndEquinox	= 1
+	Const eTrueEquatorMeanEquinox	= 2
+	Const eICRFEquinoxType		= 3
+
+	Const eDefaultEquinoxEpoch	= -1
+	Const eJ2000Epoch			= 0
+	Const eB1950Epoch			= 1
+	Const eOfDate				= 2
+	Const eYearOfObsJan0		= 3
+	Const eDayOfObs				= 4
+
+	'-------------------------------------------------------------------------
+	' define some global variables we'll be using
+	'-------------------------------------------------------------------------
+
+	Dim m_sfileSysObj, m_Stream, m_sFileName
+
+	Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+	m_sFileName       = ""
+
+	'-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+	'-------------------------------------------------------------------------
+
+	Dim version
+	version = "7.0"
+
+	Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+	versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+	GetRegKey(versionStr)
+
+	ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+	Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+	Dim pObsSet
+	ObjectStr = textFile.ReadLine
+	Set pObsSet = CreateObject(ObjectStr)
+
+	Dim pObs
+	ObjectStr = textFile.ReadLine
+	Set pObs = CreateObject(ObjectStr)
+
+	'-------------------------------------------------------------------------
+	' Function GetFileName()
+	'-------------------------------------------------------------------------
+
+	Function GetFileName()
+
+	   GetFileName = m_sFileName
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsSave property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsSave()
+
+	   GetSupportsSave = False
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsMultipleTrackers property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsMultipleTrackers()
+
+	   GetSupportsMultipleTrackers = True
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' Reset method
+	'-------------------------------------------------------------------------
+
+	Function Reset()
+
+		if m_sFileName <> "" Then
+
+			Dim newVal
+			newVal = m_sFileName
+			OpenFile newVal, False
+
+		End if
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' OpenFile method
+	'-------------------------------------------------------------------------
+
+	Function OpenFile(newVal, newFile)
+
+		If m_sFileName <> "" Then
+			m_Stream.Close
+			m_sFileName = ""
+		End If
+
+		m_sFileName = newVal
+
+		If newFile Then        
+			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+		Else        
+			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+		End If
+
+	End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+		Dim line, numSets
+		Dim splitData, modJD, facID, satID, dFlag
+                Dim value
+
+		numSets = 0
+                pObsSet.Clear
+
+		Dim debug
+		debug = 0
+
+
+		' ***** read data *****
+		Do Until m_Stream.AtEndOfStream 
+					'or numSets > 0
+
+			' ***** parse measurement data *****
+			' data formats:
+			' 1. Range
+			' 	ModJDate, FacID, SatID, 2, Range
+			' 2. RA/Dec data
+			' 	ModJDate, FacID, SatID, 3, RA, Dec
+			' 3. X, Y, Z data
+			' 	ModJDate, FacID, SatID, 4, X, Y, Z
+			
+			line = m_Stream.ReadLine
+			
+    			splitData = split(line, ",")
+
+			modJD = splitData(0)
+			facID = splitData(1)
+			satID = splitData(2)
+			dFlag = splitData(3)
+
+
+			'-------------------------------------------------------------------------
+			' Initialize observation and obs set
+			'-------------------------------------------------------------------------
+			pObsSet.Clear()
+			pObsSet.Date.Unit	= "ModJDate"
+			pObsSet.Date.Value	= modJD
+
+			pObs.Date.Unit	= "ModJDate"
+			pObs.Date.Value	= modJD
+			
+			pObs.TimeOrigin	= eGroundReceiveTime
+
+
+			' specify tracker and trackee
+			pObs.TrackerIDs.Clear()
+			pObs.TrackerIDs.Insert 0, facID  		' Facility must be first item
+			pObs.TrackerIDs.Insert 1, satID			' Satellite follows Facility
+
+
+			' data depends on dFlag
+			if dFlag = 2 then
+				' ***** RANGE *****
+				Dim range
+				range = splitData(4)
+
+				pObs.MeasureType	= eMTRange
+				pObs.Value.Unit		= "km"
+				pObs.Value.Value	= range
+
+				pObsSet.Add pObs
+
+
+				if debug <> 0 then
+					msgbox("Time: " & modJD & (Chr(13) & Chr(10)) & "Measurement: " & pObs.MeasureType & (Chr(13) & Chr(10)) & " value: " & pObs.Value.Value & " " & pObs.Value.Unit & (Chr(13) & Chr(10)) & facID & " to " & satID)
+				end if
+
+			elseif dFlag = 3 then
+				' ***** RA/DEC *****
+				Dim ra, dec
+				ra  = splitData(4)
+				dec = splitData(5)
+
+				' RA
+				pObs.MeasureType	= eMTRightAscension
+				pObs.Value.Unit		= "radians"
+				pObs.Value.Value	= ra
+
+				pObs.EquinoxType 	= eTrueEquatorMeanEquinox
+				pObs.EquinoxEpoch	= eDayOfObs
+
+				pObsSet.Add pObs
+
+				' Dec
+				pObs.MeasureType	= eMTDeclination
+				pObs.Value.Unit		= "radians"
+				pObs.Value.Value	= dec
+
+				pObs.EquinoxType	= eTrueEquatorMeanEquinox
+				pObs.EquinoxEpoch	= eDayOfObs
+
+				pObsSet.Add pObs
+
+				if debug <> 0 then
+					msgbox("Time: " & modJD & (Chr(13)& Chr(10)) & "RA: " & ra & (Chr(13)& Chr(10)) & "Dec: " & dec)
+				end if
+				
+			elseif dFlag = 4 then
+				' ***** X Y Z *****
+				Dim X, Y, Z
+				X = splitData(4)
+				Y = splitData(5)
+				Z = splitData(6)
+
+
+				' X
+				pObs.MeasureType		= eMTGPSNav_C1
+				pObs.Value.Unit			= "km"
+				pObs.Value.Value		= X
+				pObs.CartesianComponent	= eXComp
+				pObsSet.Add pObs
+
+				' Y
+				pObs.MeasureType		= eMTGPSNav_C1
+				pObs.Value.Unit			= "km"
+				pObs.Value.Value		= Y
+				pObs.CartesianComponent	= eYComp
+				pObsSet.Add pObs
+
+				' Z
+				pObs.MeasureType		= eMTGPSNav_C1
+				pObs.Value.Unit			= "km"
+				pObs.Value.Value		= Z
+				pObs.CartesianComponent	= eZComp
+				pObsSet.Add pObs
+
+
+				if debug <> 0 then
+					msgbox("Time: " & modJD & (Chr(13)& Chr(10)) & "X: " & X & (Chr(13)& Chr(10)) & "Y: " & Y & (Chr(13)& Chr(10)) & "Z: " & Z)
+				end if
+			else
+				' something not right if in here
+				msgbox("something not right with the data")
+			end if
+
+
+
+			'-------------------------------------------------------------------------
+			' Any Valid Meas? 
+			'-------------------------------------------------------------------------
+
+			If pObsSet.Count > 0 Then
+				numSets = numSets + 1
+				setColl.Add pObsSet
+			End If
+
+		Loop
+
+        GetObsSet = numSets
+
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+		
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        GetSupportedObsSet = 0
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+	Function SaveObs(pEnum, bAppend)
+		SaveObs = 0
+	End Function
+
+
+	Function GetRegKey (regKey)
+		Dim objShell
+		Set objShell = CreateObject("WScript.Shell")
+		regValue = objShell.RegRead(regKey)
+		Set objShell = nothing
+	End Function
+
+]]>
+</script>
+
+</component>
+

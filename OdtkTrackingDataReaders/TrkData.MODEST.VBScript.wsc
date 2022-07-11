@@ -1,0 +1,483 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="TrkData.MODEST.VBScript.wsc"
+    progid="AGI.TrkData.MODEST.VBScript.Example"
+    version="1.00"
+    classid="{E3F0FCC8-D9B1-450e-BAE3-709426C52B01}"
+
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <property name="ReferenceYear">
+      <get internalName="GetRefYear"/>
+      <put internalName="SetRefYear"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetAppConfig"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Dim m_sFileName   ' File name
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTAzimuth        = 11
+    Const eMTElevation      = 12
+
+    Const eMTRightAscension = 18
+    Const eMTDeclination    = 19
+
+    Const eMaxMT            = 59
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+    Dim m_sfileSysObj
+    Dim m_Stream
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+    m_sFileName = ""
+
+    Dim version
+    version = "5.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\PluginSamples\" & "AGI.ODTK.ProgIDs.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+    'msgbox "ObjectStr"& ObjectStr
+    Set pObsSet = CreateObject(ObjectStr)
+    pObsSet.Date.Unit = "UTCG"
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+    pObs.Date.Unit = "UTCG"
+
+    Dim m_RefYr
+    m_RefYr = 2000
+
+    Dim pAttrBuilder
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgAttrAutomation5.AgAttrBuilder"  or similar
+    Set pAttrBuilder = CreateObject(ObjectStr)
+
+    Dim m_scope
+    Set m_scope = pAttrBuilder.NewScope()
+
+    pAttrBuilder.AddIntDispatchProperty     _
+        m_scope,                            _
+        "ReferenceYear",                    _
+        "Reference Year",                   _
+        "ReferenceYear",                    _
+        0
+
+    Set pAttrBuilder = Nothing
+
+    '
+    Dim sDecStr
+    Dim YearOfEquinox
+    Dim EquinoxEpoch
+    Dim eJ2000Epoch, eB1950Epoch, eOfDate, eYearOfObsJan0
+
+    eJ2000Epoch     = 0
+    eB1950Epoch     = 1
+    eOfDate     = 2
+    eYearOfObsJan0  = 3
+
+    Dim eMeanEquatorAndEquinox, eTrueEquatorAndEquinox
+
+    eMeanEquatorAndEquinox  = 0
+    eTrueEquatorAndEquinox  = 1
+
+    Dim jday
+    Dim mam
+
+    Dim monthTable(12)
+
+    monthTable(1)  = "Jan"
+    monthTable(2)  = "Feb"
+    monthTable(3)  = "Mar"
+    monthTable(4)  = "Apr"
+    monthTable(5)  = "May"
+    monthTable(6)  = "Jun"
+    monthTable(7)  = "Jul"
+    monthTable(8)  = "Aug"
+    monthTable(9)  = "Sep"
+    monthTable(10) = "Oct"
+    monthTable(11) = "Nov"
+    monthTable(12) = "Dec"
+    
+    Dim Global_SenderID
+    Dim Global_ReceiverID
+   '-------------------------------------------------------------------------
+
+
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMUltipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' ReferenceYear property
+    '-------------------------------------------------------------------------
+
+    Function GetRefYear()
+
+       GetRefYear = m_RefYr
+
+    End Function
+
+    Function SetRefYear(year)
+
+       m_RefYr = year
+
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+
+        If newFile Then
+        Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+    Else
+        Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        Dim numSets
+
+        Dim rad2deg
+        rad2deg = 180.0/3.14159265358979323
+
+        Dim line
+
+        Dim sName
+        Dim mFrame
+        Dim recType
+        Dim senderID
+        Dim receiverID
+
+        Dim inDate
+        Dim yr, mo, da, hr, hrfrac, mi, sec
+        Dim yyyy
+        Dim dateStr
+
+        Dim obsVal
+        Dim az, el, ra, dec
+
+        Dim ValidAz, ValidEl,  ValidDec, ValidRA
+
+        ValidAz    = False
+        ValidEl    = False
+
+        ValidDec   = False
+        ValidRA    = False
+
+        numSets = 0
+        pObsSet.Clear
+
+        dim decimal
+
+        Do Until m_Stream.AtEndOfStream Or (numSets > 0)
+
+            line = m_Stream.ReadLine
+
+		Dim UiApp
+		Set UiApp = GetObject(, "ODTK.Application")
+		Dim pers
+		Set pers = UiApp.Personality
+				
+	    dim SSN, isSatNum, TrackName, isC9, isMO
+	    SSN = Mid(line, 1, 3)
+	    isSatNum = StrComp(SSN, "SSN")
+	    if (isSatNum = 0) then
+	      Global_SenderID = Mid(line, 4, 5)
+	    end if
+	    
+	    TrackName = Mid(line, 15, 2)
+	    isC9 = StrComp(TrackName, "C9")
+	    isMO = strComp(TrackName, "MO")
+	    
+	    ' convert "C9" to 10223
+	    if (isC9 = 0) then
+		  Global_ReceiverID = 10223
+		  pers.WriteMessage "Converting telescope ID from C9 to 10223", "Info"
+		end if
+		
+		' convert "MO" to 10222
+		if (isMO = 0) then
+		  Global_ReceiverID = 10222
+		  pers.WriteMessage "Converting telescope ID from MO to 10222", "Info"
+		end if
+		
+		Set pers = Nothing
+		Set UiApp = Nothing
+	    
+            dim isData
+            decimal = Mid(line, 19, 1)
+            isData = StrComp(decimal, ".")       
+            	
+            if ( (Len(line) >= 58) And (isData = 0) ) then
+
+				' initial format only contains RA(deg) and dec(deg) measurements
+                
+				obsVal  = Mid(line, 5, 10)
+                ValidRA = True
+                ra      = obsVal
+                EquinoxEpoch = eJ2000Epoch
+
+				obsVal = Mid(line, 15, 10)
+                ValidDec = True
+                dec      = obsVal
+                
+                ValidAz = False
+                ValidEl = False
+
+                senderID   = Global_SenderID
+                receiverID = Global_ReceiverID
+
+                yyyy   = Mid(line, 40, 4)
+                mo     = Mid(line, 45, 2)
+                da     = Mid(line, 48, 2)
+                hr     = Mid(line, 51, 2)
+                hrfrac = Mid(line, 54, 5)
+                hrfrac = hrfrac * 0.00001
+                mi     = Int(hrfrac*60.0)
+                sec    = (hrfrac*60.0 - mi)*60.0 
+				'MsgBox "hrfrac = " & hrfrac & " mi = " & mi & " sec = " & sec
+
+                ' Format date in UTCG
+
+                dateStr = "" & da & " " & monthTable(Mo) & " " & yyyy & " " & hr & ":" & mi & ":" & sec
+
+                pObs.DATE = dateStr
+                pObs.timeOrigin = eGroundReceiveTime
+
+                pObs.TrackerIDs.Clear
+                pObs.TrackerIDs.Insert 0, receiverID  ' Facility must be first item
+                pObs.TrackerIDs.Insert 1, senderID    ' Satellites follow Facility
+
+                pObsSet.Clear
+                pObsSet.DATE = dateStr
+
+
+                ' the next 5 lines attempt to fix VBScript rounding-off errors in 1/1000 of a second
+
+                Dim secam       ' sec after midnight
+                mam = pObs.MinAfterMidnight
+                secam = CLng((mam * 60.0) * 1000.0) / 1000.0
+                mam = secam / 60.0
+                pObs.MinAfterMidnight = mam
+                ' Msgbox "mam = " & mam
+
+                '/////////////////////////////////////////////////////////////
+                '//////////// AZIMUTH & ELEVATION ////////////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If ValidAz And ValidEl Then
+
+                    pObs.MeasureType = eMTAzimuth
+                    pObs.value.Unit = "deg"
+                    pObs.value = az
+
+                    pObsSet.Add pObs
+
+                    pObs.MeasureType = eMTElevation
+                    pObs.value.Unit = "deg"
+                    pObs.value = el
+
+                    pObsSet.Add pObs
+
+                    ValidAz = False
+                    ValidEl = False
+
+                End If
+
+
+                '/////////////////////////////////////////////////////////////
+                '////////////////////// RIGHT ASCENSION ///////////////////////
+                '/////////////////////////////////////////////////////////////
+
+                If (ValidRA And ValidDec) Then
+
+                    pObs.EquinoxType = eMeanEquatorAndEquinox
+                    pObs.EquinoxEpoch = EquinoxEpoch
+                    pObs.MeasureType = eMTRightAscension
+
+                    pObs.value.Unit = "deg"
+                    pObs.value = ra
+                    pObsSet.Add pObs
+
+                    pObs.MeasureType = eMTDeclination
+                    pObs.value.Unit = "deg"
+                    pObs.value = dec
+                    pObsSet.Add pObs
+
+                    ValidRA  = False
+                    ValidDec = False
+                End If
+
+
+                If pObsSet.Count > 0 Then
+                    numSets = numSets + 1
+                    setColl.Add pObsSet
+                End If
+
+            End If
+        Loop
+
+        GetObsSet = numSets
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+    Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetAppConfig method
+    '-------------------------------------------------------------------------
+
+    Function GetAppConfig()
+        Set GetAppConfig = m_scope
+    End Function
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+    End Function
+
+]]>
+</script>
+
+</component>
