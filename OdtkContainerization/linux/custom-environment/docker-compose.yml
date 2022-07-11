@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+    custom-centos:
+        image: custom/centos:7
+        build:
+            context: .
+            args:
+                baseImage: centos:7
+                pipIndexUrl: '' # Edit this value to be the index URL of your internal pip repository if you have one.

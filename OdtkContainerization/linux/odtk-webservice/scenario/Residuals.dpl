@@ -1,0 +1,143 @@
+<?xml version = "1.0" standalone = "yes"?>
+<VAR name = "ODTK">
+    <PROP name = "BinaryRevision">
+        <INT>75</INT>
+    </PROP>
+    <PROP name = "Version">
+        <STRING>&quot;7.4&quot;</STRING>
+    </PROP>
+    <SCOPE>
+        <VAR name = "DataProducts">
+            <LIST>
+                <VAR name = "DataProduct">
+                    <SCOPE Class = "DataProduct">
+                        <VAR name = "Inputs">
+                            <SCOPE>
+                                <VAR name = "DataSources">
+                                    <LIST>
+                                        <VAR name = "DataSource">
+                                            <SCOPE>
+                                                <VAR name = "Enabled">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
+                                                <VAR name = "Objects">
+                                                    <STRING>&quot;First Filter(Filter)&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Filename">
+                                                    <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Baseline.filrun&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </LIST>
+                                </VAR>
+                                <VAR name = "SatelliteList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "FacilityList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "TrackerList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "TransponderList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "MeasurementList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "TrackingStrandList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "AntennaList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "EmitterList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "CrossCorrelationList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "RetroreflectorList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "LSStageNumList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "LSIterationNumList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "EventList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "AccelerometerList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "GNSSList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "EmpiricalForcesList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "EmpiricalParametersList">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "TimePeriod">
+                                    <SCOPE>
+                                        <VAR name = "Enabled">
+                                            <BOOL>false</BOOL>
+                                        </VAR>
+                                        <VAR name = "StartTime">
+                                            <DATE>1 Jul 2021 12:00:37.000</DATE>
+                                        </VAR>
+                                        <VAR name = "StopTime">
+                                            <DATE>2 Jul 2021 11:17:37.000</DATE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Outputs">
+                            <SCOPE>
+                                <VAR name = "Style">
+                                    <STRING>&quot;/home/odtk/scenario/Styles/ResidualRatios.exp&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Display">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Export">
+                                    <SCOPE>
+                                        <VAR name = "Enabled">
+                                            <BOOL>true</BOOL>
+                                        </VAR>
+                                        <VAR name = "DestinationType">
+                                            <STRING>&quot;File&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Format">
+                                            <STRING>&quot;CommaSeparated&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "FileName">
+                                            <STRING>&quot;/home/odtk/.ODTK7/DataArchive/ResidualRatios.csv&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "GraphSize">
+                                            <SCOPE>
+                                                <VAR name = "X">
+                                                    <INT>800</INT>
+                                                </VAR>
+                                                <VAR name = "Y">
+                                                    <INT>500</INT>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Name">
+                            <STRING>&quot;Residuals&quot;</STRING>
+                        </VAR>
+                    </SCOPE>
+                </VAR>
+            </LIST>
+        </VAR>
+    </SCOPE>
+</VAR>

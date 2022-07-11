@@ -1,0 +1,47 @@
+<?xml version = "1.0" standalone = "yes"?>
+<VAR name = "AGI Export Style">
+    <PROP name = "Product">
+        <STRING>&quot;ODTK&quot;</STRING>
+    </PROP>
+    <PROP name = "Version">
+        <STRING>&quot;7.0&quot;</STRING>
+    </PROP>
+    <SCOPE>
+        <VAR name = "DatabaseInfo">
+            <SCOPE />
+        </VAR>
+        <VAR name = "Title">
+            <STRING>&quot;&quot;</STRING>
+        </VAR>
+        <VAR name = "ExportVariables">
+            <LIST>
+                <SCOPE>
+                    <VAR name = "Name">
+                        <STRING>&quot;MeasurementHistory.Date Time&quot;</STRING>
+                    </VAR>
+                </SCOPE>
+                <SCOPE>
+                    <VAR name = "Name">
+                        <STRING>&quot;MeasurementHistory.Residual Ratio&quot;</STRING>
+                    </VAR>
+                </SCOPE>
+                <SCOPE>
+                    <VAR name = "Name">
+                        <STRING>&quot;MeasurementHistory.Measurement Type&quot;</STRING>
+                    </VAR>
+                </SCOPE>
+            </LIST>
+        </VAR>
+        <VAR name = "DataProviderList">
+            <LIST>
+                <STRING>&quot;MeasurementHistory&quot;</STRING>
+            </LIST>
+        </VAR>
+        <VAR name = "ShowHeaderRow">
+            <BOOL>true</BOOL>
+        </VAR>
+        <VAR name = "ShowTableName">
+            <BOOL>false</BOOL>
+        </VAR>
+    </SCOPE>
+</VAR>
