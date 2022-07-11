@@ -37,7 +37,7 @@ If You redistribute the code examples, in whole or in part, You must provide a c
 
 ----
 
-## What if I have questions about STK
+## What if I have questions about ODTK
 
 Contact [AGI support](mail:support@agi.com "Email AGI Support") with questions regarding ODTK, ODTK Runtime or any other AGI products.
 
