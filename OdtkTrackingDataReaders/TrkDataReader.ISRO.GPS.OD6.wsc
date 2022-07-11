@@ -1,0 +1,435 @@
+<?xml version="1.0"?>
+
+<!-- ============================================= -->
+<!--  This WSC is designed to read ISROs GPS       -->
+<!--  measurements from the GPS/ROSA receiver      -->
+<!--                                               -->
+<!--  author: jens ramrath                         -->
+<!--  date: 4 apr 2012                             -->
+<!-- ============================================= -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="TrkDataReader.ISRO.GPS.OD6.wsc"
+    progid="TrkDataReader.ISRO.GPS.OD6.wsc"
+    version="1.00"
+    classid="{02B68DAB-4FFE-4068-84D7-BD103607DCB0}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Dim m_sFileName   ' File name
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    
+    Const eMTGPSL1			  = 41  ' GPS L1 phase.  
+	Const eMTGPSL2 			  = 42  ' GPS L2 phase. 
+    Const eMTGPSC1			  = 43  ' GPS C/A pseudo-range. 
+    Const eMTGPSP1			  = 44  ' GPS L1 P-code psuedo-range
+    Const eMTGPSP2 			  = 45  ' GPS L2 P-code psuedo-range
+    Const eMTGPSD1 			  = 46  ' GPS L1 doppler.  
+	Const eMTGPSD2 			  = 47  ' GPS L2 doppler.  
+
+    
+    Const eMTGPSNav_C1		  = 81
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+    
+    Const eXComp	= 0
+    Const eYComp	= 1
+    Const eZComp	= 2
+
+    '-------------------------------------------------------------------------
+	' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+	
+    Dim m_sfileSysObj, m_Stream
+    
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+    
+    m_sFileName       = ""
+
+    ' Define the speed of light (m/s)
+
+    const AgCSpeedOfLight = 2.997924580000000E+08
+
+    '-------------------------------------------------------------------------
+	' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+	
+	dim oRegExp, oMatches, oMatch
+	Set oRegExp = new RegExp
+
+	dim oRegExpSub, oMatchesSub, oMatchSub
+	Set oRegExpSub = new RegExp
+
+    '-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+    
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+    Set pObsSet = CreateObject(ObjectStr)
+    pObsSet.Date.Unit = "UTCG"
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+    pObs.Date.Unit = "UTCG"
+    
+   '-------------------------------------------------------------------------
+    Function GetFileName()
+   '-------------------------------------------------------------------------
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Classification property
+    '-------------------------------------------------------------------------
+
+    Function GetClassification()
+
+       GetClassification = m_Classification
+
+    End Function
+
+    Function SetClassification(classification)
+
+       m_Classification = classification
+
+    End Function
+
+
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+    
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+
+        If newFile Then        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+        Else        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+	Function GetObsSet(setColl)
+		dim date, line, gpsWeek, gpsSeconds, gpsNanoSec, gpsSvId
+		dim prange1, prange2, doppler1, doppler2, phase1, phase2
+		dim measType, rest, err, numSets
+
+
+		numSets = 0
+		pObsSet.Clear
+
+		Dim debug
+		debug = 0
+
+		' *********************
+		' ***** read data *****
+		' *********************
+
+		Do Until m_Stream.AtEndOfStream   ' Or numSets > 0
+
+			line = m_Stream.ReadLine
+
+			' ***** parse measurement data *****
+			' sample lines:
+			' gpsid     gpswksec   gpswknanosec    prange L1           prange L2             dop L1            dop L2      clb L1      clb L2         car phase L1           car phase L2    Unrolled cphase L1     Unrolled cphase L2   Cloack Bias RateL1          Cloack Bias RateL2   
+			'            Seconds    Nano Sec         Meters             Meters                Meter/sec        Meter/sec     Km          Km               Cycles              Cycles                  Cycles             Cycles                       
+			'    14  1015825492   340000000    17188603.73437500    17188602.54687500     -2117.741211     -2117.717773 2468.272664 2468.272063       20181.94694010      -11846.67871094       20181.94694010      -11846.67871094           0.00428125           0.00414063 0 0 0 0 0 0 0 0 0 0 0
+			'    16  1015825492   340000000    21783866.11718750    21783866.57031250      4569.817383      4569.858398 2468.272664 2468.272063       15437.75390625      141333.35221354       15437.75390625      141333.35221354           0.00428125           0.00414063 0 0 1 0 0 0 0 0 0 0 1
+			'    22  1015825492   340000000    18810141.37500000    18810138.22656250     -1443.861328     -1443.839844 2468.272664 2468.272063       -9658.90950521       80589.52832031       -9658.90950521       80589.52832031           0.00428125           0.00414063 0 0 4 0 0 0 0 0 1 0 0
+
+
+			oRegExp.pattern = "\s+(\d+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s+(.*)"
+
+			oRegExp.global = false
+			set oMatches = oRegExp.Execute(line)
+
+			if oMatches.Count = 1 then
+				gpsSvId 		= trim(oMatches(0).submatches(0))
+
+				gpsWeek 		= Fix(trim(oMatches(0).submatches(1))/60.0/60.0/24.0/7.0)
+				gpsSeconds 		= trim(oMatches(0).submatches(1)) - gpsWeek*60.0*60.0*24.0*7.0
+				gpsNanoSec 		= trim(oMatches(0).submatches(2))
+				
+				prange1			= trim(oMatches(0).submatches(3))
+				prange2			= trim(oMatches(0).submatches(4))
+				doppler1 		= trim(oMatches(0).submatches(5))
+				doppler2 		= trim(oMatches(0).submatches(6))
+				phase1 			= trim(oMatches(0).submatches(9))
+				phase2 			= trim(oMatches(0).submatches(10))
+				
+
+				'-------------------------------------------------------------------------
+				' Assemble the GPS date 
+				'-------------------------------------------------------------------------
+
+				date = gpsWeek & ":" & (gpsSeconds + gpsNanoSec / 1e9)
+
+				'-------------------------------------------------------------------------
+				' Initialize observation and obs set
+				'-------------------------------------------------------------------------
+
+				pObsSet.Clear()
+				pObsSet.Date.unit = "GPS"
+				pObsSet.Date      = date
+
+				'-------------------------------------------------------------------------
+				' Initialize observation
+				'-------------------------------------------------------------------------
+
+				pObs.Date.unit = "GPS"
+				pObs.Date      = date
+				pObs.TimeOrigin = eGroundReceiveTime
+
+				'-------------------------------------------------------------------------
+				' Set up IDs
+				' In TrackerIDs list: GPS Receiver is the "Tracker" and the GPS Sats are the "Trackees"
+				'-------------------------------------------------------------------------
+				pObs.TrackerIDs.Clear()
+				pObs.TrackerIDs.Insert 0, 1001  		' tracker
+				pObs.TrackerIDs.Insert 1, gpsSvId		' trackee
+				
+				' ##### PSEUDO RANGE #####
+				' GPS prange L1
+				pObs.MeasureType	= eMTGPSP1
+				pObs.Value.Unit		= "m"
+				pObs.Value.Value	= prange1
+				pObsSet.Add pObs
+
+				' GPS prange L2
+				pObs.MeasureType	= eMTGPSP2
+				pObs.Value.Unit		= "m"
+				pObs.Value.Value	= prange2
+				pObsSet.Add pObs
+
+				' ##### DOPPLER #####
+' skip doppler for now
+'				' GPS doppler L1
+'				pObs.MeasureType	= eMTGPSD1
+'				pObs.Value.Unit		= "m/sec"
+'				pObs.Value.Value	= doppler1
+'				pObsSet.Add pObs
+'
+'				' GPS doppler L2
+'				pObs.MeasureType	= eMTGPSD2
+'				pObs.Value.Unit		= "m/sec"
+'				pObs.Value.Value	= doppler2
+'				pObsSet.Add pObs
+
+				' ##### PHASE #####
+				' GPS phase L1
+				pObs.MeasureType	= eMTGPSL1
+				pObs.Value.Unit		= "cycles"
+				pObs.Value.Value	= phase1
+				pObsSet.Add pObs
+
+				' GPS phase L2
+				pObs.MeasureType	= eMTGPSL2
+				pObs.Value.Unit		= "cycles"
+				pObs.Value.Value	= phase2
+				pObsSet.Add pObs
+
+
+				if debug <> 0 then
+					msgbox("Time: " & date & "" )
+				end if
+
+				'-------------------------------------------------------------------------
+				' Any Valid Meas? 
+				'-------------------------------------------------------------------------
+
+				If pObsSet.Count > 0 Then
+					numSets = numSets + 1
+					setColl.Add pObsSet
+				End If
+								
+			end if			
+		
+		Loop
+
+
+		GetObsSet = numSets
+
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+		
+	End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+    
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Support Routines for SaveObs Function
+    '-------------------------------------------------------------------------
+
+    Function WriteObs()
+
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+
+
+
+
+]]>
+</script>
+
+</component>
+

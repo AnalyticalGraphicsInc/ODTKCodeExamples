@@ -1,0 +1,462 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================== -->
+<!--  This file is the ODTK reader for Monge data          -->
+<!-- ===================================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    progid="WscVBS_MONGE_RADAR.wsc"
+    classid="{E33F8347-A7BC-421c-96D0-B93028AD6ECD}"
+    description="French MONGE Radar AzElRange Format"
+    version="1.00"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+    <method name="CloseFile"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector type constants
+    '-------------------------------------------------------------------------
+
+    const eNotUsed    = -1
+    const ePosOnly    = 0
+    const eVelOnly    = 1
+    const ePosVel     = 2
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector coordinate type constants
+    '-------------------------------------------------------------------------
+
+    const eCBI =  0
+    const eCBF =  1
+	const eEFG =  9
+    
+    '-------------------------------------------------------------------------
+	' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+	
+    Dim m_sfileSysObj, m_Stream, m_sFileName
+    
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+    
+    m_sFileName       = ""
+
+    '-------------------------------------------------------------------------
+	' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+	
+    dim oRegExp, oMatches, oMatch    
+	Set oRegExp = new RegExp
+
+    '-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+    
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\CodeSamples\Extend\ODTK\" & "AGI.ODTK.ProgIDs.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_*.AgODObsSet"
+    Set pObsSet = CreateObject(ObjectStr)
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData*.AgODGenericObs"
+    Set pObs = CreateObject(ObjectStr)
+
+    '-------------------------------------------------------------------------
+   	' Define shared variables
+    '-------------------------------------------------------------------------
+    Dim Xpos, Ypos, Zpos	
+	dim stationName, satelliteName, temperature, pressure, humidity
+   
+   '-------------------------------------------------------------------------
+   ' GetFileName()
+   '-------------------------------------------------------------------------
+    
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+            
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+    
+    	dim line
+    	
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+        If newFile Then        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+        Else        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+
+			'-------------------------------------------------------------------------
+			' Read header. Look for these lines:
+			' # NOM RADAR : ARMOR1, SATELLITE : SPOT5 (NORAD 27421), DATE : 08 avril 2011
+			'-------------------------------------------------------------------------
+			
+			' set up initial values used to check if all the necessary data has been found
+			
+			stationName = ""
+			satelliteName = ""
+			temperature = ""
+			pressure = ""
+			humidity = ""
+
+			' Read the first four lines of the header to get the information we need.
+							
+			line = m_Stream.ReadLine
+			line = m_Stream.ReadLine
+			line = m_Stream.ReadLine
+						
+			'-------------------------------------------------------------------------
+			' Check for station/satellite data
+			'-------------------------------------------------------------------------
+
+			oRegExp.pattern = "^#\s+NOM RADAR : (\S+), SATELLITE : (\S+)"
+			set oMatches = oRegExp.Execute(line)
+									
+			if oMatches.Count = 1 then
+				stationName = oMatches(0).submatches(0)
+				satelliteName = oMatches(0).submatches(1)
+			end if
+			
+			line = m_Stream.ReadLine
+			
+			oRegExp.pattern = "^# température de l'air : (\S+)°C, pression atmosphérique : (\S+)hPa, humidité relative : (\S+)%"
+			set oMatches = oRegExp.Execute(line)
+						
+			' Check for atmosphere data
+			
+			if oMatches.Count = 1 then
+				temperature = oMatches(0).submatches(0)
+				pressure    = oMatches(0).submatches(1)
+				humidity    = oMatches(0).submatches(2)
+			end if
+											
+		End If
+		
+    End Function
+
+	'-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+    End Function
+
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+	dim test
+	test = true
+	
+    Function GetObsSet(setColl)
+        dim datetime, line, year, month, day, time
+        dim numSets, azvalue, elvalue, rangevalue, trackerlat, trackerlon, trackeralt
+		
+        numSets = 0
+    
+        oRegExp.pattern = "(\d{3})-(\d{2}:\d{2}:\S+)\s+\|\s+(\S+)\s+\|\s+(\S+)\s+\|\s+(\S+)\s+\|\s+(\S+)\s+\|\s+(\S+)\s+\|\s+(\S+)"
+
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+
+            line = m_Stream.ReadLine
+            
+			' ***** parse measurement data *****
+			' sample lines:
+			'# ddd-hh:mm:ss.sss in UTC | Azi (deg) | Site (deg) | Range (km) | Lat_station (deg) | Lon_station (deg) | Alt_station (m)
+			'  098-11:28:28.301	|	21.362273	|	4.820867	|	2888.320000	|	31.504130	|	-17.578603	|	33.959005
+    		
+            set oMatches = oRegExp.Execute(line)
+            
+            if oMatches.Count = 1 then
+            					
+            	' Right now the year is hardcoded since it doesn't seem to be in the data file
+            	
+            	year       = 2011
+            	day        = oMatches(0).submatches(0)
+ 				time       = oMatches(0).submatches(1)
+				azvalue    = oMatches(0).submatches(2)
+            	elvalue	   = oMatches(0).submatches(3)
+            	rangevalue = oMatches(0).submatches(4)
+            	trackerlat = oMatches(0).submatches(5)
+            	trackerlon = oMatches(0).submatches(6)
+            	trackeralt = oMatches(0).submatches(7)
+            	
+				'-------------------------------------------------------------------------
+				' Reassemble the date into a UTCJFOUR format.  This is the closest
+				' representation to what was input and avoids messy date
+				' conversion code.  Let ODTK do the work!
+				'-------------------------------------------------------------------------
+
+				datetime =  day & "/" & year & " " & time
+				
+				'-------------------------------------------------------------------------
+				' Initialize observation set and observation
+				'-------------------------------------------------------------------------
+				pObsSet.Clear()
+				pObsSet.Date.Unit = "UTCJFOUR"
+				pObsSet.Date    = datetime
+				
+				pObs.Date.unit = "UTCJFOUR"
+				pObs.Date       = datetime
+				pObs.TimeOrigin = eGroundReceiveTime
+
+				'-------------------------------------------------------------------------
+				' Set up facility and satellite names. Facility must come first for 2-way ranging.
+				'-------------------------------------------------------------------------
+			
+				pObs.TrackerNames.Clear()
+				pObs.TrackerNames.Insert 0, stationName 	' Facility must be first item
+				pObs.TrackerNames.Insert 1, satelliteName   ' Satellite follows Facility
+				
+				'-------------------------------------------------------------------------
+				'Set the position of the tracker
+				'-------------------------------------------------------------------------
+				
+				ConvertLLA2ECEF trackerlat, trackerlon, trackeralt
+			
+				pObs.TrackerVector.CoordSystem = eCBF
+				pObs.TrackerVector.ElmType = ePosOnly
+				pObs.TrackerVector.X.Unit = "m" 
+				pObs.TrackerVector.X.Value = Xpos 
+				pObs.TrackerVector.Y.Unit = "m"
+				pObs.TrackerVector.Y.Value = Ypos 
+				pObs.TrackerVector.Z.Unit = "m"
+				pObs.TrackerVector.Z.Value = Zpos 
+				
+				'-------------------------------------------------------------------------
+				'Set the weather at the tracker
+				'-------------------------------------------------------------------------
+				
+				pObs.RelHumidity = humidity/100
+				pObs.Temperature = 273.15 + temperature
+				pObs.Pressure = pressure * 100
+
+				'-------------------------------------------------------------------------
+				' Azimuth measurement
+				'-------------------------------------------------------------------------
+				
+				pObs.MeasureType = eMTAzimuth
+				pObs.value.Unit	 = "deg"
+				pObs.value = azvalue
+				pObsSet.Add pObs
+					
+				'-------------------------------------------------------------------------
+				' Elevation measurement
+				'-------------------------------------------------------------------------				
+
+				pObs.MeasureType = eMTElevation
+				pObs.value.Unit	 = "deg"
+				pObs.value = elvalue
+				pObsSet.Add pObs
+					
+				'-------------------------------------------------------------------------
+				' Range Measurement
+				'-------------------------------------------------------------------------
+
+				pObs.MeasureType = eMTRange
+				pObs.value.Unit	 = "km"
+				pObs.value = rangevalue
+				pObsSet.Add pObs
+
+				numSets = numSets + 1
+				setColl.Add pObsSet
+							
+        	End If
+		Loop
+				
+        GetObsSet = numSets
+        		
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+	    Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+    
+    '-------------------------------------------------------------------------
+    ' ConvertLLA2ECEF method
+    '-------------------------------------------------------------------------
+
+    Sub ConvertLLA2ECEF(lat, lon, alt)
+    
+    	Dim pi, a, esquared, chi
+    	pi = 3.1415926535897932384626433832795
+    	a = 6378137.0 'meters WGS84 parameters
+    	esquared = 6.69437999014e-3 'WGS84 parameters
+    	
+    	lat = lat * pi / 180.0
+    	lon = lon * pi / 180.0
+    	
+    	chi = sqr(1-(esquared*(sin(lat))^2))
+    	
+    	Xpos = ((a/chi)+alt)*cos(lat)*cos(lon)
+    	Ypos = ((a/chi)+alt)*cos(lat)*sin(lon)
+    	Zpos = (((a*(1-esquared))/chi)+alt)*sin(lat)
+    	    	
+    End Sub
+]]>
+</script>
+
+</component>
+

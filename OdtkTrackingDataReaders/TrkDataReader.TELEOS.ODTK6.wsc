@@ -1,0 +1,387 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================== -->
+<!--  ODTK data reader for Singapores TeLEOS satellites       -->
+<!--                                                          -->
+<!--  author: jens ramrath, 12 sep 2019                       -->
+<!-- ======================================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="TELEOS reader"
+    progid="TrkDataReader.TELEOS.ODTK6.wsc"
+    version="1.00"
+    classid="{3187DD15-9C7C-4D32-9185-C96DB3E7B179}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+  <method name="CloseFile"/>
+
+  <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+    '-------------------------------------------------------------------------
+	' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+
+    Dim m_sfileSysObj, m_Stream, m_sFileName, m_Satellite, m_Tracker
+
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+    m_sFileName = ""
+
+    '-------------------------------------------------------------------------
+	' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+
+    dim oRegExp, oMatches, oMatch
+
+	Set oRegExp = new RegExp
+
+    '-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+
+    Set pObsSet = CreateObject(ObjectStr)
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+
+	'-------------------------------------------------------------------------
+	' Define look up tables to translate names to ID numbers
+    '-------------------------------------------------------------------------
+
+	Dim satIDs
+	Set satIDs = CreateObject("Scripting.Dictionary")
+	satIDs.Add "TELEOS-1", "1001"
+	satIDs.Add "TELEOS-2", "1002"
+      		
+
+	Dim facIDs
+	Set facIDs = CreateObject("Scripting.Dictionary")
+	facIDs.Add "F1", "501"
+
+	
+
+   '-------------------------------------------------------------------------
+   ' Function GetFileName()
+   '-------------------------------------------------------------------------
+
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+
+		dim line
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+        If newFile Then
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+        Else
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+
+			'-------------------------------------------------------------------------
+			' Read header information to find the satellite ID and the tracker ID
+			'-------------------------------------------------------------------------
+
+			Dim filePathSplit
+			filePathSplit = Split(m_sFileName, "\")
+			
+			Dim fileNameSplitUnderscore
+			fileNameSplitUnderscore = Split(filePathSplit(Ubound(filePathSplit)), "_")
+	   		Dim fileNameSplitPeriod
+			fileNameSplitPeriod = Split(fileNameSplitUnderscore(0), ".")
+	   
+			m_Satellite     = fileNameSplitPeriod(0)
+
+		End If
+
+    End Function
+
+	'-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        dim line, datetime, obsval, station
+        dim numObsSets
+        dim date, time, azActual, azPredict, elActual, elPredict
+
+		pObsSet.Clear()
+		numObsSets = 0
+
+
+		'-------------------------------------------------------------------------
+		' parse the line 
+		' there are two possible formats
+		' 1. without signal strength
+		'
+		' Date Time AzPredit AzActual ElPredit ElActual
+		' 2019-08-29 04:51:08.067 301.321 301.314 3.205 2.973
+		' 2019-08-29 04:51:08.749 301.396 301.355 3.238 3.238
+		'
+		' 2. with signal strength
+		'
+		' Date     Time   Signal AzPredit AzActual ElPredit ElActual
+		' 2019-10-25 00:10:27.722    39.70  314.336  314.336    2.976    2.976
+		' 2019-10-25 00:10:28.646    39.62  314.410  314.367    3.236    3.214
+		'
+		'-------------------------------------------------------------------------
+		
+		
+		oRegExp.pattern  = "(\S+)\s+(\S+)\s+\S*\s*(\S+)\s+(\S+)\s+(\S+)\s+(\S+)\s?"
+
+        Do Until m_Stream.AtEndOfStream or numObsSets > 0
+			' read next line
+            line = Trim(m_Stream.ReadLine)
+
+			' look for measurements
+            set oMatches = oRegExp.Execute(line)
+
+            if oMatches.Count = 1 then
+
+                date        = oMatches(0).submatches(0)
+                time        = oMatches(0).submatches(1)
+                azPredict   = oMatches(0).submatches(2)
+                azActual    = oMatches(0).submatches(3)
+                elPredict   = oMatches(0).submatches(4)
+                elActual    = oMatches(0).submatches(5)
+                
+                ' ignore header
+                if date <> "Date" then
+
+					' put the date into a format ODTK knows
+					dateTime = Replace(date, "-", "/") & " " & time
+
+					pObsSet.Clear()
+					pObsSet.Date.unit = "YYYY/MM/DD"
+					pObsSet.Date      = dateTime
+
+					'-------------------------------------------------------------------------
+					' Initialize observation
+					'-------------------------------------------------------------------------
+
+					pObs.Date.unit  = "YYYY/MM/DD"
+					pObs.Date       = datetime
+					pObs.TimeOrigin = eGroundReceiveTime
+
+					'-------------------------------------------------------------------------
+					' Set up facility and satellite IDs. Facility must come first for 2-way ranging.
+					'-------------------------------------------------------------------------
+
+					pObs.TrackerIDs.Clear()
+					'pObs.TrackerIDs.Insert 0, m_Tracker			' Facility must be first item
+					pObs.TrackerIDs.Insert 0, 500
+					pObs.TrackerIDs.Insert 1, satIDs(m_Satellite)	' Satellite follows Facility
+
+
+					pObs.MeasureType  = eMTAzimuth
+					pObs.value.Unit   = "deg"
+					pObs.value        = azActual
+					pObsSet.Add pObs
+
+					pObs.MeasureType  = eMTElevation
+					pObs.value.Unit   = "deg"
+					pObs.value        = elActual
+					pObsSet.Add pObs
+
+
+					If pObsSet.Count > 0 Then
+						setColl.Add pObsSet
+						numObsSets = numObsSets + 1
+					End If
+				End If
+
+        	End If
+
+		Loop
+
+        GetObsSet = numObsSets
+
+    End Function  ' GetObsSet
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+	    Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+]]>
+</script>
+
+</component>
+

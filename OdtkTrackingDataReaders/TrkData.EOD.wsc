@@ -1,0 +1,457 @@
+<?xml version="1.0"?>
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    progid="AGI.TrkData.ExoAnalyticData"
+    classid="{E49F6103-6C92-446B-99E6-ACDDDFC91E4C}"
+    description="ExoAnalytic Telescope Obs Data Reader With Spaces"
+    version="1.00"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+   <method name="GetRegKey"/>
+
+    <!-- New method added to support ODTK 6.1.1 -->
+
+    <method name="CloseFile"/>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+    Const ForAppending = 8
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+
+   '-------------------------------------------------------------------------
+   ' Define equinox epoch constants
+   '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxEpoch = -1
+    const eJ2000Epoch          =  0
+    const eB1950Epoch          =  1
+    const eOfDate              =  2
+    const eYearOfObsJan0       =  3
+
+    '-------------------------------------------------------------------------
+    ' Define equinox type constants
+    '-------------------------------------------------------------------------
+
+    const eDefaultEquinoxType     = -1
+    const eMeanEquatorAndEquinox  =  0
+    const eTrueEquatorAndEquinox  =  1
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector type constants
+    '-------------------------------------------------------------------------
+
+    const eNotUsed    = -1
+    const ePosOnly    = 0
+    const eVelOnly    = 1
+    const ePosVel     = 2
+
+    '-------------------------------------------------------------------------
+    ' Define tracking vector coordinate type constants
+    '-------------------------------------------------------------------------
+
+    const eCBI =  0
+    const eCBF =  1
+	const eEFG =  9
+
+    '-------------------------------------------------------------------------
+    ' Define aberration model constants
+    '-------------------------------------------------------------------------
+	
+	const eDefaultAberration 					= -1 		' Aberration is set by the tracker's properties.  
+	const eNoAberrationRemoved 					= 0 		' No abberration effects have been removed.  
+	const eAnnualAberrationRemoved 				= 1 		' Annual aberration has been removed.  
+	const eDiurnalAberrationRemoved 			= 2 		' Diurnal aberration has been removed.  
+	const eAnnualAndDiurnalAberrationRemoved 	= 3 		' Annual and diurnal aberration have been removed.  
+	
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+
+    Dim m_sFileName   ' File name
+    Dim m_sfileSysObj
+    Dim m_Stream
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+    m_sFileName = ""
+
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\CodeSamples\Extend\ODTK\" & "AGI.ODTK.ProgIDs.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_*.AgODObsSet"
+    Set pObsSet = CreateObject(ObjectStr)
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData*.AgODGenericObs"
+    Set pObs = CreateObject(ObjectStr)
+	
+    '-------------------------------------------------------------------------
+	' define some regular expression objects that we'll be using
+    '-------------------------------------------------------------------------
+	
+    dim oRegExp, oMatches, oMatch    
+	Set oRegExp = new RegExp	
+	oRegExp.pattern = "\s*(\S+)"
+	oRegExp.global = true
+	
+    '-------------------------------------------------------------------------
+    ' Configure the parameters that are assumed to be "constant"
+    '-------------------------------------------------------------------------
+	
+    pObsSet.Date.Unit = "JDate"
+	
+    pObs.Date.Unit    = "JDate"
+	pObs.EquinoxType  = eMeanEquatorAndEquinox
+	pObs.EquinoxEpoch = eJ2000Epoch
+
+   '-------------------------------------------------------------------------
+    Function GetFileName()
+   '-------------------------------------------------------------------------
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = false
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = true
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+		
+        If newFile Then
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)
+        Else
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)
+        End If
+
+    End Function
+
+	'-------------------------------------------------------------------------
+    ' CloseFile method
+    '-------------------------------------------------------------------------
+
+    Function CloseFile()
+
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+
+        Dim numSets, line, satID, facID, Hr, Mi, ddd
+        Dim dateStr, ra, dec, Xpos, Ypos, Zpos, vx, vy, vz, lat, lon, alt
+		Dim hasPosVel
+
+        numSets = 0
+        pObsSet.Clear
+			
+        Do Until m_Stream.AtEndOfStream Or numSets > 0
+			
+			hasPosVel = false
+            line = m_Stream.ReadLine
+            set oMatches = oRegExp.Execute(line)
+            
+			' Check to see how many entries we have. This is important for determining whether we
+			' have the J2000 format or the LLA format. 
+			
+            if oMatches.Count >= 9 then
+            			
+				facID   = oMatches(0)
+				satID   = oMatches(1)
+				dateStr = oMatches(2)
+				
+				pObs.date = dateStr
+				pObsSet.date = dateStr
+				
+				if oMatches.Count = 9 or oMatches.Count = 10 then
+				
+					' We have J2000 format 
+
+					Xpos    = oMatches(3)
+					Ypos    = oMatches(4)
+					Zpos    = oMatches(5)
+					vx    = oMatches(6)
+					vy    = oMatches(7)
+					vz    = oMatches(8)
+					
+					' Note that in the J2000 format ExoAnalytics has already corrected for
+					' light time delay and all aberration effects. So we don't want to do it again.
+					
+					pObs.timeOrigin   = eSatelliteTransmitTime
+					pObs.AberrationModel = eAnnualAndDiurnalAberrationRemoved
+
+					RADEC2 vx, vy, vz, ra, dec
+					hasPosVel = true
+					
+				elseif oMatches.Count = 16 or oMatches.Count = 17 then
+					
+					' We have LLA format
+					
+					lat     = oMatches(3)
+					lon     = oMatches(4)
+					alt     = oMatches(5)
+					ra      = oMatches(8)
+					dec     = oMatches(9)
+					
+					' Note that in the LLA format ExoAnalytics has not corrected for
+					' light time delay and aberration effects. 
+					
+					pObs.timeOrigin   = eGroundReceiveTime
+					pObs.AberrationModel = eNoAberrationRemoved
+					
+				end if
+				
+				pObs.TrackerIDs.Clear
+				pObs.TrackerIDs.Insert 0, facID
+				pObs.TrackerIDs.Insert 1, satID
+
+				if hasPosVel then
+								
+					' Send in the Tracker Vector
+					
+					pObs.TrackerVector.CoordSystem = eCBI
+					pObs.TrackerVector.ElmType     = ePosOnly
+
+					pObs.TrackerVector.X.Unit  = "m"
+					pObs.TrackerVector.X.Value = Xpos
+
+					pObs.TrackerVector.Y.Unit  = "m"
+					pObs.TrackerVector.Y.Value = Ypos
+
+					pObs.TrackerVector.Z.Unit  = "m"
+					pObs.TrackerVector.Z.Value = Zpos
+					
+				end if
+				
+				'/// Right Ascension ///
+				
+				pObs.MeasureType  = eMTRightAscension
+				pObs.value.Unit   = "deg"
+				pObs.value        = ra
+
+				pObsSet.Add pObs
+				
+				'/// Declination ///
+				
+				pObs.MeasureType  = eMTDeclination
+				pObs.value.Unit   = "deg"
+				pObs.value        = dec
+
+				pObsSet.Add pObs
+				
+				numSets = numSets + 1
+				setColl.Add pObsSet
+				
+			end if
+
+        Loop
+
+        GetObsSet = numSets
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+	
+	'-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+
+        nObsSaved = 0
+        SaveObs = nObsSaved
+
+    End Function
+	
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+	
+	Sub RADEC1(x, y, z, ra, dec)
+	
+		dim pi, mag, asin, atan2
+	
+		pi = 3.14159265359
+	
+		mag = Sqr((x^2) + (y^2))
+
+		asin = 2*Atn(z / (1 + Sqr(1-z^2)))
+		dec = asin * 180 / pi
+		
+		if (x > 0) then
+			atan2 = Atn((y/mag)/(x/mag))
+		elseif (x < 0) then
+			atan2 = Sgn(y/mag) * ( pi - Atn(Abs((y/mag)/(x/mag))))
+		elseif (y = 0) then
+			atan2 = 0
+		else
+			atan2 = Sgn(y/mag)*pi/2
+		end if
+		
+		ra = atan2 * 180 / pi
+	
+	end Sub
+	
+	Sub RADEC2(x, y, z, ra, dec)
+		
+		dim pi, mag, asin, atan2
+	
+		pi = 3.14159265359
+	
+		mag = Sqr((x^2) + (y^2))
+
+		asin = Atn(z / Sqr(1-z^2))
+		dec = asin * 180 / pi
+		
+		if (x > 0) then
+			atan2 = Atn((y)/(x))
+		elseif (x < 0) then
+			atan2 = Sgn(y) * ( pi - Atn(Abs(y/x)))
+		elseif (y = 0) then
+			atan2 = 0
+		else
+			atan2 = Sgn(y/mag)*pi/2
+		end if
+		
+		ra = atan2 * 180 / pi
+	
+	end Sub
+	
+	
+	
+]]>
+</script>
+</component>

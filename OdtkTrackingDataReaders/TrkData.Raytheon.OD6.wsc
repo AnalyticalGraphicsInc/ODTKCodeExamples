@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+
+<!-- ============================================= -->
+<!--  This WSC is designed to read Raytheons       -->
+<!--  custom .csv tracking data format             -->
+<!--                                               -->
+<!--  author: jens ramrath, agi                    -->
+<!--  date: 24 mar 2010                            -->
+<!-- ============================================= -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="read indovisions custom tracking format"
+    progid="TrkData.Raytheon.OD6.wsc"
+    version="1.00"
+    classid="{51B521FC-640C-412a-8D0E-606582F90450}">
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setCollection"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+    '-------------------------------------------------------------------------
+    ' Member variables
+    '-------------------------------------------------------------------------
+
+    Option explicit
+
+    Const ForReading   = 1
+    Const ForWriting   = 2
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    Const eMTGPSNav_C1		  = 81
+    Const eMTEphPos           = 151
+
+    Const eGroundReceiveTime     = 0
+    Const eSatelliteTransmitTime = 1
+    Const eGroundTransmitTime    = 2
+    Const eSatelliteReceiveTime  = 3
+    
+    Const eXComp	= 0
+    Const eYComp	= 1
+    Const eZComp	= 2
+
+	Const eCBFCoordSys = 0
+	Const eCBICoordSys = 1
+	Const eJ2000CoordSys = 2
+	Const eICRFCoordSys = 3
+
+
+    '-------------------------------------------------------------------------
+	' define some global variables we'll be using
+    '-------------------------------------------------------------------------
+	
+    Dim m_sfileSysObj, m_Stream, m_sFileName
+    
+    Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+    
+    m_sFileName       = ""
+
+    ' Define the speed of light (m/s)
+
+    const AgCSpeedOfLight = 2.997924580000000E+08
+
+
+    '-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+    '-------------------------------------------------------------------------
+    
+    Dim version
+    version = "6.0"
+
+    Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+    versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+    GetRegKey(versionStr)
+
+    ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+    Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+    Dim pObsSet
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "AgMach10_5.AgODObsSet"  or similar
+    Set pObsSet = CreateObject(ObjectStr)
+
+
+    Dim pObs
+    ObjectStr = textFile.ReadLine               ' ObjectStr = "IAgODProvideTrackingData5.AgODGenericObs"  or similar
+    Set pObs = CreateObject(ObjectStr)
+
+   '-------------------------------------------------------------------------
+   ' Function GetFileName()
+   '-------------------------------------------------------------------------
+    
+    Function GetFileName()
+
+       GetFileName = m_sFileName
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsSave property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsSave()
+
+       GetSupportsSave = False
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SupportsMultipleTrackers property [read-only]
+    '-------------------------------------------------------------------------
+
+    Function GetSupportsMultipleTrackers()
+
+       GetSupportsMultipleTrackers = True
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' Reset method
+    '-------------------------------------------------------------------------
+
+    Function Reset()
+
+        if m_sFileName <> "" Then
+            
+            Dim newVal
+            newVal = m_sFileName
+            OpenFile newVal, False
+            
+        End if
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' OpenFile method
+    '-------------------------------------------------------------------------
+
+    Function OpenFile(newVal, newFile)
+    
+        If m_sFileName <> "" Then
+            m_Stream.Close
+            m_sFileName = ""
+        End If
+
+        m_sFileName = newVal
+
+        If newFile Then        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+        Else        
+            Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+        End If
+
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetObsSet(setColl)
+		' ***************************
+		' ***** some init stuff *****
+		' ***************************
+        Dim description
+        Dim date, line, splitLine, numSets
+		Dim simTime, xEcef, yEcef, zEcef
+		Dim satelliteID, stationID
+
+        numSets = 0
+        pObsSet.Clear
+    
+    	Dim debug
+    	debug = 0
+
+		line = "null"
+		numSets = 0
+
+
+		' *********************
+		' ***** read data *****
+		' *********************
+        Do Until m_Stream.AtEndOfStream   ' Or numSets > 0
+
+            line = m_Stream.ReadLine
+            
+			' ***** parse measurement data *****
+			' sample data:
+			' CurrentTime, TrackTime, SimTime, SenID, TrkID,   Rm(m),     Bm(deg),    Em(deg),   XBm(m),     YBm(m),     ZBm(m),   XECEFm(m),  YECEFm(m),  ZECEFm(m),      Rt(m),     Bt(deg),   Et(deg),   XBt(m),     YBt(m),     ZBt(m),   XECEFt(m),  YECEFt(m),  ZECEFt(m),      varR,        varAZ,        varEL,         LVARx,      LCOVARxy,     LCOVARxz,       LVARy,      LCOVARyz,       LVARz,         VARx,       COVARxy,      COVARxz,        VARy,       COVARyz,        VARz,       SNR(db),    Slat(deg),    Slon(deg),     Salt(m),     Rrep(m),   Brep(deg),   Erep(deg),   DetType(1-Track,0-SPos), TrkTeam(1-B 2-R 3-N)
+			' 1258411206.0000,1258411208.00000,1.79999,10016,10071,80530716.03,-57.5,-25.08,-61516622.4,39188246.82,-34134772.64,-7773308.23,-76557484.64,-12998367.66,40265357.81,-55.75,9.97,-32782688.67,22316797.65,6968135.03,2797656.16,-36607059.58,20046329.53,4.00E-02,2.74E-07,2.74E-07,6.48E+08,5.16E+08,-5.76E+08,1.13E+09,3.67E+08,1.46E+09,1.46E+09,-1.90E+08,3.67E+07,1.23E+08,-4.09E+08,1.65E+09,24.93,7.04E+01,3.11E+01,9.50E+01,80530716.03,-57.5014,-25.0793,1,2,
+			' 1258411206.0000,1258411208.00000,1.89999,10016,10053,49684989.29,-42.13,-31.71,-28355142.43,31344416.77,-26117266.24,-16285626.97,-42958916.03,-8082429.32,24842494.66,-44.48,6.64,-17288538.45,17607105.61,2871552.1,-2592886,-21762157.67,14605481.78,4.00E-02,2.74E-07,2.74E-07,3.54E+08,1.51E+08,-2.03E+08,3.23E+08,2.24E+08,4.90E+08,4.27E+08,-1.66E+08,-3.09E+07,1.27E+08,-1.83E+08,6.13E+08,33.32,7.04E+01,3.11E+01,9.50E+01,49684989.29,-42.1335,-31.7125,1,1,
+			' 1258411206.0000,1258411209.00000,3.20001,10016,10051,47561373.46,52.71,-12.21,36984252.13,28161692.52,-10058251.03,-42877116.94,17311958.9,5973618.52,23780686.71,49.74,16.39,17410453.75,14743871.41,6709352.91,-17117801.58,10001612.36,17258145.71,4.00E-02,2.74E-07,2.74E-07,2.35E+08,-2.72E+08,1.02E+08,3.85E+08,7.77E+07,5.92E+08,6.90E+07,1.90E+08,2.29E+06,5.25E+08,6.77E+06,6.18E+08,34.08,7.04E+01,3.11E+01,9.50E+01,47561373.46,52.7125,-12.2091,1,1,
+
+
+			' ignore blank lines
+			if len(line) = 0 then
+				' do nothing
+				
+			' ignore header
+			elseif left(line, 11) = "CurrentTime" then
+				' do nothing
+
+			' read data
+			else
+    		
+				splitLine = split(line, ",")
+
+				if UBound(splitLine) > 10 then
+
+					simTime		= splitLine(2)
+					stationID	= splitLine(3)
+					satelliteID	= splitLine(4)
+					xEcef		= splitLine(20)
+					yEcef		= splitLine(21)
+					zEcef		= splitLine(22)
+					
+					
+					'-------------------------------------------------------------------------
+					' Reassemble the date into a DD/MM/YYYY format
+					' ***** FOR NOW USE RANDOM EPOCH AND THEN ADD SIMTIME SECONDS *****
+					'-------------------------------------------------------------------------
+					date = "01/01/2011 00:00:" & simTime
+
+					'-------------------------------------------------------------------------
+					' Initialize observation and obs set
+					'-------------------------------------------------------------------------
+					pObsSet.Clear()
+					pObsSet.Date.unit = "DD/MM/YYYY"
+					pObsSet.Date      = date
+
+					'-------------------------------------------------------------------------
+					' Initialize observation
+					'-------------------------------------------------------------------------
+					pObs.Date.unit = "DD/MM/YYYY"
+					pObs.Date      = date
+					pObs.TimeOrigin = eGroundReceiveTime
+
+
+					'-------------------------------------------------------------------------
+					' Set up facility and satellite IDs
+					' In TrackerIDs list: facility must come first
+					'-------------------------------------------------------------------------
+					stationID = satelliteID + 10000
+					
+					pObs.TrackerIDs.Clear()
+					pObs.TrackerIDs.Insert 0, satelliteID
+					'pObs.TrackerIDs.Insert 0, stationID			' Facility must be first item
+					'pObs.TrackerIDs.Insert 1, satelliteID		' Satellite follows Facility
+
+
+					' X
+					pObs.MeasureType		= eMTEphPos
+					pObs.Value.Unit			= "m"
+					pObs.Value.Value		= xEcef
+					pObs.CartesianComponent	= eXComp
+					pObs.CartesianCoordSys	= eCBFCoordSys
+					pObs.EphCentralBody		= "Earth"
+					pObsSet.Add pObs
+
+					' Y
+					pObs.MeasureType		= eMTEphPos
+					pObs.Value.Unit			= "m"
+					pObs.Value.Value		= yEcef
+					pObs.CartesianComponent	= eYComp
+					pObs.CartesianCoordSys	= eCBFCoordSys
+					pObs.EphCentralBody		= "Earth"
+					pObsSet.Add pObs
+					
+					' Z
+					pObs.MeasureType		= eMTEphPos
+					pObs.Value.Unit			= "m"
+ 					pObs.Value.Value		= zEcef
+					pObs.CartesianComponent	= eZComp
+					pObs.CartesianCoordSys	= eCBFCoordSys
+					pObs.EphCentralBody		= "Earth"
+					pObsSet.Add pObs
+
+
+					if debug <> 0 then
+						msgbox("Time: " & date & (Chr(13) & Chr(10)) & "Measurement: " & pObs.MeasureType & (Chr(13) & Chr(10)) & " value: " & pObs.Value.Value & " " & pObs.Value.Unit & (Chr(13) & Chr(10)) & stationID & " to " & satelliteID)
+					end if
+
+
+					'-------------------------------------------------------------------------
+					' Any Valid Meas? 
+					'-------------------------------------------------------------------------
+
+					If pObsSet.Count > 0 Then
+						numSets = numSets + 1
+						setColl.Add pObsSet
+					End If
+					
+				End If
+					
+        	End If
+		Loop
+		
+		
+        GetObsSet = numSets
+        
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+		
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+	    Dim numSets
+        numSets = 0
+        GetSupportedObsSet = numSets
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+    Function SaveObs(pEnum, bAppend)
+	    Dim nObsSaved
+        nObsSaved = 0
+        SaveObs = nObsSaved
+    End Function
+
+
+    Function GetRegKey (regKey)
+        Dim objShell
+        Set objShell = CreateObject("WScript.Shell")
+        regValue = objShell.RegRead(regKey)
+        Set objShell = nothing
+    End Function
+
+]]>
+</script>
+
+</component>
+

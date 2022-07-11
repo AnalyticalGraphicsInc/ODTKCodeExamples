@@ -1,0 +1,477 @@
+<?xml version="1.0"?>
+
+<!-- ======================================== -->
+<!--  This WSC is designed to read NEC JSON   -->
+<!--  custom tracking data format             -->
+<!--                                          -->
+<!--  author: jens ramrath, agi               -->
+<!--  date: 11 dec 2019                       -->
+<!-- ======================================== -->
+
+
+<component>
+
+<?component error="true" debug="true"?>
+
+<registration
+    description="reads NEC JSON tracking data files"
+    progid="TrkDataReader.NEC.ODTK6.wsc"
+    version="1.00"
+    classid="{B8DE0397-AEA0-4B73-9CA9-2215C5CF1274}"
+>
+</registration>
+
+<public>
+
+   <!-- Properties -->
+
+   <property name="FileName">
+      <get internalName="GetFileName"/>
+   </property>
+
+   <property name="SupportsMultipleTrackers">
+      <get internalName="GetSupportsMultipleTrackers"/>
+   </property>
+
+   <property name="SupportsSave">
+      <get internalName="GetSupportsSave"/>
+   </property>
+
+   <!-- Methods -->
+
+   <method name="Reset"/>
+
+   <method name="OpenFile">
+      <parameter name="newVal"/>
+      <parameter name="newFile"/>
+   </method>
+
+   <method name="GetObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="GetSupportedObsSet">
+      <parameter name="setColl"/>
+   </method>
+
+   <method name="SaveObs">
+      <parameter name="pEnum"/>
+      <parameter name="bAppend"/>
+   </method>
+
+</public>
+
+<script language="VBScript">
+<![CDATA[
+	
+	'-------------------------------------------------------------------------
+	' Member variables
+	'-------------------------------------------------------------------------
+
+	Option explicit
+
+	Const ForReading   = 1
+	Const ForWriting   = 2
+
+    Const eMTRange            = 1
+    Const eMTDoppler          = 2
+    Const eMTAzimuth          = 11
+    Const eMTElevation        = 12
+    Const eMTRightAscension   = 18
+    Const eMTDeclination      = 19
+    Const eMTSBRightAscension = 31
+    Const eMTSBDeclination    = 32
+    Const eMTSBRange          = 33
+    Const eMTSBAzimuth        = 34
+    Const eMTSBElevation      = 35
+    Const eMTGPSNav_C1		  = 81
+    Const eMTEphPos           = 151
+	
+	Const eXComp	= 0
+	Const eYComp	= 1
+    Const eZComp	= 2
+    Const eXDComp	= 3
+    Const eYDComp	= 4
+    Const eZDComp	= 5
+    
+    
+    Const eCBFCoordSys 		= 0 
+	Const eCBICoordSys 		= 1 
+	Const eJ2000CoordSys 	= 2 
+	Const eICRFCoordSys 	= 3 
+   
+
+	Const eGroundReceiveTime     = 0
+	Const eSatelliteTransmitTime = 1
+	Const eGroundTransmitTime    = 2
+	Const eSatelliteReceiveTime  = 3
+
+
+	'-------------------------------------------------------------------------
+	' define some global variables we'll be using
+	'-------------------------------------------------------------------------
+
+	Dim m_sfileSysObj, m_Stream, m_sFileName
+
+	Set m_sfileSysObj = CreateObject("Scripting.FileSystemObject")
+
+	m_sFileName       = ""
+
+	'-------------------------------------------------------------------------
+	' Create obsSet and obs objects for use later on
+	'-------------------------------------------------------------------------
+
+	Dim version
+	version = "6.0"
+
+	Dim textFile, ObjectStr, versionStr, regValue, ODDBObjectFile
+	versionStr = "HKEY_LOCAL_MACHINE\SOFTWARE\AGI\ODTK\" & version & "\InstallHome"
+	GetRegKey(versionStr)
+
+	ODDBObjectFile = m_sfileSysObj.Buildpath(regValue, "\ODTK\AppData\Scripts\MeasProviders\WindowsScriptComponents\" & "CreatODDBObjects.txt")
+	Set textFile = m_sfileSysObj.OpenTextFile(ODDBObjectFile, ForReading)
+
+	Dim pObsSet
+	ObjectStr = textFile.ReadLine
+	Set pObsSet = CreateObject(ObjectStr)
+
+	Dim pObs
+	ObjectStr = textFile.ReadLine
+	Set pObs = CreateObject(ObjectStr)
+
+	'-------------------------------------------------------------------------
+	' Function GetFileName()
+	'-------------------------------------------------------------------------
+
+	Function GetFileName()
+
+	   GetFileName = m_sFileName
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsSave property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsSave()
+
+	   GetSupportsSave = False
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' SupportsMultipleTrackers property [read-only]
+	'-------------------------------------------------------------------------
+
+	Function GetSupportsMultipleTrackers()
+
+	   GetSupportsMultipleTrackers = True
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' Reset method
+	'-------------------------------------------------------------------------
+
+	Function Reset()
+
+		if m_sFileName <> "" Then
+
+			Dim newVal
+			newVal = m_sFileName
+			OpenFile newVal, False
+
+		End if
+
+	End Function
+
+	'-------------------------------------------------------------------------
+	' OpenFile method
+	'-------------------------------------------------------------------------
+
+	Function OpenFile(newVal, newFile)
+
+'		If m_sFileName <> "" Then
+'			m_Stream.Close
+'			m_sFileName = ""
+'		End If
+
+		m_sFileName = newVal
+
+'		If newFile Then        
+'			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForWriting, True)            
+'		Else        
+'			Set m_Stream = m_sfileSysObj.OpenTextFile(m_sFileName, ForReading)			
+'		End If
+
+
+
+	End Function
+
+    '-------------------------------------------------------------------------
+    ' GetObsSet method
+    '-------------------------------------------------------------------------
+	Dim firstRun
+	firstRun = 0
+
+
+    Function GetObsSet(setColl)
+		Dim line, numSets
+		Dim splitData
+        Dim value
+
+		numSets = 0
+        pObsSet.Clear
+
+		Dim debug
+		debug = 0
+
+		Dim stationID
+		Set stationID = CreateObject("Scripting.Dictionary")
+		stationID.Add "msr", 	400
+		
+
+		if firstRun = 0 then
+
+			' *********************************
+			' ***** read measurement file *****
+			' *********************************
+			' sample format:
+
+			'{
+			'  "measurements": [
+			'    {
+			'      "id": 290824417,
+			'      "experiment": 26739228,
+			'      "targetPass": 669621638,
+			'      "group": 2,
+			'      "instrument": "msr",
+			'      "catalogNumber": "L19993",
+			'      "noradCatalogNumber": 43152,
+			'      "updatedAt": "2019-10-04T00:52:28.379055Z",
+			'      "transmittedAt": "2019-10-04T00:35:08.826664Z",
+			'      "receivedAt": "2019-10-04T00:35:08.830665Z",
+			'      "measuredAt": "2019-10-04T00:35:08.828665Z",
+			'      "integrationTime": 0.086604,
+			'      "snr": 5.23022367287953,
+			'      "beam": 65258,
+			'      "values": {
+			'        "range": 599660.110634729,
+			'        "rangeError": 65.5436429801669,
+			'        "doppler": -695.790432278631,
+			'        "dopplerError": 1.72004555164802,
+			'        "azimuth": 251.893881964996,
+			'        "elevation": 55.4773786577928,
+			'        "rcs": 0.00053430288828812
+			'      },
+			'      "corrected": {
+			'        "range": 599633.171698553,
+			'        "rangeError": 17.8598297244801,
+			'        "doppler": -695.515256302728,
+			'        "dopplerError": 0.271913732495934,
+			'        "azimuth": 247.842675770427,
+			'        "elevation": 55.0805476746667,
+			'        "rcs": 2.17896594590555
+			'      },
+			'      "corrections": [
+			'        {
+			'          "type": "doppler_bias",
+			'          "source": "leolabs",
+			'          "value": -0.27517597590321,
+			'          "error": 0.0135477848306624
+			'        },
+			'        {
+			'          "type": "range_bias",
+			'          "source": "leolabs",
+			'          "value": -0.486924475058913,
+			'          "error": 0.88984520200039
+			'        },
+			'        {
+			'          "type": "ionospheric",
+			'          "source": "iri16",
+			'          "value": 27.4258606513429
+			'        }
+			'      ]
+    		'	}
+
+
+			'-------------------------------------------------------------------------
+			' read the file
+			'-------------------------------------------------------------------------
+			Dim json
+			Set json = CreateObject("Chilkat_9_5_0.JsonObject")   ' install http://www.chilkatsoft.com/downloads_ActiveX.asp
+			Dim isParsed
+			isParsed = json.LoadFile(m_sFileName)
+			
+			if isParsed = 0 then
+				msgbox("Could not parse measurement file")
+			end if
+
+
+			'-------------------------------------------------------------------------
+			' measurements
+			'-------------------------------------------------------------------------
+			Dim jsonObj
+			
+			Dim numMeas
+			numMeas = json.SizeOfArray("measurements")
+
+			
+			Dim measCount
+			for measCount = 0 to numMeas - 1
+				'json.I = measCount
+
+
+				Dim facID
+				facID = json.StringOf("measurements[" & measCount & "].instrument")
+				
+				Dim satID
+				satID = json.StringOf("measurements[" & measCount & "].noradCatalogNumber")
+				
+				Dim measTime
+				measTime = json.StringOf("measurements[" & measCount & "].receivedAt")
+
+				'-------------------------------------------------------------------------
+				' Initialize observation and obs set
+				'-------------------------------------------------------------------------
+				pObsSet.Clear()
+				pObsSet.Date.Unit	= "ISO-YMD"
+				pObsSet.Date.Value	= measTime
+
+				pObs.Date.Unit	= "ISO-YMD"
+				pObs.Date.Value	= measTime
+
+				pObs.TimeOrigin	= eGroundReceiveTime
+
+
+				' specify tracker and trackee
+				pObs.TrackerIDs.Clear()
+				pObs.TrackerIDs.Insert 0, stationID(facID)  ' Facility must be first item
+				pObs.TrackerIDs.Insert 1, satID				' Satellite follows Facility
+				
+
+				'-------------------------------------------------------------------------
+				' load measurement values
+				'-------------------------------------------------------------------------				
+				' range
+				if json.HasMember("measurements[" & measCount & "].corrected.range") = 1 then
+					Dim range
+					range = json.StringOf("measurements[" & measCount & "].corrected.range")
+					
+					pObs.MeasureType	= eMTRange
+					pObs.Value.Unit		= "m"
+					pObs.Value.Value	= range
+					pObsSet.Add pObs
+				end if
+
+				' doppler
+				if json.HasMember("measurements[" & measCount & "].corrected.doppler") = 1 then
+					Dim doppler
+					doppler = json.StringOf("measurements[" & measCount & "].corrected.doppler")
+					
+					pObs.MeasureType	= eMTDoppler
+					pObs.Value.Unit		= "m/sec"
+					pObs.Value.Value	= doppler
+					pObsSet.Add pObs
+				end if
+
+				' azimuth
+				if json.HasMember("measurements[" & measCount & "].corrected.azimuth") = 1 then
+					Dim azimuth
+					azimuth = json.StringOf("measurements[" & measCount & "].corrected.azimuth")
+					
+					pObs.MeasureType	= eMTAzimuth
+					pObs.Value.Unit		= "deg"
+					pObs.Value.Value	= azimuth
+					pObsSet.Add pObs
+				end if
+
+				' elevation
+				if json.HasMember("measurements[" & measCount & "].corrected.elevation") = 1 then
+					Dim elevation
+					elevation = json.StringOf("measurements[" & measCount & "].corrected.elevation")
+					
+					pObs.MeasureType	= eMTElevation
+					pObs.Value.Unit		= "deg"
+					pObs.Value.Value	= elevation
+					pObsSet.Add pObs
+				end if
+				
+				if debug <> 0 then
+					msgbox("Time: " & gpsTime & (Chr(13)& Chr(10)) & "X: " & xPos & (Chr(13)& Chr(10)) & "Y: " & yPos & (Chr(13)& Chr(10)) & "Z: " & zPos)
+				end if
+				'-------------------------------------------------------------------------
+				' Any Valid Meas? 
+				'-------------------------------------------------------------------------
+
+				If pObsSet.Count > 0 Then
+					numSets = numSets + 1
+					setColl.Add pObsSet
+				End If
+			next
+			
+
+		end if
+
+		firstRun = firstRun + 1
+
+		if firstRun > 1 then
+			numSets = 0
+		end if
+
+        GetObsSet = numSets
+
+		if debug <> 0 then
+			msgbox("at end of GetObsSet")
+		end if
+
+		
+    End Function
+
+
+
+    '-------------------------------------------------------------------------
+	' convert epoch to something useful (GPS)
+    '-------------------------------------------------------------------------
+	Private Function Dec2Hex(TempDec)
+		Dim TNo
+		Dec2Hex = "" 
+		Do 
+			TNo = TempDec - (Fix(TempDec / 16) * 16) 
+			If TNo > 9 Then 
+				Dec2Hex = Chr(55 + TNo) & Dec2Hex 
+			Else 
+				Dec2Hex = TNo & Dec2Hex 
+			End If 
+			TempDec = Fix(TempDec / 16) 
+		Loop Until (TempDec = 0) 
+	End Function 
+
+    '-------------------------------------------------------------------------
+    ' GetSupportedObsSet method
+    '-------------------------------------------------------------------------
+
+    Function GetSupportedObsSet(setColl)
+        GetSupportedObsSet = 0
+    End Function
+
+    '-------------------------------------------------------------------------
+    ' SaveObs method
+    '-------------------------------------------------------------------------
+
+	Function SaveObs(pEnum, bAppend)
+		SaveObs = 0
+	End Function
+
+
+	Function GetRegKey (regKey)
+		Dim objShell
+		Set objShell = CreateObject("WScript.Shell")
+		regValue = objShell.RegRead(regKey)
+		Set objShell = nothing
+	End Function
+
+]]>
+</script>
+</component>
+
