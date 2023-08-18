@@ -3,11 +3,11 @@
 
 [![Documentation](https://img.shields.io/badge/docs-online-FFB71B?style=for-the-badge)](https://help.agi.com/odtk)
 [![Support](https://img.shields.io/badge/support-email-898A8D?style=for-the-badge)](mailto:support@agi.com)
-[![Download](https://img.shields.io/badge/download-7.4-D9D8D6?style=for-the-badge)](https://support.agi.com/downloads/3/)
+[![Download](https://img.shields.io/badge/download-7.7.1-D9D8D6?style=for-the-badge)](https://support.agi.com/downloads/6/)
 
 Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from Ansys.
 
-The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs.  It does not contain the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/3/ "AGI's Downloads")
+The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/6/ "AGI's Downloads")
 
 ----
 
@@ -25,15 +25,7 @@ These applications contain notional data and are dual use.
 
 ## License
 
-The code examples in this repository are licensed under the AGI Code Examples License Agreement, which is included in this repository as [License.pdf](License.pdf).
-
-----
-
-## Redistribution
-
-If You redistribute the code examples, in whole or in part, You must provide a copy of this License Agreement to any other recipient of the code examples, and include the following copyright notice:
-
-© 2022 Analytical Graphics, Inc.
+`ODTKCodeExamples` is licensed under [the MIT license](LICENSE).
 
 ----
 
