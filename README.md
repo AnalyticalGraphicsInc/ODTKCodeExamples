@@ -1,9 +1,9 @@
 ![ODTK Logo Dark](https://user-images.githubusercontent.com/3358750/176480321-9bfe6d1f-c755-42e3-a975-b1404dcbe845.svg#gh-light-mode-only)
 ![ODTK Logo Light](https://user-images.githubusercontent.com/3358750/176480430-377504b5-d4c3-4e0a-a047-9c0699885c3f.svg#gh-dark-mode-only)
 
-[![Documentation](https://img.shields.io/badge/docs-online-FFB71B?style=for-the-badge)](https://help.agi.com/odtk)
-[![Support](https://img.shields.io/badge/support-email-898A8D?style=for-the-badge)](mailto:support@agi.com)
-[![Download](https://img.shields.io/badge/download-7.7.1-D9D8D6?style=for-the-badge)](https://support.agi.com/downloads/6/)
+[![Documentation](https://img.shields.io/badge/docs-online-D9D8D6?style=for-the-badge&labelColor=373A36)](https://help.agi.com/odtk)
+[![Support](https://img.shields.io/badge/support-email-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
+[![Download](https://img.shields.io/badge/download-7.7.1-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/6/)
 
 Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from Ansys.
 
