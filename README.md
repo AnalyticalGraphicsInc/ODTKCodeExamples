@@ -1,5 +1,5 @@
-![ODTK Logo Dark](https://user-images.githubusercontent.com/3358750/176480321-9bfe6d1f-c755-42e3-a975-b1404dcbe845.svg#gh-light-mode-only)
-![ODTK Logo Light](https://user-images.githubusercontent.com/3358750/176480430-377504b5-d4c3-4e0a-a047-9c0699885c3f.svg#gh-dark-mode-only)
+![ODTK Logo Dark](icons/ODTK-on-white.svg#gh-light-mode-only)
+![ODTK Logo Light](icons/ODTK-on-black.svg#gh-dark-mode-only)
 
 [![Documentation](https://img.shields.io/badge/docs-online-D9D8D6?style=for-the-badge&labelColor=373A36)](https://help.agi.com/odtk)
 [![Support](https://img.shields.io/badge/support-email-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
@@ -46,5 +46,5 @@ For more information, please visit the [AGI website](https://www.agi.com "AGI's 
 [![Youtube URL](https://img.shields.io/badge/youtube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/user/AnalyticalGraphics)
 [![Linkedin URL](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/agi?trk=company_logo)
 
-![AGI Logo Dark](https://user-images.githubusercontent.com/3358750/162795809-4fc8326e-fd6a-4022-b731-cee62fcc58db.png#gh-dark-mode-only)
-![AGI Logo Light](https://user-images.githubusercontent.com/3358750/162795908-bf530bb9-bbab-45b0-82d7-cabd67186699.png#gh-light-mode-only)
+![AGI Logo Dark](icons/AGI-Logo_2C-W.svg#gh-dark-mode-only)
+![AGI Logo Light](icons/AGI-Logo_2C-K.svg#gh-light-mode-only)
