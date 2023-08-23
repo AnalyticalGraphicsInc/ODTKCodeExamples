@@ -5,7 +5,7 @@
 [![Support](https://img.shields.io/badge/email%20support-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
 [![Download](https://img.shields.io/badge/download%207.7.1-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/6/)
 
-Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from Ansys.
+Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from ANSYS, Inc.
 
 The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/6/ "AGI's Downloads")
 
@@ -31,7 +31,7 @@ These applications contain notional data and are dual use.
 
 ## What if I have questions about ODTK
 
-Contact [AGI support](mail:support@agi.com "Email AGI Support") with questions regarding ODTK, ODTK Runtime or any other AGI products.
+Contact [AGI support](mail:support@agi.com "Email AGI Support") with questions regarding ODTK, ODTK Runtime, or any other AGI products.
 
 AGI's software helps engineers, operators, and analysts deliver digital engineering value at any stage of a program life cycle: from planning and design to training and operations. Our modeling, analysis and visualization tools, coupled with legendary customer support, help those in aerospace and defense organizations make critical decisions faster and more accurately in an operational context.
 
