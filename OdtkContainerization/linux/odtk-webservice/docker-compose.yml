@@ -1,11 +1,11 @@
 version: '3.7'
 services:
     odtk-webservice:
-        image: ansys/odtk/odtk-webservice:7.5.0-centos7
+        image: ansys/odtk/odtk-webservice:7.7.1-ubi8
         build: 
             context: .
             args:
-                baseImage: ansys/odtk/odtk-python:7.5.0-centos7
+                baseImage: ansys/odtk/odtk-python:7.7.1-ubi8
         env_file: ../configuration/licensing.env
         ports:
             - 5000:5000

@@ -1,4 +1,6 @@
-ARG baseImage=centos:7
+# Uncomment the first line below if you want to use the UBI image from ironbank
+# ARG baseImage=registry1.dso.mil/ironbank/redhat/ubi/ubi8:latest
+ARG baseImage=redhat/ubi8:latest
 FROM ${baseImage}
 
 USER root

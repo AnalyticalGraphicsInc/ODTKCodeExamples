@@ -1,1 +1,1 @@
-Copy the `odtk_binaries_v${version}.tgz` and `odtk_data_v${version}.tgz` into this folder.
+Copy the `odtk_binaries_v${version}.tgz` and `odtk_data_v${version}.tgz` from `ODTKEngineLinux_v${version}.tgz` into this folder.
