@@ -59,6 +59,8 @@
       <parameter name="bAppend"/>
    </method>
 
+   <!-- New method added to support ODTK 6.1.1 -->
+   <method name="CloseFile"/>
 </public>
 
 <script language="VBScript">
@@ -365,6 +367,21 @@
     Function GetSupportedObsSet(setColl)
         GetSupportedObsSet = 0
     End Function
+
+
+	'-------------------------------------------------------------------------
+	' CloseFile method
+	'-------------------------------------------------------------------------
+
+	Function CloseFile()
+
+		If m_sFileName <> "" Then
+			m_Stream.Close()
+			m_sFileName = ""
+		End If
+
+	End Function
+
 
     '-------------------------------------------------------------------------
     ' SaveObs method

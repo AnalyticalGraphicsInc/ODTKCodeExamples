@@ -61,6 +61,9 @@
 
    <method name="GetAppConfig"/>
 
+   <!-- New method added to support ODTK 6.1.1 -->
+   <method name="CloseFile"/>
+
 </public>
 
 <script language="VBScript">
@@ -1460,6 +1463,19 @@
         Set GetAppConfig = m_scope
     End Function
 
+
+	'-------------------------------------------------------------------------
+	' CloseFile method
+	'-------------------------------------------------------------------------
+
+	Function CloseFile()
+
+		If m_sFileName <> "" Then
+			m_Stream.Close()
+			m_sFileName = ""
+		End If
+
+	End Function
 
     '-------------------------------------------------------------------------
     ' Support Routines for SaveObs Function
