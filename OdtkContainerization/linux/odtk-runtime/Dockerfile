@@ -20,15 +20,12 @@ LABEL ANSYSLMD_LICENSE_FILE='Specifies the location of the Ansys Licensing Serve
 
 # Install Required Python
 RUN set -e; \
-    yum install python38 -y
+    yum install python38 python38-devel python38-setuptools python38-pip -y
 
-# Upgrade Pip to the latest version
-RUN pip3 install --no-cache-dir --upgrade pip
+ENV ODTK_USER_HOME=/home/odtk
 
 # Setup non-root ODTK user
-ENV ODTK_USER_HOME=/home/odtk
 RUN useradd -ms /bin/bash odtk
-WORKDIR "${ODTK_USER_HOME}"
 
 RUN ln -s /usr/lib64/libnsl.so.2 /usr/lib64/libnsl.so.1
 RUN ln -s /usr/lib64/libpython3.8.so.1.0 /usr/lib/libpython3.8.so.1.0
@@ -36,20 +33,23 @@ RUN ln -s /usr/lib64/libpython3.8.so.1.0 /usr/lib/libpython3.8.so.1.0
 # Copy files from the builder stage
 COPY --from=builder --chown=odtk /odtk/ "${ODTK_USER_HOME}"/
 
+USER odtk
+
 # Configure environment
-ENV PYTHONHOME="/usr"
-ENV ODTK_INSTALL_DIR="${ODTK_USER_HOME}"
-ENV LD_LIBRARY_PATH="${ODTK_USER_HOME}/bin:${PYTHONHOME}/lib64/python3.8/lib-dynload:${PYTHONHOME}/lib64"
-ENV PATH="${ODTK_USER_HOME}/bin:${PATH}"
-ENV LD_PRELOAD="${PYTHONHOME}/lib/libpython3.8.so.1.0"
+ENV PIP_DEFAULT_TIMEOUT=600 \
+    PIP_RETRY=50 \
+    PYTHONHOME="/usr" \
+    ODTK_INSTALL_DIR="${ODTK_USER_HOME}" \
+    LD_LIBRARY_PATH="${ODTK_USER_HOME}/bin:${PYTHONHOME}/lib64/python3.8/lib-dynload:${PYTHONHOME}/lib64" \
+    PATH="${ODTK_USER_HOME}/bin:${PATH}" \
+    LD_PRELOAD="${PYTHONHOME}/lib/libpython3.8.so.1.0"
+
+# Install required Python packages
+RUN pip3 install --no-cache-dir --user h5py numpy pandas packaging pyparsing python-dateutil
+
+WORKDIR "${ODTK_USER_HOME}"
 
 # Expose port for ODTK
 EXPOSE 9393/tcp
-
-# Switch to non-root ODTK user
-USER odtk
-
-# Install required Python packages
-RUN pip3 install --no-cache-dir --user h5py numpy pandas packaging pyparsing python-dateutil pytz
 
 ENTRYPOINT odtkruntime --address=0.0.0.0
