@@ -42,7 +42,7 @@ def process_simulated_obs(satName):
     for i, (label, df) in enumerate(gb):
         df.plot.scatter("Date Time", "Residual Ratio", rot=90, ax=axs[i], label=label, title=satName)
     figure.savefig(f'/home/odtk/scenario/ResidualRatios.jpg', format='jpg')
-    return send_file('/home/odtk/scenario/ResidualRatios.jpg', attachment_filename='ResidualRatios.jpg')
+    return send_file('/home/odtk/scenario/ResidualRatios.jpg', download_name='ResidualRatios.jpg')
 
 
 
