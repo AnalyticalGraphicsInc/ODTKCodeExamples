@@ -1,8 +1,8 @@
 version: '3.7'
 services:
     odtk-runtime:
-        image: ansys/odtk/odtk-runtime:7.7.1-ubi8
-        build: 
+        image: ansys/odtk/odtk-runtime:7.8.0-ubi8
+        build:
             context: .
             args:
                 # Uncomment the first line below if you want to use the UBI image from ironbank

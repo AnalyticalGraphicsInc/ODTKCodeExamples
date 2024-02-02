@@ -1,5 +1,5 @@
 # Builder stage
-ARG baseImage=ansys/odtk/odtk-runtime:7.7.1-ubi8
+ARG baseImage=ansys/odtk/odtk-runtime:7.8.0-ubi8
 FROM ${baseImage} AS builder
 
 # Add the ODTK Code Samples package to the builder stage

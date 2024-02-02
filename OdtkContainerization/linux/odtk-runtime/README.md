@@ -21,14 +21,14 @@ This image is built using the `yum` and `pip` tools to install package dependenc
 1. Download version 7.4.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
 2. Unzip this file and copy the `odtk_binaries_v${version}.tgz` and `odtk_data_v${version}.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
 3. Build the image
-    * If you did not build the `custom-environment` image described above, run `docker build -t ansys/odtk/odtk-runtime:{version}-ubi8 .` on the command line in this directory after replacing `{version}` with the version number. i.e `7.7.1`
-    * If you did build the `custom-environment` image described above, run `docker build -t ansys/odtk/odtk-runtime:{version}-ubi8 --build-arg baseImage=custom/redhat/ubi8:latest .` on the command line in this directory after replacing `{version}` with the version number. i.e `7.7.1`
+    * If you did not build the `custom-environment` image described above, run `docker build -t ansys/odtk/odtk-runtime:{version}-ubi8 .` on the command line in this directory after replacing `{version}` with the version number. i.e `7.8.0`
+    * If you did build the `custom-environment` image described above, run `docker build -t ansys/odtk/odtk-runtime:{version}-ubi8 --build-arg baseImage=custom/redhat/ubi8:latest .` on the command line in this directory after replacing `{version}` with the version number. i.e `7.8.0`
 
 ### Run the Container
 
 This image starts the ODTK runtime application listening for connections on port `9393`. To start the container and verify its functionality:
 
-1. Run the following command from this directory after replacing `{version}` with the version number. i.e `7.7.1`:
+1. Run the following command from this directory after replacing `{version}` with the version number. i.e `7.8.0`:
 `docker run -d -it -p 9393:9393 --env-file ../configuration/licensing.env --name odtk-runtime --rm ansys/odtk/odtk-runtime:{version}-ubi8`
     * If port `9393` is already in use on your machine, map a different port (e.g. `1234:9393`).
 2. In a web browser, navigate to `http://localhost:9393/v1.0/ODTK.application.appVersion`. If you changed the host port mapping in the step above, use that port here instead of `9393`. Verify the resulting page contains the correct version of ODTK running in your container.

@@ -3,18 +3,18 @@
 
 [![Documentation](https://img.shields.io/badge/documentation-D9D8D6?style=for-the-badge&labelColor=373A36)](https://help.agi.com/odtk)
 [![Support](https://img.shields.io/badge/email%20support-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
-[![Download](https://img.shields.io/badge/download%207.7.1-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/6/)
+[![Download](https://img.shields.io/badge/download%207.8.0-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/7/)
 
 Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from ANSYS, Inc.
 
-The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/6/ "AGI's Downloads")
+The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/7/ "AGI's Downloads")
 
 ----
 
 ## Featured Examples Areas
 
 * [ODTK Automation](OdtkAutomation/) contains scripts and applications for automating ODTK
-* [ODTK Containerization](OdtkContainerization) contains examples that demonstrate containerization of ODTK Runtime applications
+* [ODTK Containerization](OdtkContainerization/) contains examples that demonstrate containerization of ODTK Runtime applications
 * [ODTK Data Products](OdtkDataProducts/) contains scripts and applications for ODTK data product generation
 * [ODTK Tracking Data Readers](OdtkTrackingDataReaders/) contains scripts for reading different tracking data formats
 * [ODTK Ui Plugins](OdtkUiPlugins/) contains UI Plugin applications for the ODTK desktop application

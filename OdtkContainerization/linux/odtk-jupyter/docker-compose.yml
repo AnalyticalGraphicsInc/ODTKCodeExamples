@@ -1,11 +1,11 @@
 version: '3.7'
 services:
     odtk-jupyter:
-        image: ansys/odtk/odtk-jupyter:7.7.1-ubi8
+        image: ansys/odtk/odtk-jupyter:7.8.0-ubi8
         build: 
             context: .
             args:
-                baseImage: ansys/odtk/odtk-python:7.7.1-ubi8
+                baseImage: ansys/odtk/odtk-python:7.8.0-ubi8
         ports:
             - 8888:8888
         init: true # This enables the "tini" init tool for the entrypoint as recommended by Jupyter Lab

@@ -1,4 +1,4 @@
-ARG baseImage=ansys/odtk/odtk-python:7.7.1-ubi8
+ARG baseImage=ansys/odtk/odtk-python:7.8.0-ubi8
 FROM ${baseImage}
 
 # Install Flask
