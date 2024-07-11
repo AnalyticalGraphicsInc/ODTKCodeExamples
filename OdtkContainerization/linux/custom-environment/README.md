@@ -2,7 +2,11 @@
 
 ## Purpose
 
-Many of the images in this collection of code samples are built using the `yum` and `pip` tools to install package dependencies. The image built by this project acts as a layer on top of the baseline OS image which configures these tools to work in your environment. The image produced by this project is not meant to be run on its own. Instead, it will be used as a baseline for other images in this code sample collection.
+Many of the images in this collection of code samples are built using the `yum` and `pip` tools to install package dependencies. The image built by this project acts as a layer on top of the baseline OS image which configures these tools to work in your environment.
+
+Additionally, ODTK depends on a specific version of Python which is built from source by one of the images in this collection. In order to build Python, the yum repository configuration needs to include the baseos, appstream, and powertools repositories from Rocky 8.
+
+The image produced by this project is not meant to be run on its own. Instead, it will be used as a baseline for other images in this code sample collection.
 
 ### Certificate Authority (CA) Certificates
 
@@ -26,9 +30,9 @@ If you don't need to override the default `pip` repository URL to download Pytho
 
 ### Build the Images
 
-If you need to override the default `pip` repository URL to download Python packages, run `docker build -t custom/redhat/ubi8 --build-arg baseImage=redhat/ubi8:latest --build-arg pipIndexUrl=<Your custom pip index url> .` on the command line in this directory.
+If you need to override the default `pip` repository URL to download Python packages, run `docker build -t ansys/odtk/custom/redhat/ubi8 --build-arg baseImage=redhat/ubi8:latest --build-arg pipIndexUrl=<Your custom pip index url> .` on the command line in this directory.
 
-If you do not need to override the default `pip` repository URL, run `docker build -t custom/redhat/ubi8:latest --build-arg baseImage=redhat/ubi8:latest .` on the command line in this directory.
+If you do not need to override the default `pip` repository URL, run `docker build -t ansys/odtk/custom/redhat/ubi8:latest --build-arg baseImage=redhat/ubi8:latest .` on the command line in this directory.
 
 ## Method 2 - Docker Compose
 

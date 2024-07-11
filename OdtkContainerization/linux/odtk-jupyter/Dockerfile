@@ -1,12 +1,15 @@
-ARG baseImage=ansys/odtk/odtk-python:7.8.0-ubi8
+ARG baseImage=ansys/odtk/odtk-python:7.9.0-ubi8
 FROM ${baseImage}
 
 LABEL JUPYTER_LAB_TOKEN='The token used to initially authenticate with the jupyter lab application. Required.'
 
+COPY --chown=odtk docker-entrypoint.sh "${ODTK_USER_HOME}"/bin/docker-entrypoint.sh
+
 # Install jupyterlab
 RUN set -e; \
-    pip3 install --no-cache-dir --user jupyterlab; \
-    mkdir -p "${ODTK_USER_HOME}"/notebooks
+    pip3 install --no-cache-dir --user jupyterlab matplotlib; \
+    mkdir -p "${ODTK_USER_HOME}"/notebooks; \
+    chmod 755 "${ODTK_USER_HOME}"/bin/docker-entrypoint.sh
 
 # Mount notebooks from the local file system
 VOLUME [ "${ODTK_USER_HOME}/notebooks" ]
@@ -15,8 +18,6 @@ VOLUME [ "${ODTK_USER_HOME}/notebooks" ]
 EXPOSE 8888
 
 # Run the Jupyter Lab server in the foreground.
-COPY --chown=odtk docker-entrypoint.sh "${ODTK_USER_HOME}"/bin/docker-entrypoint.sh
-RUN chmod 755 "${ODTK_USER_HOME}"/bin/docker-entrypoint.sh
 ENTRYPOINT "${ODTK_USER_HOME}"/bin/docker-entrypoint.sh
 
 # Jupyter Lab recommonds using the tini init tool when running in a container.

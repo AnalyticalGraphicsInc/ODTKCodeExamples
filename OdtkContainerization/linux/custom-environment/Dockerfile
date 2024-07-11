@@ -1,4 +1,4 @@
-# Uncomment the first line below if you want to use the UBI image from ironbank
+# Uncomment the line below if you want to use the UBI image from ironbank
 # ARG baseImage=registry1.dso.mil/ironbank/redhat/ubi/ubi8:latest
 ARG baseImage=redhat/ubi8:latest
 FROM ${baseImage}
@@ -22,4 +22,4 @@ ENV PIP_CERT=/etc/pki/ca-trust/extracted/openssl/ca-bundle.trust.crt
 # Directs python pip installs to pull packages from a specified repository.
 # Delete the following two lines if you do not need to override the default pip repository URL.
 ARG pipIndexUrl=''
-ENV PIP_INDEX_URL=${pipIndexUrl} 
+ENV PIP_INDEX_URL=${pipIndexUrl}

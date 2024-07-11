@@ -1,1 +1,1 @@
-Copy the `odtk_codesamples_v${version}.tgz` into this folder.
+Copy the file `odtk_codesamples_v7.9.0.tgz` into this folder.
