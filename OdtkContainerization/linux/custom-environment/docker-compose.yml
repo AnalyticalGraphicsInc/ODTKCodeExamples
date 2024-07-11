@@ -1,11 +1,11 @@
 version: '3.7'
 services:
     custom-ubi8:
-        image: custom/redhat/ubi8:latest
+        image: ansys/odtk/custom/redhat/ubi8:latest
         build:
             context: .
             args:
-                # Uncomment the first line below if you want to use the UBI image from ironbank
+                # Uncomment the line below if you want to use the UBI image from ironbank
                 # baseImage: registry1.dso.mil/ironbank/redhat/ubi/ubi8:latest
                 baseImage: redhat/ubi8:latest
                 pipIndexUrl: '' # Edit this value to be the index URL of your internal pip repository if you have one.

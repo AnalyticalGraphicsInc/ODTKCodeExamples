@@ -1,4 +1,4 @@
-from flask import Flask, abort, send_file 
+from flask import Flask, abort, send_file
 from odtk import Client
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -43,6 +43,3 @@ def process_simulated_obs(satName):
         df.plot.scatter("Date Time", "Residual Ratio", rot=90, ax=axs[i], label=label, title=satName)
     figure.savefig(f'/home/odtk/scenario/ResidualRatios.jpg', format='jpg')
     return send_file('/home/odtk/scenario/ResidualRatios.jpg', download_name='ResidualRatios.jpg')
-
-
-
