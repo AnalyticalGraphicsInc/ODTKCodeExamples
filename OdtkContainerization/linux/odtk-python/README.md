@@ -15,16 +15,16 @@ This Docker image code sample demonstrates how to install the ODTK Runtime Pytho
 ### Build the Image
 
 1. Download version 7.4.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
-2. Unzip this file and copy the `odtk_codesamples_v${version}.tgz` into the [`distributions`](./distributions) folder at
+2. Unzip this file and copy the `odtk_codesamples_v7.9.0.tgz` into the [`distributions`](./distributions) folder at
 the same level as this file.
-3. Run `docker build -t ansys/odtk/odtk-python:{version}-ubi8 .` on the command line in this directory after replacing `{version}` with the version number. i.e `7.8.0`
+3. Run `docker build -t ansys/odtk/odtk-python:7.9.0-ubi8 .` on the command line in this directory.
 
 ### Run the Container
 
 This image starts the `python` interpreter when starting the container. You can verify that ODTK Runtime is working inside the `odtk-python` container with the following steps:
 
-1. Run the following command from this directory after replacing `{version}` with the version number. i.e `7.8.0`:
-`docker run -it --env-file ../configuration/licensing.env --name odtk-python --rm ansys/odtk/odtk-python:{version}-ubi8`
+1. Run the following command from this directory:
+`docker run -it --env-file ../configuration/licensing.env --name odtk-python --rm ansys/odtk/odtk-python:7.9.0-ubi8`
 2. Execute the following Python commands and verify it returns a valid response:
 
     ```python
@@ -41,7 +41,7 @@ This image starts the `python` interpreter when starting the container. You can 
 ### Build the Image
 
 1. Download version 7.4.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
-2. Unzip this file and copy the `odtk_codesamples_v${version}.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
+2. Unzip this file and copy the `odtk_codesamples_v7.9.0.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
 3. Run `docker compose build` on the command line in this directory.
 
 ### Run the Container

@@ -1,13 +1,13 @@
 version: '3.7'
 services:
     odtk-runtime:
-        image: ansys/odtk/odtk-runtime:7.8.0-ubi8
+        image: ansys/odtk/odtk-runtime:7.9.0-ubi8
         build:
             context: .
             args:
-                # Uncomment the first line below if you want to use the UBI image from ironbank
+                # Uncomment the line below if you want to use the UBI image from ironbank
                 # baseImage: registry1.dso.mil/ironbank/redhat/ubi/ubi8:latest
-                # Uncomment the first line below if you want to use the custom UBI image made in custom-environment
+                # Uncomment the line below if you want to use the custom UBI image made in custom-environment
                 # baseImage: custom/redhat/ubi8:latest
                 baseImage: redhat/ubi8:latest
         ports:
