@@ -15,9 +15,7 @@ The repository offers fully functional tools and libraries of example code that 
 
 * [ODTK Automation](OdtkAutomation/) contains scripts and applications for automating ODTK
 * [ODTK Containerization](OdtkContainerization/) contains examples that demonstrate containerization of ODTK Runtime applications
-* [ODTK Data Products](OdtkDataProducts/) contains scripts and applications for ODTK data product generation
 * [ODTK Tracking Data Readers](OdtkTrackingDataReaders/) contains scripts for reading different tracking data formats
-* [ODTK Ui Plugins](OdtkUiPlugins/) contains UI Plugin applications for the ODTK desktop application
 
 These applications contain notional data and are dual use.
 
