@@ -1,4 +1,3 @@
-version: '3.7'
 services:
     custom-ubi8:
         image: ansys/odtk/custom/redhat/ubi8:latest

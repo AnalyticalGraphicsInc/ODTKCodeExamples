@@ -1,9 +1,8 @@
-version: '3.7'
 services:
     odtk-python:
-        image: ansys/odtk/odtk-python:7.9.0-ubi8
+        image: ansys/odtk/odtk-python:7.10.0-ubi8
         build:
             context: .
             args:
-                baseImage: ansys/odtk/odtk-runtime:7.9.0-ubi8
+                baseImage: ansys/odtk/odtk-runtime:7.10.0-ubi8
         env_file: ../configuration/licensing.env

@@ -11,6 +11,11 @@ USER root
 COPY trusted-certificates/* /etc/pki/ca-trust/source/anchors/
 RUN update-ca-trust extract
 
+# Python YUM Configuration
+# Provides default Rocky 8 repositories for packages required for newer versions of Python.
+# If you override the default yum configuration, the python-yum.repo file will be removed from this image.
+COPY python-yum-repositories/*.repo /etc/yum.repos.d/
+
 # YUM Configuration
 # Overrides the default configuration for yum repositories built into the base image.
 # Delete the following two lines to use the default configuration for yum repositories.

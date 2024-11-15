@@ -4,8 +4,6 @@
 
 Many of the images in this collection of code samples are built using the `yum` and `pip` tools to install package dependencies. The image built by this project acts as a layer on top of the baseline OS image which configures these tools to work in your environment.
 
-Additionally, ODTK depends on a specific version of Python which is built from source by one of the images in this collection. In order to build Python, the yum repository configuration needs to include the baseos, appstream, and powertools repositories from Rocky 8.
-
 The image produced by this project is not meant to be run on its own. Instead, it will be used as a baseline for other images in this code sample collection.
 
 ### Certificate Authority (CA) Certificates
@@ -17,6 +15,14 @@ If your network doesn't require special CA certificates to download packages, de
 ### Yellowdog Updater Modifier (YUM)
 
 If you need to override the default `yum` repository configuration to download RPM packages, copy your repository configuration (`*.repo`) files to the [`yum-repositories`](./yum-repositories/) folder at the same level as this file.
+
+> [!IMPORTANT]
+> ODTK depends on a specific version of Python which is built from source by one of the images in this collection. This process requires downloading packages from yum repositories not provided in the Redhat UBI-8 base image. We provide the `python-yum-repositories/python-yum.repo` file, which configures the following Rocky 8 repositories needed to build Python:
+> * Rocky Linux 8 - BaseOS
+> * Rocky Linux 8 - AppStream
+> * Rocky Linux 8 - PowerTools
+>
+> If you provide any repo files in the [`yum-repositories`](./yum-repositories/) folder, the default repo file will not be made available, and you will be responsible to configure the above Rocky Linux 8 repositories in addition to your own customizations.
 
 If you don't need to override the default `yum` repository configuration to download RPM packages, delete the lines for `YUM configuration` as described in [`Dockerfile`](./Dockerfile).
 
