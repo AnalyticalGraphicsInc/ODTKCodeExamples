@@ -3,7 +3,7 @@
 
 [![Documentation](https://img.shields.io/badge/documentation-D9D8D6?style=for-the-badge&labelColor=373A36)](https://help.agi.com/odtk)
 [![Support](https://img.shields.io/badge/email%20support-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
-[![Download](https://img.shields.io/badge/download%207.9.0-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/8/)
+[![Download](https://img.shields.io/badge/download%207.10.0-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/8/)
 
 Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from ANSYS, Inc.
 
