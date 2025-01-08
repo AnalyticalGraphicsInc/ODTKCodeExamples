@@ -13,7 +13,7 @@ This Docker image code sample demonstrates how to install ODTK Runtime for Linux
 
 ## Special Configuration
 
-This image is built using the `yum` and `pip` tools to install package dependencies. Please see the [`custom-environment`](../custom-environment/README.md) Docker image code sample project and build the `custom/redhat/ubi8:latest` image, if needed, before proceeding with this image.
+This image is built using the `yum` and `pip` tools to install package dependencies. Please see the [`custom-environment`](../custom-environment/README.md) Docker image code sample project and build the `ansys/odtk/custom/redhat/ubi8:latest` image, if needed, before proceeding with this image.
 
 ## Method 1 - Docker CLI
 
@@ -42,7 +42,7 @@ This image starts the ODTK runtime application listening for connections on port
 
 1. Download version 7.4.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
 2. Unzip this file and copy the `odtk_binaries_v7.10.0.tgz` and `odtk_data_v7.10.0.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
-3. If you built the `custom-environment` images described in the [Special Configuration](#special-configuration) section, edit the [`docker-compose.yml`](./docker-compose.yml) file to set the value of the `baseImage` build argument to `custom/redhat/ubi8:latest`.
+3. If you built the `custom-environment` images described in the [Special Configuration](#special-configuration) section, edit the [`docker-compose.yml`](./docker-compose.yml) file to set the value of the `baseImage` build argument to `ansys/odtk/custom/redhat/ubi8:latest`.
 4. On the command line, run `docker compose build`.
 
 ### Run the Container
