@@ -1,0 +1,23 @@
+# The following Rocky 8 repositories are needed to build a Python version that is not available from the official
+# Redhat UBI-8 repositories.
+
+[rocky-8-baseos-rpms]
+name=Rocky Linux $releasever - BaseOS
+baseurl=https://dl.rockylinux.org/pub/rocky/8/BaseOS/x86_64/os/
+gpgcheck=0
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
+
+[rocky-8-appstream-rpms]
+name=Rocky Linux $releasever - AppStream
+baseurl=https://dl.rockylinux.org/pub/rocky/8/AppStream/x86_64/os/
+gpgcheck=0
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
+
+[rocky-8-powertools-rpm]
+name=Rocky Linux $releasever - PowerTools
+baseurl=https://dl.rockylinux.org/pub/rocky/8/PowerTools/x86_64/os/
+gpgcheck=0
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
