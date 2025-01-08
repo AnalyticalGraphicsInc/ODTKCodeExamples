@@ -7,7 +7,7 @@ services:
                 # Uncomment the line below if you want to use the UBI image from ironbank
                 # baseImage: registry1.dso.mil/ironbank/redhat/ubi/ubi8:latest
                 # Uncomment the line below if you want to use the custom UBI image made in custom-environment
-                # baseImage: custom/redhat/ubi8:latest
+                # baseImage: ansys/odtk/custom/redhat/ubi8:latest
                 baseImage: redhat/ubi8:latest
         ports:
             - 9393:9393
