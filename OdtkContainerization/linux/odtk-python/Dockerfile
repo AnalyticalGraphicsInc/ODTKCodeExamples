@@ -22,5 +22,6 @@ ENV PATH="${ODTK_USER_HOME}/.local/bin:${PATH}" \
 
 # Use entrypoint script to run Python commands
 COPY --chown=odtk docker-entrypoint.sh "${ODTK_USER_HOME}/bin/docker-entrypoint.sh"
+COPY --chown=odtk start-odtk.sh "${ODTK_USER_HOME}/bin/start-odtk.sh"
 RUN chmod +x "${ODTK_USER_HOME}/bin/docker-entrypoint.sh"
 ENTRYPOINT [ "docker-entrypoint.sh" ]
