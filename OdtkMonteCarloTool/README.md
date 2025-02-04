@@ -4,4 +4,4 @@ This library will allow you to run Monte Carlo analysis on various components of
 
 More detailed instructions and video walkthrough coming soon.
 
-Very much a work in progress. Contact Cal Van Doren (cal.vandoren@ansys.com) with any questions.
+Work in progress. Feel free to open an issue or pull request with any feedback.
