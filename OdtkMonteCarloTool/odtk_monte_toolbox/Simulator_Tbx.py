@@ -133,13 +133,8 @@ def drawCrAM(satellite: AttrProxy, logFile: logging.Logger, loglist: list) -> di
     # Compute new CrAM
     defaultCrAM = satellite.ForceModel.SolarPressure.Model.CrAoverM.Value.eval()
     cram_model = satellite.ForceModel.SolarPressure.Model.CrModel
-    shortMu = cram_model.ShortTerm.InitialEstimate.Value.eval()
-    shortSigma = cram_model.ShortTerm.Sigma.Value.eval()
-    shortDraw = random.gauss(shortMu, shortSigma)
-    longMu = cram_model.LongTerm.InitialEstimate.Value.eval()
     longSigma = cram_model.LongTerm.Sigma.Value.eval()
-    longDraw = random.gauss(longMu, longSigma)
-    newCrAM = defaultCrAM * (1 + longDraw)
+    newCrAM = random.gauss(defaultCrAM,longSigma)
 
     # Ensure new CrAM is not negative
     while newCrAM < 0:
@@ -149,31 +144,23 @@ def drawCrAM(satellite: AttrProxy, logFile: logging.Logger, loglist: list) -> di
             f"CrAM: ERROR below zero value drawn - {newCrAM}... redrawing",
             loglist,
         )
-        shortDraw = random.gauss(shortMu, shortSigma)
-        longDraw = random.gauss(longMu, longSigma)
-        newCrAM = defaultCrAM * (1 + longDraw)
+        newCrAM = random.gauss(defaultCrAM,longSigma)
+        
     # Assign new CrAM
     satellite.ForceModel.SolarPressure.Model.CrAoverM = newCrAM
-    cram_model.ShortTerm.InitialEstimate = shortDraw
 
     logtbx.log(
         logFile,
-        f"CrAM : default - {defaultCrAM} "
-        f"long sigma - {longSigma} "
-        f"long draw - {longDraw}"
-        f"new CrAM - {newCrAM}"
-        f"short sigma - {shortSigma} "
-        f"short initial estimate - {shortDraw} "
-        f"draw - {newCrAM}",
+        f"CrAM Default - {defaultCrAM} "
+        f"CrAM Sigma - {longSigma} "
+        f"CrAM Draw - {newCrAM}",
         loglist,
     )
 
     outDict = {
         f"CrAM Default": defaultCrAM,
-        f"CrAM Long Sigma": longSigma,
+        f"CrAM Sigma": longSigma,
         f"CrAM Draw": newCrAM,
-        f"CrAM Short Sigma": shortSigma,
-        f"CrAM Short Initial Estimate": shortDraw,
     }
 
     return outDict
@@ -336,13 +323,8 @@ def drawBCoeff(satellite: AttrProxy, logFile: logging.Logger, loglist: list) -> 
     # Compute New BCoeff
     defaultBc = satellite.ForceModel.Drag.Model.BallisticCoeff.Value.eval()
     bcoeff_model = satellite.ForceModel.Drag.Model.BallisticCoeffModel
-    shortMu = bcoeff_model.ShortTerm.InitialEstimate.Value.eval()
-    shortSigma = bcoeff_model.ShortTerm.Sigma.Value.eval()
-    shortDraw = random.gauss(shortMu, shortSigma)
-    longMu = bcoeff_model.LongTerm.InitialEstimate.Value.eval()
     longSigma = bcoeff_model.LongTerm.Sigma.Value.eval()
-    longDraw = random.gauss(longMu, longSigma)
-    newBc = defaultBc * (1 + longDraw)
+    newBc = random.gauss(defaultBc,longSigma)
 
     # Ensure new BCoeff is not negative
     while newBc < 0:
@@ -352,30 +334,23 @@ def drawBCoeff(satellite: AttrProxy, logFile: logging.Logger, loglist: list) -> 
             f"BCoeff: ERROR below zero value drawn - {newBc}... redrawing",
             loglist,
         )
-        shortDraw = random.gauss(shortMu, shortSigma)
-        longDraw = random.gauss(longMu, longSigma)
-        newBc = defaultBc * (1 + longDraw)
+        newBc = random.gauss(defaultBc,longSigma)
+
     # Assign new BCoeff
     satellite.ForceModel.Drag.Model.BallisticCoeff = newBc
-    bcoeff_model.ShortTerm.InitialEstimate = shortDraw
 
     logtbx.log(
         logFile,
-        f"BCoeff : default - {defaultBc} "
-        f"long sigma - {longSigma} "
-        f"long draw - {longDraw} "
-        f"new BCoeff - {newBc} "
-        f"short sigma - {shortSigma} "
-        f"short initial estimate - {shortDraw} ",
+        f"BCoeff Default - {defaultBc} "
+        f"BCoeff Sigma - {longSigma} "
+        f"BCoeff Draw - {newBc} ",
         loglist,
     )
 
     outDict = {
         f"BCoeff Default": defaultBc,
-        f"BCoeff Long Sigma": longSigma,
+        f"BCoeff Sigma": longSigma,
         f"BCoeff Draw": newBc,
-        f"BCoeff Short Sigma": shortSigma,
-        f"BCoeff Short Initial Estimate": shortDraw,
     }
 
     return outDict
@@ -556,35 +531,24 @@ def drawMeasBias(
             LongSigma = bias_model.LongTerm.Sigma.GetIn(LongSigmaUnit)
             newLongBias = random.gauss(LongBias, LongSigma)
 
-            ShortEstimateUnit = bias_model.ShortTerm.InitialEstimate.unit.eval()
-            ShortEstimate = bias_model.ShortTerm.InitialEstimate.GetIn(ShortEstimateUnit)
-            ShortSigmaUnit = bias_model.ShortTerm.Sigma.unit.eval()
-            ShortSigma = bias_model.ShortTerm.Sigma.GetIn(ShortSigmaUnit)
-            newShortEstimate = random.gauss(ShortEstimate,ShortSigma)
-
             # Assign new biases
             bias_model.LongTerm.Constant.Set(newLongBias, LongBiasUnit)
-            bias_model.ShortTerm.InitialEstimate.Set(newShortEstimate,ShortEstimateUnit)
 
             logtbx.log(
                 logFile,
                 f"Measurement Bias: Facility - {facility.Name.eval()} "
                 f"Measurement - {measName} "
-                f"Initial Bias - {LongBias} "
-                f"Long Sigma - {LongSigma} "
-                f"New Bias - {newLongBias}"
-                f"Short Sigma - {ShortSigma}"
-                f"Short Initial Estimate - {newShortEstimate}",
+                f"Default Bias - {LongBias} "
+                f"Sigma - {LongSigma} "
+                f"Bias Draw - {newLongBias}",
                 loglist,
             )
             # Save to output data frame
             outDict.update(
                 {
                     f"{facName} {measName} Default Bias": LongBias,
-                    f"{facName} {measName} Long Sigma": LongSigma,
-                    f"{facName} {measName} New Bias": newLongBias,
-                    f"{facName} {measName} Short Sigma": ShortSigma,  
-                    f"{facName} {measName} Short Initial Estimate": newShortEstimate,                  
+                    f"{facName} {measName} Sigma": LongSigma,
+                    f"{facName} {measName} Bias Draw": newLongBias,               
                     f"{facName} {measName} Unit": LongBiasUnit,
                 }
             )
@@ -608,7 +572,6 @@ def singleTruthResetDraws(
     for facility in facilities:
         numMeas = facility.MeasurementStatistics.size.eval()
         for i in range(numMeas):
-            facility.MeasurementStatistics[i].Type.BiasModel.ShortTerm.InitialEstimate = 0
             facility.MeasurementStatistics[i].Type.BiasModel.LongTerm.Constant = 0
 
     logtbx.log(logFile, "Reset all varied values to nominal", loglist)
