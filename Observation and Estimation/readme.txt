@@ -1,4 +1,4 @@
-To correctly run the notebooks, please install the following Python modules:
+To correctly run the notebooks, please be sure to install the following Python modules:
 - numpy
 - pandas
 - matplotlib
