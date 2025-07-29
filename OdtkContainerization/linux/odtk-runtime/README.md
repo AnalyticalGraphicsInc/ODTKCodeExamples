@@ -45,7 +45,6 @@ docker run -d -it -p 9393:9393 --env-file ../configuration/licensing.env --name 
 ```
 > [!NOTE]
 > If port `9393` is already in use on your machine, map a different port (e.g. `1234:9393`).
-
 2. In a web browser, navigate to `http://localhost:9393/v1.0/ODTK.application.appVersion`. If you changed the host port mapping in the step above, use that port here instead of `9393`. Verify the resulting page contains the correct version of ODTK running in your container.
 3. Shut down the container by typing the command `docker stop odtk-runtime`.
 
@@ -69,6 +68,5 @@ docker compose up -d
 ```
 > [!NOTE]
 > If port `9393` is already in use on your machine, modify the port mapping (e.g. `1234:9393`) in the `ports` settings of the `docker-compose.yml` file before executing step 1.
-
 2. In a web browser, navigate to `http://localhost:9393/v1.0/ODTK.application.appVersion`. If you changed the host port mapping in the step above, use that port here instead of `9393`. Verify the resulting page contains the correct version of ODTK running in your container.
 3. Shut down the container by typing the command `docker compose down`.
