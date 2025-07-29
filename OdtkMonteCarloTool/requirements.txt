@@ -1,0 +1,15 @@
+pandas
+black
+black[jupyter]
+flake8
+numpy
+matplotlib
+scipy
+pywin32
+isort
+pre-commit
+ipykernel
+astropy
+dash
+plotly
+plotly-express
