@@ -36,7 +36,7 @@ def process_simulated_obs(satName):
     filter.Go()
     root.ProductBuilder.LoadDataProductList('/home/odtk/scenario/Residuals.dpl')
     root.ProductBuilder.GenerateProduct('Residuals')
-    data = pd.read_csv('/home/odtk/.ODTK7/DataArchive/ResidualRatios.csv', parse_dates=["Date Time"])
+    data = pd.read_csv('/home/odtk/.ODTK13/DataArchive/ResidualRatios.csv', parse_dates=["Date Time"])
     gb = data.groupby("Measurement Type")
     figure, axs = plt.subplots(4, 1, figsize = (10,12), sharex=True)
     for i, (label, df) in enumerate(gb):

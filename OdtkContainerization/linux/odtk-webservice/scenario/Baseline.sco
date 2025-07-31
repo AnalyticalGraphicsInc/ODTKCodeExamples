@@ -1,13 +1,13 @@
 <?xml version = "1.0" standalone = "yes"?>
 <VAR name = "ODTK">
     <PROP name = "Version">
-        <STRING>&quot;7.0&quot;</STRING>
+        <STRING>&quot;13.0&quot;</STRING>
     </PROP>
     <SCOPE>
         <VAR name = "Baseline">
             <SCOPE Class = "Scenario">
                 <PROP name = "version">
-                    <STRING>&quot;7.4&quot;</STRING>
+                    <STRING>&quot;13.0&quot;</STRING>
                 </PROP>
                 <VAR name = "Description">
                     <STRING>&quot;&quot;</STRING>
@@ -36,7 +36,7 @@
                                 </VAR>
                                 <VAR name = "TimeSpan">
                                     <QUANTITY Dimension = "TimeUnit" Unit = "hr">
-                                        <REAL>24</REAL>
+                                        <REAL>24.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                             </SCOPE>
@@ -45,7 +45,7 @@
                             <SCOPE Class = "Intervals">
                                 <VAR name = "TimeSpan">
                                     <QUANTITY Dimension = "TimeUnit" Unit = "hr">
-                                        <REAL>4</REAL>
+                                        <REAL>4.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                             </SCOPE>
@@ -87,18 +87,21 @@
                                 </VAR>
                             </SCOPE>
                         </VAR>
+                        <VAR name = "PassDetectionCriterion">
+                            <STRING>&quot;TrackerAndSatellite&quot;</STRING>
+                        </VAR>
                     </SCOPE>
                 </VAR>
                 <VAR name = "StateControls">
                     <SCOPE Class = "StateControls">
                         <VAR name = "MinApogeeAltForSRP">
                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                <REAL>400</REAL>
+                                <REAL>400.0</REAL>
                             </QUANTITY>
                         </VAR>
                         <VAR name = "MaxPerigeeAltForDrag">
                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                <REAL>1000</REAL>
+                                <REAL>1000.0</REAL>
                             </QUANTITY>
                         </VAR>
                     </SCOPE>
@@ -114,11 +117,11 @@
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>8291.578100000001</REAL>
+                                        <REAL>8291.5781</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0</REAL>
+                                    <REAL>0.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.2</REAL>
@@ -129,7 +132,7 @@
                             <SCOPE Class = "MEO">
                                 <VAR name = "SemiMajorAxisMin">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>8291.578100000001</REAL>
+                                        <REAL>8291.5781</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
@@ -138,7 +141,7 @@
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0</REAL>
+                                    <REAL>0.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.2</REAL>
@@ -158,7 +161,7 @@
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0</REAL>
+                                    <REAL>0.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.2</REAL>
@@ -178,7 +181,7 @@
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0</REAL>
+                                    <REAL>0.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.2</REAL>
@@ -194,11 +197,11 @@
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>63781370000000</REAL>
+                                        <REAL>63781370000000.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0</REAL>
+                                    <REAL>0.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.2</REAL>
@@ -209,16 +212,16 @@
                             <SCOPE Class = "HEO">
                                 <VAR name = "SemiMajorAxisMin">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>8291.578100000001</REAL>
+                                        <REAL>8291.5781</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>63781370000000</REAL>
+                                        <REAL>63781370000000.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>0.6899999999999999</REAL>
+                                    <REAL>0.69</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
                                     <REAL>0.73</REAL>
@@ -229,19 +232,19 @@
                             <SCOPE Class = "LOeHEO">
                                 <VAR name = "SemiMajorAxisMin">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>8291.578100000001</REAL>
+                                        <REAL>8291.5781</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>63781370000000</REAL>
+                                        <REAL>63781370000000.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
                                     <REAL>0.2</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
-                                    <REAL>0.6899999999999999</REAL>
+                                    <REAL>0.69</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -249,29 +252,29 @@
                             <SCOPE Class = "HIeHEO">
                                 <VAR name = "SemiMajorAxisMin">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>8291.578100000001</REAL>
+                                        <REAL>8291.5781</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>63781370000000</REAL>
+                                        <REAL>63781370000000.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
                                     <REAL>0.73</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
-                                    <REAL>1</REAL>
+                                    <REAL>1.0</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
                         <VAR name = "Para">
                             <SCOPE Class = "Para">
                                 <VAR name = "EccentricityMin">
-                                    <REAL>1</REAL>
+                                    <REAL>1.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
-                                    <REAL>1</REAL>
+                                    <REAL>1.0</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -279,19 +282,19 @@
                             <SCOPE Class = "Hyper">
                                 <VAR name = "SemiMajorAxisMin">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>-63781370000000</REAL>
+                                        <REAL>-63781370000000.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "SemiMajorAxisMax">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "EccentricityMin">
-                                    <REAL>1</REAL>
+                                    <REAL>1.0</REAL>
                                 </VAR>
                                 <VAR name = "EccentricityMax">
-                                    <REAL>10000000000</REAL>
+                                    <REAL>10000000000.0</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -329,7 +332,7 @@
                                 </VAR>
                                 <VAR name = "WarnThreshold">
                                     <QUANTITY Dimension = "TimeUnit" Unit = "day">
-                                        <REAL>1</REAL>
+                                        <REAL>1.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                             </SCOPE>
@@ -343,10 +346,10 @@
                                     <STRING>&quot;/home/odtk/DynamicEarthData/SpaceWeather-v1.2.txt&quot;</STRING>
                                 </VAR>
                                 <VAR name = "F10">
-                                    <REAL>150</REAL>
+                                    <REAL>150.0</REAL>
                                 </VAR>
                                 <VAR name = "F10bar">
-                                    <REAL>150</REAL>
+                                    <REAL>150.0</REAL>
                                 </VAR>
                                 <VAR name = "KpUpdate">
                                     <STRING>&quot;3-Hourly&quot;</STRING>
@@ -371,7 +374,7 @@
                                 </VAR>
                                 <VAR name = "WarnThreshold">
                                     <QUANTITY Dimension = "TimeUnit" Unit = "day">
-                                        <REAL>1</REAL>
+                                        <REAL>1.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "JacchiaBowmanIndices">
@@ -383,25 +386,25 @@
                                             <STRING>&quot;&quot;</STRING>
                                         </VAR>
                                         <VAR name = "M10">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "M10bar">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "S10">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "S10bar">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "Y10">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "Y10bar">
-                                            <REAL>150</REAL>
+                                            <REAL>150.0</REAL>
                                         </VAR>
                                         <VAR name = "DstDTc">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
                                 </VAR>
@@ -410,7 +413,7 @@
                         <VAR name = "Ionosphere">
                             <SCOPE>
                                 <VAR name = "IRI20xxDataDirectory">
-                                    <STRING>&quot;/home/odtk/DynamicEarthData/IRI2016ModelData\&quot;</STRING>
+                                    <STRING>&quot;/home/odtk/DynamicEarthData/IRI2016ModelData/&quot;</STRING>
                                 </VAR>
                                 <VAR name = "ApSource">
                                     <STRING>&quot;SpaceWeatherFile&quot;</STRING>
@@ -444,11 +447,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -457,80 +482,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -544,11 +575,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -557,80 +610,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -644,11 +703,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -657,80 +738,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -744,11 +831,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;/home/odtk/STKData/CentralBodies/Moon/SimpleReflectionModel.txt&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -757,80 +866,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -844,11 +959,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -857,80 +994,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -944,11 +1087,33 @@
                                 </VAR>
                                 <VAR name = "EclipsingAtmosAlt">
                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                        <REAL>0</REAL>
+                                        <REAL>0.0</REAL>
                                     </QUANTITY>
                                 </VAR>
                                 <VAR name = "GroundReflectionModel">
                                     <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkFilename">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "LandmarkPosUncertainty">
+                                    <SCOPE>
+                                        <VAR name = "SouthSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "EastSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>200.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "AltitudeSigma">
+                                            <QUANTITY Dimension = "DistanceUnit" Unit = "m">
+                                                <REAL>100.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                    </SCOPE>
                                 </VAR>
                                 <VAR name = "EstimateOrbitCorrection">
                                     <BOOL>false</BOOL>
@@ -957,80 +1122,86 @@
                                     <SCOPE>
                                         <VAR name = "R_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>2000</REAL>
+                                                <REAL>2000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "I_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "C_sigma">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                <REAL>20000</REAL>
+                                                <REAL>20000.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Rdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Idot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "Cdot_sigma">
                                             <QUANTITY Dimension = "Rate" Unit = "m*sec^-1">
-                                                <REAL>1</REAL>
+                                                <REAL>1.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "RI_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IC_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "ICdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CRdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "CCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotIdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "RdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                         <VAR name = "IdotCdot_correlation">
-                                            <REAL>0</REAL>
+                                            <REAL>0.0</REAL>
                                         </VAR>
                                     </SCOPE>
+                                </VAR>
+                                <VAR name = "EstimateGM">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "GMScaleSigma">
+                                    <REAL>0.3</REAL>
                                 </VAR>
                             </SCOPE>
                         </VAR>
@@ -1176,10 +1347,13 @@
                                 <VAR name = "Satellite1">
                                     <SCOPE Class = "Satellite">
                                         <PROP name = "version">
-                                            <STRING>&quot;7.4&quot;</STRING>
+                                            <STRING>&quot;13.0&quot;</STRING>
                                         </PROP>
                                         <VAR name = "Description">
                                             <STRING>&quot;&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "MotionType">
+                                            <STRING>&quot;Orbiter&quot;</STRING>
                                         </VAR>
                                         <VAR name = "MotionModel">
                                             <STRING>&quot;Orbiter&quot;</STRING>
@@ -1211,17 +1385,17 @@
                                                 </VAR>
                                                 <VAR name = "YPosition">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "ZPosition">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "XVelocity">
                                                     <QUANTITY Dimension = "Rate" Unit = "km*sec^-1">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "YVelocity">
@@ -1246,17 +1420,17 @@
                                             <SCOPE Class = "Geodetic">
                                                 <VAR name = "Lat">
                                                     <QUANTITY Dimension = "LatitudeUnit" Unit = "rad">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Lon">
                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "rad">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Alt">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
@@ -1297,7 +1471,15 @@
                                             <SCOPE>
                                                 <VAR name = "Mass">
                                                     <QUANTITY Dimension = "MassUnit" Unit = "kg">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
+                                                    </QUANTITY>
+                                                </VAR>
+                                                <VAR name = "EstimateMass">
+                                                    <STRING>&quot;BasedOnManeuvers&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "MassSigma">
+                                                    <QUANTITY Dimension = "MassUnit" Unit = "kg">
+                                                        <REAL>0.01</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
@@ -1322,27 +1504,33 @@
                                                 <VAR name = "Files">
                                                     <LIST />
                                                 </VAR>
+                                                <VAR name = "SpiceID">
+                                                    <STRING>&quot;BODY -999 INST -999999&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "TimeTolTicks">
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
                                                 <VAR name = "BodySpinAxisDir">
                                                     <STRING>&quot;Z&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "InertialSpinAxisRA">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InertialSpinAxisDec">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>90</REAL>
+                                                        <REAL>90.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "SpinRate">
                                                     <QUANTITY Dimension = "AngleRateUnit" Unit = "deg*sec^-1">
-                                                        <REAL>360</REAL>
+                                                        <REAL>360.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InitialSpinOffset">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InitialSpinOffsetEpoch">
@@ -1352,17 +1540,17 @@
                                                     <SCOPE>
                                                         <VAR name = "X">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Y">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Z">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -1371,7 +1559,7 @@
                                         </VAR>
                                         <VAR name = "MinGrazingAlt">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                <REAL>100</REAL>
+                                                <REAL>100.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "TransmitFreq">
@@ -1399,13 +1587,21 @@
                                                 </VAR>
                                                 <VAR name = "MinPassDelta">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>20</REAL>
+                                                        <REAL>20.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
                                         <VAR name = "ForceModel">
                                             <SCOPE>
+                                                <VAR name = "Propagator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Satellite1_Propagator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
+                                                <VAR name = "UseComponentPropagator">
+                                                    <BOOL>false</BOOL>
+                                                </VAR>
                                                 <VAR name = "Gravity">
                                                     <SCOPE>
                                                         <VAR name = "DegreeAndOrder">
@@ -1414,13 +1610,13 @@
                                                         <VAR name = "Tides">
                                                             <SCOPE>
                                                                 <VAR name = "SolidTides">
-                                                                    <BOOL>false</BOOL>
+                                                                    <STRING>&quot;None&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "TimeDependentSolidTides">
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
                                                                 <VAR name = "MinSolidTideAmplitude">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "TruncateSolidTides">
                                                                     <BOOL>true</BOOL>
@@ -1428,11 +1624,14 @@
                                                                 <VAR name = "OceanTides">
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
+                                                                <VAR name = "OceanTidesModel">
+                                                                    <STRING>&quot;CSR 3.0&quot;</STRING>
+                                                                </VAR>
                                                                 <VAR name = "MaxDegreeOrderOceanTides">
                                                                     <INT>4</INT>
                                                                 </VAR>
                                                                 <VAR name = "MinOceanTideAmplitude">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -1460,7 +1659,7 @@
                                                                             <BOOL>true</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "Scale">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -1470,12 +1669,12 @@
                                                                             <BOOL>true</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "Scale">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
                                                                 <VAR name = "MeanMotionUncertaintyScaling">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -1490,7 +1689,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "GMUser">
                                                                                     <QUANTITY Dimension = "Grav Parameter" Unit = "m^3*sec^-2">
-                                                                                        <REAL>4902794000000</REAL>
+                                                                                        <REAL>4902794000000.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "GMSource">
@@ -1545,7 +1744,7 @@
                                                         </VAR>
                                                         <VAR name = "DensityBlendingAltRange">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                                <REAL>30</REAL>
+                                                                <REAL>30.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "EstimateDensity">
@@ -1570,7 +1769,7 @@
                                                                 </VAR>
                                                                 <VAR name = "Area">
                                                                     <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                        <REAL>20</REAL>
+                                                                        <REAL>20.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BallisticCoeff">
@@ -1591,7 +1790,7 @@
                                                                             <REAL>0.044</REAL>
                                                                         </VAR>
                                                                         <VAR name = "InitialEstimate">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SigmaStored">
                                                                             <REAL>0.1</REAL>
@@ -1601,7 +1800,7 @@
                                                                         </VAR>
                                                                         <VAR name = "HalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>10080</REAL>
+                                                                                <REAL>10080.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -1613,20 +1812,20 @@
                                                         </VAR>
                                                         <VAR name = "DensityCorrHalfLife">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>180</REAL>
+                                                                <REAL>180.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "DensityCorrInitialEstimate">
-                                                            <REAL>0</REAL>
+                                                            <REAL>0.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityCorrSigmaScale">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityRatioRoot">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityRatioIncreaseThreshold">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "SunPosMethod">
                                                             <STRING>&quot;ApparentToTrueCB&quot;</STRING>
@@ -1647,15 +1846,15 @@
                                                             <SCOPE>
                                                                 <VAR name = "Duration">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "DensityCorrSigma">
-                                                                    <REAL>10</REAL>
+                                                                    <REAL>10.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "DensityCorrHalfLife">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>28800</REAL>
+                                                                        <REAL>28800.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -1682,11 +1881,11 @@
                                                                     <STRING>&quot;Cr Additive&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "Cr">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Area">
                                                                     <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                        <REAL>20</REAL>
+                                                                        <REAL>20.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "CrAoverM">
@@ -1701,13 +1900,13 @@
                                                                             <BOOL>false</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "NominalStored">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "Constant">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "InitialEstimate">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SigmaStored">
                                                                             <REAL>0.2</REAL>
@@ -1717,7 +1916,7 @@
                                                                         </VAR>
                                                                         <VAR name = "HalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>2880</REAL>
+                                                                                <REAL>2880.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -1763,11 +1962,11 @@
                                                             <BOOL>false</BOOL>
                                                         </VAR>
                                                         <VAR name = "Ck">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "Area">
                                                             <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                <REAL>20</REAL>
+                                                                <REAL>20.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -1789,24 +1988,27 @@
                                                     <SCOPE>
                                                         <VAR name = "ProcessNoise">
                                                             <SCOPE>
-                                                                <VAR name = "RadialVelocitySigma">
+                                                                <VAR name = "Frame">
+                                                                    <STRING>&quot;Gaussian (RIC)&quot;</STRING>
+                                                                </VAR>
+                                                                <VAR name = "XVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
-                                                                <VAR name = "IntrackVelocitySigma">
+                                                                <VAR name = "YVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
-                                                                <VAR name = "CrosstrackVelocitySigma">
+                                                                <VAR name = "ZVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "TimeInterval">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "UseSquaredTimeFormulation">
@@ -1835,6 +2037,19 @@
                                         </VAR>
                                         <VAR name = "PropagatorControls">
                                             <SCOPE Class = "PropagatorControls">
+                                                <VAR name = "UseComponentIntegrator">
+                                                    <BOOL>false</BOOL>
+                                                </VAR>
+                                                <VAR name = "Propagator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Satellite1_Propagator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
+                                                <VAR name = "Integrator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Nominal_Integrator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
                                                 <VAR name = "IntegrationMethod">
                                                     <STRING>&quot;RKF 7(8)&quot;</STRING>
                                                 </VAR>
@@ -1843,7 +2058,7 @@
                                                 </VAR>
                                                 <VAR name = "MinimumAltitude">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "StepSize">
@@ -1858,7 +2073,7 @@
                                                         </VAR>
                                                         <VAR name = "TrueAnomaly">
                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                <REAL>2</REAL>
+                                                                <REAL>2.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "EccentricityThreshold">
@@ -1869,12 +2084,12 @@
                                                         </VAR>
                                                         <VAR name = "MinStepSize">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>1</REAL>
+                                                                <REAL>1.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "MaxStepSize">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>86400</REAL>
+                                                                <REAL>86400.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -1883,6 +2098,19 @@
                                                     <SCOPE Class = "Predict">
                                                         <VAR name = "Enabled">
                                                             <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "UseComponentIntegrator">
+                                                            <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Propagator">
+                                                            <LINKTOOBJ>
+                                                                <STRING>&quot;Satellite1_Propagator&quot;</STRING>
+                                                            </LINKTOOBJ>
+                                                        </VAR>
+                                                        <VAR name = "Integrator">
+                                                            <LINKTOOBJ>
+                                                                <STRING>&quot;RKF7th8th&quot;</STRING>
+                                                            </LINKTOOBJ>
                                                         </VAR>
                                                         <VAR name = "IntegrationMethod">
                                                             <STRING>&quot;RKF 7(8)&quot;</STRING>
@@ -1908,7 +2136,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TrueAnomaly">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "EccentricityThreshold">
@@ -1919,12 +2147,12 @@
                                                                 </VAR>
                                                                 <VAR name = "MinStepSize">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>1</REAL>
+                                                                        <REAL>1.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxStepSize">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>86400</REAL>
+                                                                        <REAL>86400.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -1940,12 +2168,12 @@
                                                 </VAR>
                                                 <VAR name = "Span">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1440</REAL>
+                                                        <REAL>1440.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "TimeStep">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1</REAL>
+                                                        <REAL>1.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "AlignTimeGrid">
@@ -1976,7 +2204,7 @@
                                                     <STRING>&quot;STK Ephemeris&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "Filename">
-                                                    <STRING>&quot;/home/odtk/.ODTK7/Ephemeris/Satellite1.e&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/.ODTK13/Ephemeris/Satellite1.e&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "SendToScript">
                                                     <BOOL>false</BOOL>
@@ -1990,17 +2218,17 @@
                                             <SCOPE>
                                                 <VAR name = "R_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>50</REAL>
+                                                        <REAL>50.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "I_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>100</REAL>
+                                                        <REAL>100.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "C_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>20</REAL>
+                                                        <REAL>20.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Rdot_sigma">
@@ -2019,49 +2247,49 @@
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "RI_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RC_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IC_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "ICdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RdotIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RdotCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IdotCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -2069,27 +2297,27 @@
                                             <SCOPE>
                                                 <VAR name = "SouthSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "EastSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "AltitudeSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>200</REAL>
+                                                        <REAL>200.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "SouthEastCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "SouthAltCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "EastAltCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -2117,15 +2345,15 @@
                                                             <SCOPE Class = "ClockControls">
                                                                 <VAR name = "PhaseBias">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "FreqBias">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "AgingBias">
                                                                     <QUANTITY Dimension = "Unitless Per Time" Unit = "sec*day^-2">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "A0">
@@ -2134,7 +2362,7 @@
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "Aminus1">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Aminus2">
                                                                     <QUANTITY Dimension = "Unitless Per Time" Unit = "sec^-1">
@@ -2143,7 +2371,7 @@
                                                                 </VAR>
                                                                 <VAR name = "AgingWN">
                                                                     <QUANTITY Dimension = "TimeUnit-3" Unit = "sec^-3">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -2164,71 +2392,71 @@
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "PhaseFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "PhaseAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "FreqAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
                                                         <VAR name = "OrbitClockCorrelations">
                                                             <SCOPE>
                                                                 <VAR name = "RPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -2247,13 +2475,13 @@
                                                             <INT>0</INT>
                                                         </VAR>
                                                         <VAR name = "OnWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnReturnFromWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnAlert">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
@@ -2261,22 +2489,22 @@
                                                     <SCOPE>
                                                         <VAR name = "TimeGapForWarning">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "TimeGapForAlert">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "OnWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnReturnFromWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnAlert">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
@@ -2297,17 +2525,17 @@
                                                         </VAR>
                                                         <VAR name = "InitialEstimateStored">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Constant">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "InitialEstimate">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "InitialSigmaStored">
@@ -2322,25 +2550,47 @@
                                                         </VAR>
                                                         <VAR name = "DiffusionCoefficient">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>9.999999999999999e-12</REAL>
+                                                                <REAL>1e-11</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
-                                        <VAR name = "CCSDS">
+                                        <VAR name = "Attachments">
                                             <SCOPE>
-                                                <VAR name = "ObjName">
-                                                    <STRING>&quot;Satellite1&quot;</STRING>
-                                                </VAR>
-                                                <VAR name = "ObjId">
-                                                    <STRING>&quot;2000-000A&quot;</STRING>
+                                                <VAR name = "Role">
+                                                    <STRING>&quot;None&quot;</STRING>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
-                                        <VAR name = "SPICE">
-                                            <SCOPE />
+                                        <VAR name = "EphemerisFileSetting">
+                                            <SCOPE>
+                                                <VAR name = "CCSDS">
+                                                    <SCOPE>
+                                                        <VAR name = "ObjName">
+                                                            <STRING>&quot;Satellite1&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "ObjId">
+                                                            <STRING>&quot;2000-000A&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                                <VAR name = "SPICE">
+                                                    <SCOPE>
+                                                        <VAR name = "ID">
+                                                            <INT>-10</INT>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                                <VAR name = "FileNaming">
+                                                    <SCOPE>
+                                                        <VAR name = "Prefix">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
                                         </VAR>
                                         <VAR name = "Children">
                                             <SCOPE />
@@ -2350,10 +2600,13 @@
                                 <VAR name = "Satellite2">
                                     <SCOPE Class = "Satellite">
                                         <PROP name = "version">
-                                            <STRING>&quot;7.4&quot;</STRING>
+                                            <STRING>&quot;13.0&quot;</STRING>
                                         </PROP>
                                         <VAR name = "Description">
                                             <STRING>&quot;&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "MotionType">
+                                            <STRING>&quot;Orbiter&quot;</STRING>
                                         </VAR>
                                         <VAR name = "MotionModel">
                                             <STRING>&quot;Orbiter&quot;</STRING>
@@ -2385,17 +2638,17 @@
                                                 </VAR>
                                                 <VAR name = "YPosition">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "ZPosition">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "XVelocity">
                                                     <QUANTITY Dimension = "Rate" Unit = "km*sec^-1">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "YVelocity">
@@ -2420,17 +2673,17 @@
                                             <SCOPE Class = "Geodetic">
                                                 <VAR name = "Lat">
                                                     <QUANTITY Dimension = "LatitudeUnit" Unit = "rad">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Lon">
                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "rad">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Alt">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
@@ -2471,7 +2724,15 @@
                                             <SCOPE>
                                                 <VAR name = "Mass">
                                                     <QUANTITY Dimension = "MassUnit" Unit = "kg">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
+                                                    </QUANTITY>
+                                                </VAR>
+                                                <VAR name = "EstimateMass">
+                                                    <STRING>&quot;BasedOnManeuvers&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "MassSigma">
+                                                    <QUANTITY Dimension = "MassUnit" Unit = "kg">
+                                                        <REAL>0.01</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
@@ -2496,27 +2757,33 @@
                                                 <VAR name = "Files">
                                                     <LIST />
                                                 </VAR>
+                                                <VAR name = "SpiceID">
+                                                    <STRING>&quot;BODY -999 INST -999999&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "TimeTolTicks">
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
                                                 <VAR name = "BodySpinAxisDir">
                                                     <STRING>&quot;Z&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "InertialSpinAxisRA">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InertialSpinAxisDec">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>90</REAL>
+                                                        <REAL>90.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "SpinRate">
                                                     <QUANTITY Dimension = "AngleRateUnit" Unit = "deg*sec^-1">
-                                                        <REAL>360</REAL>
+                                                        <REAL>360.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InitialSpinOffset">
                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "InitialSpinOffsetEpoch">
@@ -2526,17 +2793,17 @@
                                                     <SCOPE>
                                                         <VAR name = "X">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Y">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Z">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -2545,7 +2812,7 @@
                                         </VAR>
                                         <VAR name = "MinGrazingAlt">
                                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                <REAL>100</REAL>
+                                                <REAL>100.0</REAL>
                                             </QUANTITY>
                                         </VAR>
                                         <VAR name = "TransmitFreq">
@@ -2573,13 +2840,21 @@
                                                 </VAR>
                                                 <VAR name = "MinPassDelta">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>20</REAL>
+                                                        <REAL>20.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
                                         <VAR name = "ForceModel">
                                             <SCOPE>
+                                                <VAR name = "Propagator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Satellite2_Propagator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
+                                                <VAR name = "UseComponentPropagator">
+                                                    <BOOL>false</BOOL>
+                                                </VAR>
                                                 <VAR name = "Gravity">
                                                     <SCOPE>
                                                         <VAR name = "DegreeAndOrder">
@@ -2588,13 +2863,13 @@
                                                         <VAR name = "Tides">
                                                             <SCOPE>
                                                                 <VAR name = "SolidTides">
-                                                                    <BOOL>false</BOOL>
+                                                                    <STRING>&quot;None&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "TimeDependentSolidTides">
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
                                                                 <VAR name = "MinSolidTideAmplitude">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "TruncateSolidTides">
                                                                     <BOOL>true</BOOL>
@@ -2602,11 +2877,14 @@
                                                                 <VAR name = "OceanTides">
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
+                                                                <VAR name = "OceanTidesModel">
+                                                                    <STRING>&quot;CSR 3.0&quot;</STRING>
+                                                                </VAR>
                                                                 <VAR name = "MaxDegreeOrderOceanTides">
                                                                     <INT>4</INT>
                                                                 </VAR>
                                                                 <VAR name = "MinOceanTideAmplitude">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -2634,7 +2912,7 @@
                                                                             <BOOL>true</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "Scale">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -2644,12 +2922,12 @@
                                                                             <BOOL>true</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "Scale">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
                                                                 <VAR name = "MeanMotionUncertaintyScaling">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -2664,7 +2942,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "GMUser">
                                                                                     <QUANTITY Dimension = "Grav Parameter" Unit = "m^3*sec^-2">
-                                                                                        <REAL>4902794000000</REAL>
+                                                                                        <REAL>4902794000000.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "GMSource">
@@ -2719,7 +2997,7 @@
                                                         </VAR>
                                                         <VAR name = "DensityBlendingAltRange">
                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                                <REAL>30</REAL>
+                                                                <REAL>30.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "EstimateDensity">
@@ -2744,7 +3022,7 @@
                                                                 </VAR>
                                                                 <VAR name = "Area">
                                                                     <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                        <REAL>20</REAL>
+                                                                        <REAL>20.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BallisticCoeff">
@@ -2765,7 +3043,7 @@
                                                                             <REAL>0.044</REAL>
                                                                         </VAR>
                                                                         <VAR name = "InitialEstimate">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SigmaStored">
                                                                             <REAL>0.1</REAL>
@@ -2775,7 +3053,7 @@
                                                                         </VAR>
                                                                         <VAR name = "HalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>10080</REAL>
+                                                                                <REAL>10080.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -2787,20 +3065,20 @@
                                                         </VAR>
                                                         <VAR name = "DensityCorrHalfLife">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>180</REAL>
+                                                                <REAL>180.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "DensityCorrInitialEstimate">
-                                                            <REAL>0</REAL>
+                                                            <REAL>0.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityCorrSigmaScale">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityRatioRoot">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "DensityRatioIncreaseThreshold">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "SunPosMethod">
                                                             <STRING>&quot;ApparentToTrueCB&quot;</STRING>
@@ -2821,15 +3099,15 @@
                                                             <SCOPE>
                                                                 <VAR name = "Duration">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "DensityCorrSigma">
-                                                                    <REAL>10</REAL>
+                                                                    <REAL>10.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "DensityCorrHalfLife">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>28800</REAL>
+                                                                        <REAL>28800.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -2856,11 +3134,11 @@
                                                                     <STRING>&quot;Cr Additive&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "Cr">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Area">
                                                                     <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                        <REAL>20</REAL>
+                                                                        <REAL>20.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "CrAoverM">
@@ -2875,13 +3153,13 @@
                                                                             <BOOL>false</BOOL>
                                                                         </VAR>
                                                                         <VAR name = "NominalStored">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "Constant">
-                                                                            <REAL>1</REAL>
+                                                                            <REAL>1.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "InitialEstimate">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SigmaStored">
                                                                             <REAL>0.2</REAL>
@@ -2891,7 +3169,7 @@
                                                                         </VAR>
                                                                         <VAR name = "HalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>2880</REAL>
+                                                                                <REAL>2880.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -2937,11 +3215,11 @@
                                                             <BOOL>false</BOOL>
                                                         </VAR>
                                                         <VAR name = "Ck">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "Area">
                                                             <QUANTITY Dimension = "Area" Unit = "m^2">
-                                                                <REAL>20</REAL>
+                                                                <REAL>20.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -2963,24 +3241,27 @@
                                                     <SCOPE>
                                                         <VAR name = "ProcessNoise">
                                                             <SCOPE>
-                                                                <VAR name = "RadialVelocitySigma">
+                                                                <VAR name = "Frame">
+                                                                    <STRING>&quot;Gaussian (RIC)&quot;</STRING>
+                                                                </VAR>
+                                                                <VAR name = "XVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
-                                                                <VAR name = "IntrackVelocitySigma">
+                                                                <VAR name = "YVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
-                                                                <VAR name = "CrosstrackVelocitySigma">
+                                                                <VAR name = "ZVelocitySigma">
                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "TimeInterval">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "UseSquaredTimeFormulation">
@@ -3009,6 +3290,19 @@
                                         </VAR>
                                         <VAR name = "PropagatorControls">
                                             <SCOPE Class = "PropagatorControls">
+                                                <VAR name = "UseComponentIntegrator">
+                                                    <BOOL>false</BOOL>
+                                                </VAR>
+                                                <VAR name = "Propagator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Satellite2_Propagator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
+                                                <VAR name = "Integrator">
+                                                    <LINKTOOBJ>
+                                                        <STRING>&quot;Nominal_Integrator&quot;</STRING>
+                                                    </LINKTOOBJ>
+                                                </VAR>
                                                 <VAR name = "IntegrationMethod">
                                                     <STRING>&quot;RKF 7(8)&quot;</STRING>
                                                 </VAR>
@@ -3017,7 +3311,7 @@
                                                 </VAR>
                                                 <VAR name = "MinimumAltitude">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "km">
-                                                        <REAL>0</REAL>
+                                                        <REAL>0.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "StepSize">
@@ -3032,7 +3326,7 @@
                                                         </VAR>
                                                         <VAR name = "TrueAnomaly">
                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                <REAL>2</REAL>
+                                                                <REAL>2.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "EccentricityThreshold">
@@ -3043,12 +3337,12 @@
                                                         </VAR>
                                                         <VAR name = "MinStepSize">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>1</REAL>
+                                                                <REAL>1.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "MaxStepSize">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>86400</REAL>
+                                                                <REAL>86400.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
@@ -3057,6 +3351,19 @@
                                                     <SCOPE Class = "Predict">
                                                         <VAR name = "Enabled">
                                                             <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "UseComponentIntegrator">
+                                                            <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Propagator">
+                                                            <LINKTOOBJ>
+                                                                <STRING>&quot;Satellite2_Propagator&quot;</STRING>
+                                                            </LINKTOOBJ>
+                                                        </VAR>
+                                                        <VAR name = "Integrator">
+                                                            <LINKTOOBJ>
+                                                                <STRING>&quot;RKF7th8th&quot;</STRING>
+                                                            </LINKTOOBJ>
                                                         </VAR>
                                                         <VAR name = "IntegrationMethod">
                                                             <STRING>&quot;RKF 7(8)&quot;</STRING>
@@ -3082,7 +3389,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TrueAnomaly">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "EccentricityThreshold">
@@ -3093,12 +3400,12 @@
                                                                 </VAR>
                                                                 <VAR name = "MinStepSize">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>1</REAL>
+                                                                        <REAL>1.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxStepSize">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>86400</REAL>
+                                                                        <REAL>86400.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -3114,12 +3421,12 @@
                                                 </VAR>
                                                 <VAR name = "Span">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1440</REAL>
+                                                        <REAL>1440.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "TimeStep">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1</REAL>
+                                                        <REAL>1.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "AlignTimeGrid">
@@ -3150,7 +3457,7 @@
                                                     <STRING>&quot;STK Ephemeris&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "Filename">
-                                                    <STRING>&quot;/home/odtk/.ODTK7/Ephemeris/Satellite1.e&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/.ODTK13/Ephemeris/Satellite1.e&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "SendToScript">
                                                     <BOOL>false</BOOL>
@@ -3164,17 +3471,17 @@
                                             <SCOPE>
                                                 <VAR name = "R_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>50</REAL>
+                                                        <REAL>50.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "I_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>100</REAL>
+                                                        <REAL>100.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "C_sigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>20</REAL>
+                                                        <REAL>20.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "Rdot_sigma">
@@ -3193,49 +3500,49 @@
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "RI_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RC_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IC_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "ICdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CRdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RdotIdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RdotCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "IdotCdot_correlation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -3243,27 +3550,27 @@
                                             <SCOPE>
                                                 <VAR name = "SouthSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "EastSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>1000</REAL>
+                                                        <REAL>1000.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "AltitudeSigma">
                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                        <REAL>200</REAL>
+                                                        <REAL>200.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "SouthEastCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "SouthAltCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                                 <VAR name = "EastAltCorrelation">
-                                                    <REAL>0</REAL>
+                                                    <REAL>0.0</REAL>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -3291,15 +3598,15 @@
                                                             <SCOPE Class = "ClockControls">
                                                                 <VAR name = "PhaseBias">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "FreqBias">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "AgingBias">
                                                                     <QUANTITY Dimension = "Unitless Per Time" Unit = "sec*day^-2">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "A0">
@@ -3308,7 +3615,7 @@
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "Aminus1">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Aminus2">
                                                                     <QUANTITY Dimension = "Unitless Per Time" Unit = "sec^-1">
@@ -3317,7 +3624,7 @@
                                                                 </VAR>
                                                                 <VAR name = "AgingWN">
                                                                     <QUANTITY Dimension = "TimeUnit-3" Unit = "sec^-3">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -3338,71 +3645,71 @@
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "PhaseFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "PhaseAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "FreqAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
                                                         <VAR name = "OrbitClockCorrelations">
                                                             <SCOPE>
                                                                 <VAR name = "RPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "RdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "IdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotPhase_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotFreq_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "CdotAging_correlation">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -3421,13 +3728,13 @@
                                                             <INT>0</INT>
                                                         </VAR>
                                                         <VAR name = "OnWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnReturnFromWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnAlert">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
@@ -3435,22 +3742,22 @@
                                                     <SCOPE>
                                                         <VAR name = "TimeGapForWarning">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "TimeGapForAlert">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "OnWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnReturnFromWarning">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OnAlert">
-                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
@@ -3471,17 +3778,17 @@
                                                         </VAR>
                                                         <VAR name = "InitialEstimateStored">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "Constant">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "InitialEstimate">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>0</REAL>
+                                                                <REAL>0.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "InitialSigmaStored">
@@ -3496,25 +3803,47 @@
                                                         </VAR>
                                                         <VAR name = "DiffusionCoefficient">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                <REAL>9.999999999999999e-12</REAL>
+                                                                <REAL>1e-11</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                     </SCOPE>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
-                                        <VAR name = "CCSDS">
+                                        <VAR name = "Attachments">
                                             <SCOPE>
-                                                <VAR name = "ObjName">
-                                                    <STRING>&quot;Satellite2&quot;</STRING>
-                                                </VAR>
-                                                <VAR name = "ObjId">
-                                                    <STRING>&quot;2000-000A&quot;</STRING>
+                                                <VAR name = "Role">
+                                                    <STRING>&quot;None&quot;</STRING>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
-                                        <VAR name = "SPICE">
-                                            <SCOPE />
+                                        <VAR name = "EphemerisFileSetting">
+                                            <SCOPE>
+                                                <VAR name = "CCSDS">
+                                                    <SCOPE>
+                                                        <VAR name = "ObjName">
+                                                            <STRING>&quot;Satellite2&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "ObjId">
+                                                            <STRING>&quot;2000-000A&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                                <VAR name = "SPICE">
+                                                    <SCOPE>
+                                                        <VAR name = "ID">
+                                                            <INT>-10</INT>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                                <VAR name = "FileNaming">
+                                                    <SCOPE>
+                                                        <VAR name = "Prefix">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
                                         </VAR>
                                         <VAR name = "Children">
                                             <SCOPE />
@@ -3528,7 +3857,7 @@
                                 <VAR name = "Simulator">
                                     <SCOPE Class = "Simulator">
                                         <PROP name = "version">
-                                            <STRING>&quot;7.4&quot;</STRING>
+                                            <STRING>&quot;13.0&quot;</STRING>
                                         </PROP>
                                         <VAR name = "Description">
                                             <STRING>&quot;&quot;</STRING>
@@ -3548,6 +3877,12 @@
                                         <VAR name = "EmitterList">
                                             <PROP name = "EmptyDescription">
                                                 <STRING>&quot;An empty list allows all emitters to be used&quot;</STRING>
+                                            </PROP>
+                                            <SETLINKTOOBJ />
+                                        </VAR>
+                                        <VAR name = "SurfaceVehicleList">
+                                            <PROP name = "EmptyDescription">
+                                                <STRING>&quot;An empty list allows all surface vehicles to be used&quot;</STRING>
                                             </PROP>
                                             <SETLINKTOOBJ />
                                         </VAR>
@@ -3579,16 +3914,21 @@
                                                 </VAR>
                                                 <VAR name = "TimeSpan">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "hr">
-                                                        <REAL>24</REAL>
+                                                        <REAL>24.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "TimeStep">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1</REAL>
+                                                        <REAL>1.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "NumOrbitsAllowedForEpochAlignment">
                                                     <INT>15</INT>
+                                                </VAR>
+                                                <VAR name = "MaxPropTimeAllowedForEpochAlignment">
+                                                    <QUANTITY Dimension = "TimeUnit" Unit = "min">
+                                                        <REAL>60.0</REAL>
+                                                    </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "GlobalAtmosphericDensityEstimation">
                                                     <SCOPE>
@@ -3616,11 +3956,11 @@
                                                                                 <SCOPE>
                                                                                     <VAR name = "HalfLife">
                                                                                         <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                            <REAL>180</REAL>
+                                                                                            <REAL>180.0</REAL>
                                                                                         </QUANTITY>
                                                                                     </VAR>
                                                                                     <VAR name = "Sigma">
-                                                                                        <REAL>5</REAL>
+                                                                                        <REAL>5.0</REAL>
                                                                                     </VAR>
                                                                                 </SCOPE>
                                                                             </VAR>
@@ -3640,11 +3980,11 @@
                                                                                 <SCOPE>
                                                                                     <VAR name = "HalfLife">
                                                                                         <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                            <REAL>180</REAL>
+                                                                                            <REAL>180.0</REAL>
                                                                                         </QUANTITY>
                                                                                     </VAR>
                                                                                     <VAR name = "Sigma">
-                                                                                        <REAL>5</REAL>
+                                                                                        <REAL>5.0</REAL>
                                                                                     </VAR>
                                                                                 </SCOPE>
                                                                             </VAR>
@@ -3679,7 +4019,7 @@
                                                 </VAR>
                                                 <VAR name = "SaveFrequency">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>60</REAL>
+                                                        <REAL>60.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "BackupRestartRecords">
@@ -3738,6 +4078,9 @@
                                                 <VAR name = "DeviateOrbits">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
+                                                <VAR name = "DeviateMass">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
                                                 <VAR name = "DeviateDensity">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
@@ -3762,13 +4105,22 @@
                                                 <VAR name = "DeviateManeuvers">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
-                                                <VAR name = "AddProcessNoise">
+                                                <VAR name = "AddMeasBiasProcessNoise">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
+                                                <VAR name = "AddForceModelProcessNoise">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
                                                 <VAR name = "AddManeuverProcessNoise">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
                                                 <VAR name = "AddMeasWhiteNoise">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
+                                                <VAR name = "DeviateSurfaceTrajectories">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
+                                                <VAR name = "AddSurfaceTrajectoryProcessNoise">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
                                                 <VAR name = "DeviateStationLocations">
@@ -3798,63 +4150,81 @@
                                                 <VAR name = "DeviateCentralBodyOrbits">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
+                                                <VAR name = "DeviateCentralBodyGravity">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
+                                                <VAR name = "DeviateChildDeploymentVelocity">
+                                                    <BOOL>true</BOOL>
+                                                </VAR>
                                                 <VAR name = "RandomSeed">
-                                                    <LONG>1</LONG>
+                                                    <INT>1</INT>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
                                         <VAR name = "ErrorScaling">
                                             <SCOPE Class = "ErrorScaling">
                                                 <VAR name = "Orbits">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
+                                                <VAR name = "Mass">
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "Density">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "BCoeff">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "SolarP">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "TranspDelay">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "RetroDelay">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "MeasBiases">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "TropoBiases">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "Maneuvers">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
+                                                <VAR name = "SurfaceTrajectories">
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "StationLocations">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "AntennaLocations">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "Clocks">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "MeasTimeBias">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "Accelerometers">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "GlobalDensity">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "EmpiricalForces">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                                 <VAR name = "CentralBodyOrbits">
-                                                    <REAL>1</REAL>
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
+                                                <VAR name = "CentralBodyGravity">
+                                                    <REAL>1.0</REAL>
+                                                </VAR>
+                                                <VAR name = "ChildDeploymentVelocity">
+                                                    <REAL>1.0</REAL>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -3885,7 +4255,7 @@
                                                 <VAR name = "Measurements">
                                                     <SCOPE>
                                                         <VAR name = "Filename">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/TrackingData/Baseline.gobs&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/TrackingData/Baseline.gobs&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "AliasMapping">
                                                             <STRING>&quot;&quot;</STRING>
@@ -3899,6 +4269,9 @@
                                                         <VAR name = "PassFileDefaultExtension">
                                                             <STRING>&quot;gobs&quot;</STRING>
                                                         </VAR>
+                                                        <VAR name = "PassDetectionCriterion">
+                                                            <STRING>&quot;TrackerAndPrimary&quot;</STRING>
+                                                        </VAR>
                                                         <VAR name = "UpdateScenario">
                                                             <BOOL>true</BOOL>
                                                         </VAR>
@@ -3910,7 +4283,7 @@
                                                 <VAR name = "DataArchive">
                                                     <SCOPE Class = "DataArchive">
                                                         <VAR name = "Filename">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Baseline.simrun&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/DataArchive/Baseline.simrun&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "FileUpdateMethod">
                                                             <STRING>&quot;Overwrite&quot;</STRING>
@@ -3965,12 +4338,12 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxTimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "UniformTimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -3982,7 +4355,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>1</REAL>
+                                                                        <REAL>1.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AlignTimeGrid">
@@ -3993,7 +4366,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TimeSpan">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>720</REAL>
+                                                                        <REAL>720.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "StopTime">
@@ -4010,7 +4383,7 @@
                                                                     <SCOPE>
                                                                         <VAR name = "Satellite">
                                                                             <LINKTOOBJ>
-                                                                                <STRING>&quot;Satellite2&quot;</STRING>
+                                                                                <STRING>&quot;Satellite1&quot;</STRING>
                                                                             </LINKTOOBJ>
                                                                         </VAR>
                                                                         <VAR name = "CBName">
@@ -4025,7 +4398,7 @@
                                                                     <SCOPE>
                                                                         <VAR name = "Satellite">
                                                                             <LINKTOOBJ>
-                                                                                <STRING>&quot;Satellite1&quot;</STRING>
+                                                                                <STRING>&quot;Satellite2&quot;</STRING>
                                                                             </LINKTOOBJ>
                                                                         </VAR>
                                                                         <VAR name = "CBName">
@@ -4057,7 +4430,7 @@
                                                             <STRING>&quot;STK Ephemeris&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OutputDirectory">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/Ephemeris&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/Ephemeris&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "FileNamingOption">
                                                             <STRING>&quot;ProcessStart&quot;</STRING>
@@ -4088,7 +4461,7 @@
                                                         </VAR>
                                                         <VAR name = "TimeStep">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>15</REAL>
+                                                                <REAL>15.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "CombineGNSSSystems">
@@ -4125,16 +4498,16 @@
                                         <VAR name = "Events">
                                             <SCOPE>
                                                 <VAR name = "OnInternalError">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnStart">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnComplete">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnHalt">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -4150,7 +4523,7 @@
                                 <VAR name = "Filter">
                                     <SCOPE Class = "Filter">
                                         <PROP name = "version">
-                                            <STRING>&quot;7.4&quot;</STRING>
+                                            <STRING>&quot;13.0&quot;</STRING>
                                         </PROP>
                                         <VAR name = "Description">
                                             <STRING>&quot;&quot;</STRING>
@@ -4170,6 +4543,12 @@
                                         <VAR name = "EmitterList">
                                             <PROP name = "EmptyDescription">
                                                 <STRING>&quot;An empty list allows all emitters to be used&quot;</STRING>
+                                            </PROP>
+                                            <SETLINKTOOBJ />
+                                        </VAR>
+                                        <VAR name = "SurfaceVehicleList">
+                                            <PROP name = "EmptyDescription">
+                                                <STRING>&quot;An empty list allows all surface vehicles to be used&quot;</STRING>
                                             </PROP>
                                             <SETLINKTOOBJ />
                                         </VAR>
@@ -4216,13 +4595,19 @@
                                                 </VAR>
                                                 <VAR name = "TimeSpan">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "hr">
-                                                        <REAL>24</REAL>
+                                                        <REAL>24.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "ProcessNoiseUpdateInterval">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>1</REAL>
+                                                        <REAL>1.0</REAL>
                                                     </QUANTITY>
+                                                </VAR>
+                                                <VAR name = "CovarianceDecomposition">
+                                                    <STRING>&quot;P&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "CovarianceUpdateForm">
+                                                    <STRING>&quot;OptimalGain&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "MeasurementProcessingMode">
                                                     <STRING>&quot;Scalar&quot;</STRING>
@@ -4233,14 +4618,16 @@
                                                 <VAR name = "NumOrbitsAllowedForEpochAlignment">
                                                     <INT>15</INT>
                                                 </VAR>
+                                                <VAR name = "MaxPropTimeAllowedForEpochAlignment">
+                                                    <QUANTITY Dimension = "TimeUnit" Unit = "min">
+                                                        <REAL>60.0</REAL>
+                                                    </QUANTITY>
+                                                </VAR>
                                                 <VAR name = "EnableVLS">
                                                     <BOOL>true</BOOL>
                                                 </VAR>
                                                 <VAR name = "MeasUpdateOrbitStateRepresentation">
                                                     <STRING>&quot;Cartesian&quot;</STRING>
-                                                </VAR>
-                                                <VAR name = "CovarianceUpdateForm">
-                                                    <STRING>&quot;OptimalGain&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "EnableDeepSpaceMode">
                                                     <BOOL>false</BOOL>
@@ -4271,7 +4658,7 @@
                                                         </VAR>
                                                         <VAR name = "MaximumLag">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>120</REAL>
+                                                                <REAL>120.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "UseCovarianceReduction">
@@ -4308,7 +4695,7 @@
                                                                     <REAL>1e-06</REAL>
                                                                 </VAR>
                                                                 <VAR name = "DeweightingScaleFactor">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4321,10 +4708,10 @@
                                                                     <STRING>&quot;AlwaysOn&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "ResidualVarianceCorrectionLimit">
-                                                                    <REAL>10000</REAL>
+                                                                    <REAL>10000.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "ResidualVarianceScaling">
-                                                                    <REAL>1</REAL>
+                                                                    <REAL>1.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "MeasUpdateNonlinearDetectionThreshold">
                                                                     <REAL>0.5</REAL>
@@ -4346,10 +4733,10 @@
                                                                     <REAL>0.1</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Beta">
-                                                                    <REAL>2</REAL>
+                                                                    <REAL>2.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "Kappa">
-                                                                    <REAL>0</REAL>
+                                                                    <REAL>0.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4357,7 +4744,7 @@
                                                             <BOOL>false</BOOL>
                                                         </VAR>
                                                         <VAR name = "ResidualToWNIterationThreshold">
-                                                            <REAL>1</REAL>
+                                                            <REAL>1.0</REAL>
                                                         </VAR>
                                                         <VAR name = "MaxMeasUpdateIterations">
                                                             <INT>3</INT>
@@ -4390,7 +4777,7 @@
                                                 <VAR name = "Defaults">
                                                     <SCOPE Class = "SigmaEditing">
                                                         <VAR name = "NominalSigma">
-                                                            <REAL>3</REAL>
+                                                            <REAL>3.0</REAL>
                                                         </VAR>
                                                         <VAR name = "Dynamic">
                                                             <SCOPE>
@@ -4398,7 +4785,7 @@
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
                                                                 <VAR name = "HighSigma">
-                                                                    <REAL>100</REAL>
+                                                                    <REAL>100.0</REAL>
                                                                 </VAR>
                                                                 <VAR name = "NumRejectToStart">
                                                                     <INT>10</INT>
@@ -4408,7 +4795,7 @@
                                                                 </VAR>
                                                                 <VAR name = "InitialHighSigmaDuration">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -4447,7 +4834,7 @@
                                                 </VAR>
                                                 <VAR name = "SaveFrequency">
                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                        <REAL>60</REAL>
+                                                        <REAL>60.0</REAL>
                                                     </QUANTITY>
                                                 </VAR>
                                                 <VAR name = "BackupRestartRecords">
@@ -4485,7 +4872,7 @@
                                                                     <STRING>&quot;PromptUser&quot;</STRING>
                                                                 </VAR>
                                                                 <VAR name = "PercentSigmaDeweighting">
-                                                                    <REAL>10</REAL>
+                                                                    <REAL>10.0</REAL>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4536,11 +4923,11 @@
                                                                                 <SCOPE>
                                                                                     <VAR name = "HalfLife">
                                                                                         <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                            <REAL>180</REAL>
+                                                                                            <REAL>180.0</REAL>
                                                                                         </QUANTITY>
                                                                                     </VAR>
                                                                                     <VAR name = "Sigma">
-                                                                                        <REAL>5</REAL>
+                                                                                        <REAL>5.0</REAL>
                                                                                     </VAR>
                                                                                 </SCOPE>
                                                                             </VAR>
@@ -4560,11 +4947,11 @@
                                                                                 <SCOPE>
                                                                                     <VAR name = "HalfLife">
                                                                                         <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                            <REAL>180</REAL>
+                                                                                            <REAL>180.0</REAL>
                                                                                         </QUANTITY>
                                                                                     </VAR>
                                                                                     <VAR name = "Sigma">
-                                                                                        <REAL>5</REAL>
+                                                                                        <REAL>5.0</REAL>
                                                                                     </VAR>
                                                                                 </SCOPE>
                                                                             </VAR>
@@ -4591,7 +4978,7 @@
                                                 <VAR name = "DataArchive">
                                                     <SCOPE Class = "DataArchive">
                                                         <VAR name = "Filename">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Baseline.filrun&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/DataArchive/Baseline.filrun&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "FileUpdateMethod">
                                                             <STRING>&quot;Overwrite&quot;</STRING>
@@ -4656,13 +5043,16 @@
                                                 <VAR name = "ClearMsgLog">
                                                     <BOOL>false</BOOL>
                                                 </VAR>
+                                                <VAR name = "PassDetectionCriterion">
+                                                    <STRING>&quot;TrackingStrand&quot;</STRING>
+                                                </VAR>
                                                 <VAR name = "SmootherData">
                                                     <SCOPE Class = "SmootherData">
                                                         <VAR name = "Generate">
                                                             <BOOL>false</BOOL>
                                                         </VAR>
                                                         <VAR name = "Filename">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/Smoother/Baseline_Filter.rough&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/Smoother/Baseline_Filter.rough&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "TimeMode">
                                                             <STRING>&quot;FilterSpan&quot;</STRING>
@@ -4687,12 +5077,12 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxTimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "UniformTimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>2</REAL>
+                                                                        <REAL>2.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                             </SCOPE>
@@ -4704,7 +5094,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TimeStep">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>1</REAL>
+                                                                        <REAL>1.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AlignTimeGrid">
@@ -4715,7 +5105,7 @@
                                                                 </VAR>
                                                                 <VAR name = "TimeSpan">
                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                        <REAL>720</REAL>
+                                                                        <REAL>720.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "StopTime">
@@ -4732,7 +5122,7 @@
                                                                     <SCOPE>
                                                                         <VAR name = "Satellite">
                                                                             <LINKTOOBJ>
-                                                                                <STRING>&quot;Satellite2&quot;</STRING>
+                                                                                <STRING>&quot;Satellite1&quot;</STRING>
                                                                             </LINKTOOBJ>
                                                                         </VAR>
                                                                         <VAR name = "CBName">
@@ -4747,7 +5137,7 @@
                                                                     <SCOPE>
                                                                         <VAR name = "Satellite">
                                                                             <LINKTOOBJ>
-                                                                                <STRING>&quot;Satellite1&quot;</STRING>
+                                                                                <STRING>&quot;Satellite2&quot;</STRING>
                                                                             </LINKTOOBJ>
                                                                         </VAR>
                                                                         <VAR name = "CBName">
@@ -4779,7 +5169,7 @@
                                                             <STRING>&quot;STK Ephemeris&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "OutputDirectory">
-                                                            <STRING>&quot;/home/odtk/.ODTK7/Ephemeris&quot;</STRING>
+                                                            <STRING>&quot;/home/odtk/.ODTK13/Ephemeris&quot;</STRING>
                                                         </VAR>
                                                         <VAR name = "FileNamingOption">
                                                             <STRING>&quot;ProcessStart&quot;</STRING>
@@ -4810,7 +5200,7 @@
                                                         </VAR>
                                                         <VAR name = "TimeStep">
                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                <REAL>15</REAL>
+                                                                <REAL>15.0</REAL>
                                                             </QUANTITY>
                                                         </VAR>
                                                         <VAR name = "CombineGNSSSystems">
@@ -4849,8 +5239,23 @@
                                                                 <VAR name = "Generate">
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
+                                                                <VAR name = "State">
+                                                                    <BOOL>true</BOOL>
+                                                                </VAR>
+                                                                <VAR name = "Covariance">
+                                                                    <BOOL>true</BOOL>
+                                                                </VAR>
+                                                                <VAR name = "StateErrorTransition">
+                                                                    <BOOL>true</BOOL>
+                                                                </VAR>
+                                                                <VAR name = "MeasurementPartials">
+                                                                    <BOOL>false</BOOL>
+                                                                </VAR>
+                                                                <VAR name = "FilterGainMatrix">
+                                                                    <BOOL>false</BOOL>
+                                                                </VAR>
                                                                 <VAR name = "Filename">
-                                                                    <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Filter_FilterDebug.txt&quot;</STRING>
+                                                                    <STRING>&quot;/home/odtk/.ODTK13/DataArchive/Filter_FilterDebug.txt&quot;</STRING>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4860,7 +5265,7 @@
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
                                                                 <VAR name = "Filename">
-                                                                    <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Filter_EigenValues.txt&quot;</STRING>
+                                                                    <STRING>&quot;/home/odtk/.ODTK13/DataArchive/Filter_EigenValues.txt&quot;</STRING>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4870,7 +5275,7 @@
                                                                     <BOOL>false</BOOL>
                                                                 </VAR>
                                                                 <VAR name = "Filename">
-                                                                    <STRING>&quot;/home/odtk/.ODTK7/DataArchive/Filter_SecondOrder.txt&quot;</STRING>
+                                                                    <STRING>&quot;/home/odtk/.ODTK13/DataArchive/Filter_SecondOrder.txt&quot;</STRING>
                                                                 </VAR>
                                                             </SCOPE>
                                                         </VAR>
@@ -4881,19 +5286,19 @@
                                         <VAR name = "Events">
                                             <SCOPE>
                                                 <VAR name = "OnInternalError">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnResume">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnComplete">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnHalt">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                                 <VAR name = "OnNoMoreMeas">
-                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/DoNothing.vbs&quot;</STRING>
+                                                    <STRING>&quot;/home/odtk/ODTK/AppData/Scripts/Event_Controls/DoNothing.vbs&quot;</STRING>
                                                 </VAR>
                                             </SCOPE>
                                         </VAR>
@@ -4909,7 +5314,7 @@
                                 <VAR name = "Baseline">
                                     <SCOPE Class = "TrackingSystem">
                                         <PROP name = "version">
-                                            <STRING>&quot;7.4&quot;</STRING>
+                                            <STRING>&quot;13.0&quot;</STRING>
                                         </PROP>
                                         <VAR name = "Description">
                                             <STRING>&quot;&quot;</STRING>
@@ -4954,7 +5359,7 @@
                                                         <VAR name = "COOK-A">
                                                             <SCOPE Class = "Facility">
                                                                 <PROP name = "version">
-                                                                    <STRING>&quot;7.4&quot;</STRING>
+                                                                    <STRING>&quot;13.0&quot;</STRING>
                                                                 </PROP>
                                                                 <VAR name = "Description">
                                                                     <STRING>&quot;&quot;</STRING>
@@ -5002,17 +5407,17 @@
                                                                             <SCOPE>
                                                                                 <VAR name = "X">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Y">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Z">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -5038,27 +5443,27 @@
                                                                     <SCOPE>
                                                                         <VAR name = "SouthSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "EastSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "AltitudeSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "SouthEastCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SouthAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "EastAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -5084,7 +5489,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>765</REAL>
+                                                                                                        <REAL>765.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
@@ -5094,22 +5499,22 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>32</REAL>
+                                                                                                        <REAL>32.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>16</REAL>
+                                                                                                        <REAL>16.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>5</REAL>
+                                                                                                        <REAL>5.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -5155,39 +5560,39 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>100</REAL>
+                                                                                                        <REAL>100.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>50</REAL>
+                                                                                                        <REAL>50.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>20</REAL>
+                                                                                                        <REAL>20.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigmaTwoWay">
                                                                                             <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                                                <REAL>10</REAL>
+                                                                                                <REAL>10.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -5198,7 +5603,7 @@
                                                                                         </VAR>
                                                                                         <VAR name = "CountInterval">
                                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                                <REAL>1</REAL>
+                                                                                                <REAL>1.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "LightTimeDelay">
@@ -5225,17 +5630,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -5250,14 +5655,14 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigma">
                                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                <REAL>0.03</REAL>
+                                                                                                <REAL>0.029999999999999995</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -5287,17 +5692,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -5312,7 +5717,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -5357,7 +5762,7 @@
                                                                         </VAR>
                                                                         <VAR name = "MinPassDelta">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>20</REAL>
+                                                                                <REAL>20.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -5379,7 +5784,7 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>90</REAL>
+                                                                        <REAL>90.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AzElMask">
@@ -5406,17 +5811,17 @@
                                                                 </VAR>
                                                                 <VAR name = "DirectionCosineAzimuthOffset">
                                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightAzimuth">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxAngleDown">
@@ -5431,32 +5836,32 @@
                                                                         </VAR>
                                                                         <VAR name = "PolarExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSunElevation">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>90</REAL>
+                                                                                <REAL>90.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinSunExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinMoonExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinEarthExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>10</REAL>
+                                                                                <REAL>10.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSolarPhaseAngle">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>180</REAL>
+                                                                                <REAL>180.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "ReferenceFrame">
@@ -5488,12 +5893,12 @@
                                                                         </VAR>
                                                                         <VAR name = "BiasSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "BiasHalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "Data">
@@ -5520,7 +5925,7 @@
                                                                                     <REAL>-11513.2285766602</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial6">
-                                                                                    <REAL>74576.19091796879</REAL>
+                                                                                    <REAL>74576.1909179688</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial7">
                                                                                     <REAL>-194315.89453125</REAL>
@@ -5541,40 +5946,40 @@
                                                                                     <INT>1</INT>
                                                                                 </VAR>
                                                                                 <VAR name = "Jan">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Feb">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Mar">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Apr">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "May">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jun">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jul">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Aug">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Sep">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Oct">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Nov">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Dec">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "OverrideWavelength">
                                                                                     <BOOL>false</BOOL>
@@ -5599,7 +6004,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "Humidity">
                                                                                     <QUANTITY Dimension = "Percent" Unit = "%">
-                                                                                        <REAL>55</REAL>
+                                                                                        <REAL>55.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "MetFiles">
@@ -5647,17 +6052,17 @@
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimateStored">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Constant">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimate">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialSigmaStored">
@@ -5672,7 +6077,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "DiffusionCoefficient">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>9.999999999999999e-12</REAL>
+                                                                                        <REAL>1e-11</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -5687,7 +6092,7 @@
                                                         <VAR name = "GUAM-A">
                                                             <SCOPE Class = "Facility">
                                                                 <PROP name = "version">
-                                                                    <STRING>&quot;7.4&quot;</STRING>
+                                                                    <STRING>&quot;13.0&quot;</STRING>
                                                                 </PROP>
                                                                 <VAR name = "Description">
                                                                     <STRING>&quot;&quot;</STRING>
@@ -5712,7 +6117,7 @@
                                                                         </VAR>
                                                                         <VAR name = "Alt">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>217</REAL>
+                                                                                <REAL>217.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -5735,17 +6140,17 @@
                                                                             <SCOPE>
                                                                                 <VAR name = "X">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Y">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Z">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -5771,27 +6176,27 @@
                                                                     <SCOPE>
                                                                         <VAR name = "SouthSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "EastSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "AltitudeSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "SouthEastCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SouthAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "EastAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -5817,32 +6222,32 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>190</REAL>
+                                                                                                        <REAL>190.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>95</REAL>
+                                                                                                        <REAL>95.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>30</REAL>
+                                                                                                        <REAL>30.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>15</REAL>
+                                                                                                        <REAL>15.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>5</REAL>
+                                                                                                        <REAL>5.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -5888,39 +6293,39 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>100</REAL>
+                                                                                                        <REAL>100.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>50</REAL>
+                                                                                                        <REAL>50.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>20</REAL>
+                                                                                                        <REAL>20.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigmaTwoWay">
                                                                                             <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                                                <REAL>10</REAL>
+                                                                                                <REAL>10.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -5931,7 +6336,7 @@
                                                                                         </VAR>
                                                                                         <VAR name = "CountInterval">
                                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                                <REAL>1</REAL>
+                                                                                                <REAL>1.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "LightTimeDelay">
@@ -5958,17 +6363,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -5983,14 +6388,14 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigma">
                                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                <REAL>0.03</REAL>
+                                                                                                <REAL>0.029999999999999995</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -6020,17 +6425,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -6045,7 +6450,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -6090,7 +6495,7 @@
                                                                         </VAR>
                                                                         <VAR name = "MinPassDelta">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>20</REAL>
+                                                                                <REAL>20.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -6112,7 +6517,7 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>90</REAL>
+                                                                        <REAL>90.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AzElMask">
@@ -6139,17 +6544,17 @@
                                                                 </VAR>
                                                                 <VAR name = "DirectionCosineAzimuthOffset">
                                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightAzimuth">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxAngleDown">
@@ -6164,32 +6569,32 @@
                                                                         </VAR>
                                                                         <VAR name = "PolarExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSunElevation">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>90</REAL>
+                                                                                <REAL>90.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinSunExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinMoonExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinEarthExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>10</REAL>
+                                                                                <REAL>10.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSolarPhaseAngle">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>180</REAL>
+                                                                                <REAL>180.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "ReferenceFrame">
@@ -6221,12 +6626,12 @@
                                                                         </VAR>
                                                                         <VAR name = "BiasSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "BiasHalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "Data">
@@ -6274,40 +6679,40 @@
                                                                                     <INT>1</INT>
                                                                                 </VAR>
                                                                                 <VAR name = "Jan">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Feb">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Mar">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Apr">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "May">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jun">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jul">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Aug">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Sep">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Oct">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Nov">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Dec">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "OverrideWavelength">
                                                                                     <BOOL>false</BOOL>
@@ -6332,7 +6737,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "Humidity">
                                                                                     <QUANTITY Dimension = "Percent" Unit = "%">
-                                                                                        <REAL>55</REAL>
+                                                                                        <REAL>55.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "MetFiles">
@@ -6380,17 +6785,17 @@
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimateStored">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Constant">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimate">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialSigmaStored">
@@ -6405,7 +6810,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "DiffusionCoefficient">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>9.999999999999999e-12</REAL>
+                                                                                        <REAL>1e-11</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -6420,7 +6825,7 @@
                                                         <VAR name = "HULA-A">
                                                             <SCOPE Class = "Facility">
                                                                 <PROP name = "version">
-                                                                    <STRING>&quot;7.4&quot;</STRING>
+                                                                    <STRING>&quot;13.0&quot;</STRING>
                                                                 </PROP>
                                                                 <VAR name = "Description">
                                                                     <STRING>&quot;&quot;</STRING>
@@ -6468,17 +6873,17 @@
                                                                             <SCOPE>
                                                                                 <VAR name = "X">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Y">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Z">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -6504,27 +6909,27 @@
                                                                     <SCOPE>
                                                                         <VAR name = "SouthSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "EastSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "AltitudeSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "SouthEastCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SouthAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "EastAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -6550,7 +6955,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>135</REAL>
+                                                                                                        <REAL>135.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
@@ -6560,22 +6965,22 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>28</REAL>
+                                                                                                        <REAL>28.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>14</REAL>
+                                                                                                        <REAL>14.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>5</REAL>
+                                                                                                        <REAL>5.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -6621,39 +7026,39 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>100</REAL>
+                                                                                                        <REAL>100.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>50</REAL>
+                                                                                                        <REAL>50.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>20</REAL>
+                                                                                                        <REAL>20.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigmaTwoWay">
                                                                                             <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                                                <REAL>10</REAL>
+                                                                                                <REAL>10.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -6664,7 +7069,7 @@
                                                                                         </VAR>
                                                                                         <VAR name = "CountInterval">
                                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                                <REAL>1</REAL>
+                                                                                                <REAL>1.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "LightTimeDelay">
@@ -6691,17 +7096,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -6716,14 +7121,14 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigma">
                                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                <REAL>0.03</REAL>
+                                                                                                <REAL>0.029999999999999995</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -6753,17 +7158,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -6778,7 +7183,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -6823,7 +7228,7 @@
                                                                         </VAR>
                                                                         <VAR name = "MinPassDelta">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>20</REAL>
+                                                                                <REAL>20.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -6845,7 +7250,7 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>90</REAL>
+                                                                        <REAL>90.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AzElMask">
@@ -6872,17 +7277,17 @@
                                                                 </VAR>
                                                                 <VAR name = "DirectionCosineAzimuthOffset">
                                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightAzimuth">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxAngleDown">
@@ -6897,32 +7302,32 @@
                                                                         </VAR>
                                                                         <VAR name = "PolarExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSunElevation">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>90</REAL>
+                                                                                <REAL>90.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinSunExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinMoonExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinEarthExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>10</REAL>
+                                                                                <REAL>10.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSolarPhaseAngle">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>180</REAL>
+                                                                                <REAL>180.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "ReferenceFrame">
@@ -6954,12 +7359,12 @@
                                                                         </VAR>
                                                                         <VAR name = "BiasSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "BiasHalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "Data">
@@ -7007,40 +7412,40 @@
                                                                                     <INT>1</INT>
                                                                                 </VAR>
                                                                                 <VAR name = "Jan">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Feb">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Mar">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Apr">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "May">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jun">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jul">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Aug">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Sep">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Oct">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Nov">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Dec">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "OverrideWavelength">
                                                                                     <BOOL>false</BOOL>
@@ -7065,7 +7470,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "Humidity">
                                                                                     <QUANTITY Dimension = "Percent" Unit = "%">
-                                                                                        <REAL>55</REAL>
+                                                                                        <REAL>55.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "MetFiles">
@@ -7113,17 +7518,17 @@
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimateStored">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Constant">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimate">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialSigmaStored">
@@ -7138,7 +7543,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "DiffusionCoefficient">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>9.999999999999999e-12</REAL>
+                                                                                        <REAL>1e-11</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -7153,7 +7558,7 @@
                                                         <VAR name = "REEF-A">
                                                             <SCOPE Class = "Facility">
                                                                 <PROP name = "version">
-                                                                    <STRING>&quot;7.4&quot;</STRING>
+                                                                    <STRING>&quot;13.0&quot;</STRING>
                                                                 </PROP>
                                                                 <VAR name = "Description">
                                                                     <STRING>&quot;&quot;</STRING>
@@ -7201,17 +7606,17 @@
                                                                             <SCOPE>
                                                                                 <VAR name = "X">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Y">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Z">
                                                                                     <QUANTITY Dimension = "SlowRate" Unit = "cm*yr^-1">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
@@ -7237,27 +7642,27 @@
                                                                     <SCOPE>
                                                                         <VAR name = "SouthSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "EastSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "AltitudeSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "SouthEastCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "SouthAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                         <VAR name = "EastAltCorrelation">
-                                                                            <REAL>0</REAL>
+                                                                            <REAL>0.0</REAL>
                                                                         </VAR>
                                                                     </SCOPE>
                                                                 </VAR>
@@ -7283,32 +7688,32 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>48</REAL>
+                                                                                                        <REAL>48.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>24</REAL>
+                                                                                                        <REAL>24.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>32</REAL>
+                                                                                                        <REAL>32.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                                        <REAL>16</REAL>
+                                                                                                        <REAL>16.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>5</REAL>
+                                                                                                        <REAL>5.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -7354,39 +7759,39 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>100</REAL>
+                                                                                                        <REAL>100.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Sigma">
                                                                                                     <QUANTITY Dimension = "Rate" Unit = "cm*sec^-1">
-                                                                                                        <REAL>50</REAL>
+                                                                                                        <REAL>50.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>20</REAL>
+                                                                                                        <REAL>20.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigmaTwoWay">
                                                                                             <QUANTITY Dimension = "SlowRate" Unit = "cm*sec^-1">
-                                                                                                <REAL>10</REAL>
+                                                                                                <REAL>10.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -7397,7 +7802,7 @@
                                                                                         </VAR>
                                                                                         <VAR name = "CountInterval">
                                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                                <REAL>1</REAL>
+                                                                                                <REAL>1.0</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "LightTimeDelay">
@@ -7424,17 +7829,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -7449,14 +7854,14 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
                                                                                         </VAR>
                                                                                         <VAR name = "WhiteNoiseSigma">
                                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                <REAL>0.03</REAL>
+                                                                                                <REAL>0.029999999999999995</REAL>
                                                                                             </QUANTITY>
                                                                                         </VAR>
                                                                                         <VAR name = "EstimateBias">
@@ -7486,17 +7891,17 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "NominalStored">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "Constant">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "InitialEstimate">
                                                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                                        <REAL>0</REAL>
+                                                                                                        <REAL>0.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                                 <VAR name = "SigmaStored">
@@ -7511,7 +7916,7 @@
                                                                                                 </VAR>
                                                                                                 <VAR name = "HalfLife">
                                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                                        <REAL>60</REAL>
+                                                                                                        <REAL>60.0</REAL>
                                                                                                     </QUANTITY>
                                                                                                 </VAR>
                                                                                             </SCOPE>
@@ -7556,7 +7961,7 @@
                                                                         </VAR>
                                                                         <VAR name = "MinPassDelta">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>20</REAL>
+                                                                                <REAL>20.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                     </SCOPE>
@@ -7578,7 +7983,7 @@
                                                                 </VAR>
                                                                 <VAR name = "MaxElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>90</REAL>
+                                                                        <REAL>90.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "AzElMask">
@@ -7605,17 +8010,17 @@
                                                                 </VAR>
                                                                 <VAR name = "DirectionCosineAzimuthOffset">
                                                                     <QUANTITY Dimension = "LongitudeUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightAzimuth">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "BoresightElevation">
                                                                     <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                        <REAL>0</REAL>
+                                                                        <REAL>0.0</REAL>
                                                                     </QUANTITY>
                                                                 </VAR>
                                                                 <VAR name = "MaxAngleDown">
@@ -7630,32 +8035,32 @@
                                                                         </VAR>
                                                                         <VAR name = "PolarExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSunElevation">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>90</REAL>
+                                                                                <REAL>90.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinSunExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinMoonExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>0</REAL>
+                                                                                <REAL>0.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MinEarthExclusion">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>10</REAL>
+                                                                                <REAL>10.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "MaxSolarPhaseAngle">
                                                                             <QUANTITY Dimension = "AngleUnit" Unit = "deg">
-                                                                                <REAL>180</REAL>
+                                                                                <REAL>180.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "ReferenceFrame">
@@ -7687,12 +8092,12 @@
                                                                         </VAR>
                                                                         <VAR name = "BiasSigma">
                                                                             <QUANTITY Dimension = "DistanceUnit" Unit = "m">
-                                                                                <REAL>1</REAL>
+                                                                                <REAL>1.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "BiasHalfLife">
                                                                             <QUANTITY Dimension = "TimeUnit" Unit = "min">
-                                                                                <REAL>30</REAL>
+                                                                                <REAL>30.0</REAL>
                                                                             </QUANTITY>
                                                                         </VAR>
                                                                         <VAR name = "Data">
@@ -7707,73 +8112,73 @@
                                                                                     <REAL>377.634</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial2">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial3">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial4">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial5">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial6">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial7">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial8">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial9">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial10">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Polynomial11">
-                                                                                    <REAL>0</REAL>
+                                                                                    <REAL>0.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "DayOfMonth">
                                                                                     <INT>1</INT>
                                                                                 </VAR>
                                                                                 <VAR name = "Jan">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Feb">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Mar">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Apr">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "May">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jun">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Jul">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Aug">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Sep">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Oct">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Nov">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "Dec">
-                                                                                    <REAL>340</REAL>
+                                                                                    <REAL>340.0</REAL>
                                                                                 </VAR>
                                                                                 <VAR name = "OverrideWavelength">
                                                                                     <BOOL>false</BOOL>
@@ -7798,7 +8203,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "Humidity">
                                                                                     <QUANTITY Dimension = "Percent" Unit = "%">
-                                                                                        <REAL>55</REAL>
+                                                                                        <REAL>55.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "MetFiles">
@@ -7846,17 +8251,17 @@
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimateStored">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "Constant">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialEstimate">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>0</REAL>
+                                                                                        <REAL>0.0</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                                 <VAR name = "InitialSigmaStored">
@@ -7871,7 +8276,7 @@
                                                                                 </VAR>
                                                                                 <VAR name = "DiffusionCoefficient">
                                                                                     <QUANTITY Dimension = "TimeUnit" Unit = "sec">
-                                                                                        <REAL>9.999999999999999e-12</REAL>
+                                                                                        <REAL>1e-11</REAL>
                                                                                     </QUANTITY>
                                                                                 </VAR>
                                                                             </SCOPE>
