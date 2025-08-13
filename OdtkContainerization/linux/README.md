@@ -15,6 +15,9 @@ All of the images are built upon the [Red Hat Universal Base Image 8](https://ca
 
 Further information can be found in the [ODTK Help](https://help.agi.com/odtk/#od/Containerization.htm).
 
+> [!IMPORTANT]
+> If you are building these images on Windows, you need to ensure the git config setting [`core.autocrlf=input`](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings) when cloning this repository. Since the base image is a Linux distribution, shell scripts in your workspace need to have Linux line endings when they are copied into the docker image.
+
 ## [Custom Environment](custom-environment)
 
 Provides the environment required to communicate with the Yum and Pip package managers in your organization. This is optional if you are directly connected to the internet. It is required if you are using a proxy/firewall or isolated network requiring different certificates, settings, or both.
