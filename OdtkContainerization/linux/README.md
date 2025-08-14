@@ -15,6 +15,9 @@ All of the images are built upon the [Red Hat Universal Base Image 8](https://ca
 
 Further information can be found in the [ODTK Help](https://help.agi.com/odtk/#od/Containerization.htm).
 
+> [!IMPORTANT]
+> If you are building these images on Windows, you need to ensure the git config setting [`core.autocrlf=input`](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings) when cloning this repository. Since the base image is a Linux distribution, shell scripts in your workspace need to have Linux line endings when they are copied into the docker image.
+
 ## [Custom Environment](custom-environment)
 
 Provides the environment required to communicate with the Yum and Pip package managers in your organization. This is optional if you are directly connected to the internet. It is required if you are using a proxy/firewall or isolated network requiring different certificates, settings, or both.
@@ -31,7 +34,7 @@ Provides the ODTK Runtime installation with the configuration (environment varia
 ### Dependencies
 
 * Images: redhat/ubi8:latest
-* Files: ODTK Runtime for Linux v(7.4.0+)
+* Files: ODTK Runtime for Linux v(13.0.0+)
 
 ## [Python ODTK Runtime Docker image](odtk-python)
 
@@ -44,7 +47,7 @@ Derives from the base ODTK Runtime image and adds the ODTK Python api to the ima
 
 ## [Jupyter ODTK Runtime Docker image](odtk-jupyter)
 
-Derives from the Python ODTK image and exposes JupyterLab from the container. Go to JupyterLab in your web browser to exercise Python notebooks using ODTK Runtime for computations. AGI also provides an example notebook.
+Derives from the Python ODTK image and exposes JupyterLab from the container. Go to JupyterLab in your web browser to exercise Python notebooks using ODTK Runtime for computations. Includes an example notebook.
 
 ### Dependencies
 
@@ -53,7 +56,7 @@ Derives from the Python ODTK image and exposes JupyterLab from the container. Go
 
 ## [Custom ODTK Runtime Service Docker image](odtk-webservice)
 
-Derives from the Python ODTK Engine image and shows how to develop and include your own web service(s) in the Docker image. You can write those web services in Java and Python for Linux, and also with .NET if using a Windows container. This is just a bare-bones minimal web service example using the Flask development server and is not production ready. Please refer to the Flask documentation for best practices on how to create and deploy a production-ready web service.
+Derives from the Python ODTK Runtime image and shows how to develop and include your own web service(s) in the Docker image. You can write those web services in Java and Python for Linux, and also with .NET if using a Windows container. This is just a bare-bones minimal web service example using the Flask development server and is not production ready. Please refer to the Flask documentation for best practices on how to create and deploy a production-ready web service.
 
 ### Dependencies
 

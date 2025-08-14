@@ -4,7 +4,7 @@
         <STRING>&quot;ODTK&quot;</STRING>
     </PROP>
     <PROP name = "Version">
-        <STRING>&quot;7.0&quot;</STRING>
+        <STRING>&quot;13.0&quot;</STRING>
     </PROP>
     <SCOPE>
         <VAR name = "DatabaseInfo">

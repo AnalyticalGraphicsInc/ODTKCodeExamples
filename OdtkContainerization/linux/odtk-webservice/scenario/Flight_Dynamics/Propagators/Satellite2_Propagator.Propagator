@@ -1,0 +1,1504 @@
+<?xml version = "1.0" standalone = "yes"?>
+<Component>
+    <Type>Propagator</Type>
+    <SpecificType>NumericalPropagatorWrapper</SpecificType>
+    <Data>
+        <VAR name = "Satellite2_Propagator">
+            <SCOPE Class = "Propagator">
+                <VAR name = "Version">
+                    <STRING>&quot;1.0.0 a&quot;</STRING>
+                </VAR>
+                <VAR name = "AppVersion">
+                    <INT>1300</INT>
+                </VAR>
+                <VAR name = "Description">
+                    <STRING>&quot;Numerical propagator using HPOP&quot;</STRING>
+                </VAR>
+                <VAR name = "Type">
+                    <STRING>&quot;NumericalPropagatorWrapper&quot;</STRING>
+                </VAR>
+                <VAR name = "UserComment">
+                    <STRING>&quot;Default Earth HPOP settings for STK 10.0&quot;</STRING>
+                </VAR>
+                <VAR name = "ReadOnly">
+                    <BOOL>false</BOOL>
+                </VAR>
+                <VAR name = "Clonable">
+                    <BOOL>true</BOOL>
+                </VAR>
+                <VAR name = "Category">
+                    <STRING>&quot;@Top&quot;</STRING>
+                </VAR>
+                <VAR name = "IdentifierInformation">
+                    <SCOPE>
+                        <VAR name = "Identifier">
+                            <STRING>&quot;{129BD089-6F94-A145-95D9-C25A371A5CA9}&quot;</STRING>
+                        </VAR>
+                        <VAR name = "Version">
+                            <STRING>&quot;1&quot;</STRING>
+                        </VAR>
+                        <VAR name = "SdfInformation">
+                            <SCOPE>
+                                <VAR name = "Version">
+                                    <STRING>&quot;0.0&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Url">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "SourceIdentifierInformation">
+                            <SCOPE>
+                                <VAR name = "Identifier">
+                                    <STRING>&quot;{7379B007-C07B-4901-8EF3-575239153687}&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Version">
+                                    <STRING>&quot;1&quot;</STRING>
+                                </VAR>
+                                <VAR name = "SdfInformation">
+                                    <SCOPE>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0.0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Url">
+                                            <STRING>&quot;&quot;</STRING>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                    </SCOPE>
+                </VAR>
+                <VAR name = "ShooterControls">
+                    <LIST />
+                </VAR>
+                <VAR name = "CentralBody">
+                    <LINKTOOBJ>
+                        <STRING>&quot;Earth&quot;</STRING>
+                    </LINKTOOBJ>
+                </VAR>
+                <VAR name = "NumericalIntegrator">
+                    <VAR name = "RKF7th8th">
+                        <SCOPE Class = "NumIntegrator">
+                            <VAR name = "Version">
+                                <STRING>&quot;1.0.0 a&quot;</STRING>
+                            </VAR>
+                            <VAR name = "AppVersion">
+                                <INT>1300</INT>
+                            </VAR>
+                            <VAR name = "Description">
+                                <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                            </VAR>
+                            <VAR name = "Type">
+                                <STRING>&quot;RKF7th8th&quot;</STRING>
+                            </VAR>
+                            <VAR name = "UserComment">
+                                <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                            </VAR>
+                            <VAR name = "ReadOnly">
+                                <BOOL>false</BOOL>
+                            </VAR>
+                            <VAR name = "Clonable">
+                                <BOOL>true</BOOL>
+                            </VAR>
+                            <VAR name = "Category">
+                                <STRING>&quot;&quot;</STRING>
+                            </VAR>
+                            <VAR name = "IdentifierInformation">
+                                <SCOPE>
+                                    <VAR name = "Identifier">
+                                        <STRING>&quot;{9F2FE62C-1BB0-384E-84EC-E98E0FBCD81C}&quot;</STRING>
+                                    </VAR>
+                                    <VAR name = "Version">
+                                        <STRING>&quot;0&quot;</STRING>
+                                    </VAR>
+                                    <VAR name = "SdfInformation">
+                                        <SCOPE>
+                                            <VAR name = "Version">
+                                                <STRING>&quot;0.0&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Url">
+                                                <STRING>&quot;&quot;</STRING>
+                                            </VAR>
+                                        </SCOPE>
+                                    </VAR>
+                                    <VAR name = "SourceIdentifierInformation">
+                                        <SCOPE>
+                                            <VAR name = "Identifier">
+                                                <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Version">
+                                                <STRING>&quot;0&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "SdfInformation">
+                                                <SCOPE>
+                                                    <VAR name = "Version">
+                                                        <STRING>&quot;0.0&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "Url">
+                                                        <STRING>&quot;&quot;</STRING>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                        </SCOPE>
+                                    </VAR>
+                                </SCOPE>
+                            </VAR>
+                            <VAR name = "ShooterControls">
+                                <LIST />
+                            </VAR>
+                            <VAR name = "InitialStep">
+                                <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                    <REAL>60.0</REAL>
+                                </QUANTITY>
+                            </VAR>
+                            <VAR name = "UseVOP">
+                                <BOOL>false</BOOL>
+                            </VAR>
+                            <VAR name = "UseRegularizedTime">
+                                <BOOL>false</BOOL>
+                            </VAR>
+                            <VAR name = "RegularizedTimeExponent">
+                                <REAL>1.5</REAL>
+                            </VAR>
+                            <VAR name = "RegularizedTimeStepsPerOrbit">
+                                <INT>90</INT>
+                            </VAR>
+                            <VAR name = "CanChangVOPRegTime">
+                                <BOOL>true</BOOL>
+                            </VAR>
+                            <VAR name = "UseFixedStep">
+                                <BOOL>false</BOOL>
+                            </VAR>
+                            <VAR name = "MaxIterations">
+                                <INT>100</INT>
+                            </VAR>
+                            <VAR name = "UseMaxStep">
+                                <BOOL>true</BOOL>
+                            </VAR>
+                            <VAR name = "UseMinStep">
+                                <BOOL>true</BOOL>
+                            </VAR>
+                            <VAR name = "MaxStep">
+                                <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                    <REAL>86400.0</REAL>
+                                </QUANTITY>
+                            </VAR>
+                            <VAR name = "MinStep">
+                                <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                    <REAL>1.0</REAL>
+                                </QUANTITY>
+                            </VAR>
+                            <VAR name = "MaxRelError">
+                                <REAL>1e-13</REAL>
+                            </VAR>
+                            <VAR name = "MaxAbsError">
+                                <REAL>1e-10</REAL>
+                            </VAR>
+                            <VAR name = "SCHigh">
+                                <REAL>0.9</REAL>
+                            </VAR>
+                            <VAR name = "SCLow">
+                                <REAL>0.9</REAL>
+                            </VAR>
+                            <VAR name = "ErrorControl">
+                                <STRING>&quot;Relative by component&quot;</STRING>
+                            </VAR>
+                            <VAR name = "StepTruncationThreshold">
+                                <REAL>0.1</REAL>
+                            </VAR>
+                            <VAR name = "StepTruncationRounding">
+                                <REAL>0.001</REAL>
+                            </VAR>
+                        </SCOPE>
+                    </VAR>
+                </VAR>
+                <VAR name = "NumericalIntegratorList">
+                    <LIST>
+                        <VAR name = "RKF7th8th">
+                            <SCOPE Class = "NumIntegrator">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.0 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;RKF7th8th&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{9F2FE62C-1BB0-384E-84EC-E98E0FBCD81C}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "InitialStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>60.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "UseVOP">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "UseRegularizedTime">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "RegularizedTimeExponent">
+                                    <REAL>1.5</REAL>
+                                </VAR>
+                                <VAR name = "RegularizedTimeStepsPerOrbit">
+                                    <INT>90</INT>
+                                </VAR>
+                                <VAR name = "CanChangVOPRegTime">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "UseFixedStep">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "MaxIterations">
+                                    <INT>100</INT>
+                                </VAR>
+                                <VAR name = "UseMaxStep">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "UseMinStep">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "MaxStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>86400.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "MinStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>1.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "MaxRelError">
+                                    <REAL>1e-13</REAL>
+                                </VAR>
+                                <VAR name = "MaxAbsError">
+                                    <REAL>1e-10</REAL>
+                                </VAR>
+                                <VAR name = "SCHigh">
+                                    <REAL>0.9</REAL>
+                                </VAR>
+                                <VAR name = "SCLow">
+                                    <REAL>0.9</REAL>
+                                </VAR>
+                                <VAR name = "ErrorControl">
+                                    <STRING>&quot;Relative by component&quot;</STRING>
+                                </VAR>
+                                <VAR name = "StepTruncationThreshold">
+                                    <REAL>0.1</REAL>
+                                </VAR>
+                                <VAR name = "StepTruncationRounding">
+                                    <REAL>0.001</REAL>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Nominal_Integrator">
+                            <SCOPE Class = "NumIntegrator">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.0 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;RKF7th8th&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Runge-Kutta-Fehlberg 7(8)&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{469A95D0-26D5-784D-9DC6-9218EF5EC90C}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "InitialStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>30.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "UseVOP">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "UseRegularizedTime">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "RegularizedTimeExponent">
+                                    <REAL>1.5</REAL>
+                                </VAR>
+                                <VAR name = "RegularizedTimeStepsPerOrbit">
+                                    <INT>90</INT>
+                                </VAR>
+                                <VAR name = "CanChangVOPRegTime">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "UseFixedStep">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "MaxIterations">
+                                    <INT>100</INT>
+                                </VAR>
+                                <VAR name = "UseMaxStep">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "UseMinStep">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "MaxStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>86400.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "MinStep">
+                                    <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                        <REAL>1.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "MaxRelError">
+                                    <REAL>1e-13</REAL>
+                                </VAR>
+                                <VAR name = "MaxAbsError">
+                                    <REAL>1e-10</REAL>
+                                </VAR>
+                                <VAR name = "SCHigh">
+                                    <REAL>0.9</REAL>
+                                </VAR>
+                                <VAR name = "SCLow">
+                                    <REAL>0.9</REAL>
+                                </VAR>
+                                <VAR name = "ErrorControl">
+                                    <STRING>&quot;Relative by component&quot;</STRING>
+                                </VAR>
+                                <VAR name = "StepTruncationThreshold">
+                                    <REAL>0.1</REAL>
+                                </VAR>
+                                <VAR name = "StepTruncationRounding">
+                                    <REAL>0.001</REAL>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                    </LIST>
+                </VAR>
+                <VAR name = "PropFuncs">
+                    <LIST>
+                        <VAR name = "Gravitational_Force">
+                            <SCOPE Class = "EOMFuncWrapper">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.1 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;GravityFieldFunc&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;Gravity Models&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{284B3914-38F1-A448-89B8-C941B6C9215D}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "CentralBody">
+                                    <LINKTOOBJ>
+                                        <STRING>&quot;Earth&quot;</STRING>
+                                    </LINKTOOBJ>
+                                </VAR>
+                                <VAR name = "GravityFile">
+                                    <STRING>&quot;STKData/CentralBodies/Earth/EGM2008.grv&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Degree">
+                                    <INT>21</INT>
+                                </VAR>
+                                <VAR name = "Order">
+                                    <INT>21</INT>
+                                </VAR>
+                                <VAR name = "PartialsDegree">
+                                    <INT>2</INT>
+                                </VAR>
+                                <VAR name = "PartialsOrder">
+                                    <INT>0</INT>
+                                </VAR>
+                                <VAR name = "SolidTideType">
+                                    <STRING>&quot;None&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IncludeTimeDependentSolidTides">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "TruncateSolidTides">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "SolidTideMinAmp">
+                                    <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                        <REAL>0.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "UseOceanTides">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "OceanTideFile">
+                                    <STRING>&quot;STKData/CentralBodies/Earth/FES2014bv1OceanTideModel.txt&quot;</STRING>
+                                </VAR>
+                                <VAR name = "OceanTideMinAmp">
+                                    <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                        <REAL>0.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "OceanTideMaxDegree">
+                                    <INT>4</INT>
+                                </VAR>
+                                <VAR name = "OceanTideMaxOrder">
+                                    <INT>4</INT>
+                                </VAR>
+                                <VAR name = "MinRadiusPercent">
+                                    <QUANTITY Dimension = "Percent" Unit = "unitValue">
+                                        <REAL>0.99</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "UseSecularVariations">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "StochasticParams">
+                                    <SCOPE>
+                                        <VAR name = "UseProcessNoise">
+                                            <STRING>&quot;Yes&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "IncludeOmissionErrors">
+                                            <BOOL>true</BOOL>
+                                        </VAR>
+                                        <VAR name = "OmissionScale">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                        <VAR name = "IncludeCommissionErrors">
+                                            <BOOL>true</BOOL>
+                                        </VAR>
+                                        <VAR name = "CommissionScale">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                        <VAR name = "MeanMotionUncertaintyScaling">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Moon">
+                            <SCOPE Class = "EOMFuncWrapper">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.1 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Third body effect&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;ThirdBodyFunc&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Moon third body effect&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;Third Bodies&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{EBD17A64-0565-624F-AFDB-EAA9081D4AFD}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "ThirdBody">
+                                    <LINKTOOBJ>
+                                        <STRING>&quot;Moon&quot;</STRING>
+                                    </LINKTOOBJ>
+                                </VAR>
+                                <VAR name = "GravSource">
+                                    <STRING>&quot;HPOP Historical&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Mu">
+                                    <QUANTITY Dimension = "Grav Parameter" Unit = "m^3*sec^-2">
+                                        <REAL>4902794000000.0</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "Mode">
+                                    <STRING>&quot;Point Mass&quot;</STRING>
+                                </VAR>
+                                <VAR name = "EphemerisSource">
+                                    <STRING>&quot;Cb File&quot;</STRING>
+                                </VAR>
+                                <VAR name = "GravityField">
+                                    <VAR name = "Gravitational_Force">
+                                        <SCOPE Class = "EOMFuncWrapper">
+                                            <VAR name = "Version">
+                                                <STRING>&quot;1.0.1 a&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "AppVersion">
+                                                <INT>1300</INT>
+                                            </VAR>
+                                            <VAR name = "Description">
+                                                <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Type">
+                                                <STRING>&quot;GravityFieldFunc&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "UserComment">
+                                                <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "ReadOnly">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "Clonable">
+                                                <BOOL>true</BOOL>
+                                            </VAR>
+                                            <VAR name = "Category">
+                                                <STRING>&quot;Gravity Models&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "IdentifierInformation">
+                                                <SCOPE>
+                                                    <VAR name = "Identifier">
+                                                        <STRING>&quot;{D6661E79-A9B4-F145-A490-A46AA1389892}&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "Version">
+                                                        <STRING>&quot;0&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "SdfInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0.0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Url">
+                                                                <STRING>&quot;&quot;</STRING>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                    <VAR name = "SourceIdentifierInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Identifier">
+                                                                <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "SdfInformation">
+                                                                <SCOPE>
+                                                                    <VAR name = "Version">
+                                                                        <STRING>&quot;0.0&quot;</STRING>
+                                                                    </VAR>
+                                                                    <VAR name = "Url">
+                                                                        <STRING>&quot;&quot;</STRING>
+                                                                    </VAR>
+                                                                </SCOPE>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                            <VAR name = "ShooterControls">
+                                                <LIST />
+                                            </VAR>
+                                            <VAR name = "CentralBody">
+                                                <LINKTOOBJ>
+                                                    <STRING>&quot;Moon&quot;</STRING>
+                                                </LINKTOOBJ>
+                                            </VAR>
+                                            <VAR name = "GravityFile">
+                                                <STRING>&quot;STKData/CentralBodies/Moon/GL0660B.grv&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Degree">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "Order">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "PartialsDegree">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "PartialsOrder">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "SolidTideType">
+                                                <STRING>&quot;Permanent tide only&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "IncludeTimeDependentSolidTides">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "TruncateSolidTides">
+                                                <BOOL>true</BOOL>
+                                            </VAR>
+                                            <VAR name = "SolidTideMinAmp">
+                                                <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                                    <REAL>0.0</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "UseOceanTides">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "OceanTideFile">
+                                                <STRING>&quot;STKData/CentralBodies/Earth/FES2014bv1OceanTideModel.txt&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "OceanTideMinAmp">
+                                                <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                                    <REAL>0.0</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "OceanTideMaxDegree">
+                                                <INT>4</INT>
+                                            </VAR>
+                                            <VAR name = "OceanTideMaxOrder">
+                                                <INT>4</INT>
+                                            </VAR>
+                                            <VAR name = "MinRadiusPercent">
+                                                <QUANTITY Dimension = "Percent" Unit = "unitValue">
+                                                    <REAL>0.99</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "UseSecularVariations">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "StochasticParams">
+                                                <SCOPE>
+                                                    <VAR name = "UseProcessNoise">
+                                                        <STRING>&quot;Yes&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "IncludeOmissionErrors">
+                                                        <BOOL>true</BOOL>
+                                                    </VAR>
+                                                    <VAR name = "OmissionScale">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                    <VAR name = "IncludeCommissionErrors">
+                                                        <BOOL>true</BOOL>
+                                                    </VAR>
+                                                    <VAR name = "CommissionScale">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                    <VAR name = "MeanMotionUncertaintyScaling">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                        </SCOPE>
+                                    </VAR>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Sun">
+                            <SCOPE Class = "EOMFuncWrapper">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.1 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Third body effect&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;ThirdBodyFunc&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Sun third body effect&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;Third Bodies&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{4146B226-18EB-0143-BCC4-069FA53A5589}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "ThirdBody">
+                                    <LINKTOOBJ>
+                                        <STRING>&quot;Sun&quot;</STRING>
+                                    </LINKTOOBJ>
+                                </VAR>
+                                <VAR name = "GravSource">
+                                    <STRING>&quot;HPOP Historical&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Mu">
+                                    <QUANTITY Dimension = "Grav Parameter" Unit = "m^3*sec^-2">
+                                        <REAL>1.32712438e+20</REAL>
+                                    </QUANTITY>
+                                </VAR>
+                                <VAR name = "Mode">
+                                    <STRING>&quot;Point Mass&quot;</STRING>
+                                </VAR>
+                                <VAR name = "EphemerisSource">
+                                    <STRING>&quot;Cb File&quot;</STRING>
+                                </VAR>
+                                <VAR name = "GravityField">
+                                    <VAR name = "Gravitational_Force">
+                                        <SCOPE Class = "EOMFuncWrapper">
+                                            <VAR name = "Version">
+                                                <STRING>&quot;1.0.1 a&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "AppVersion">
+                                                <INT>1300</INT>
+                                            </VAR>
+                                            <VAR name = "Description">
+                                                <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Type">
+                                                <STRING>&quot;GravityFieldFunc&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "UserComment">
+                                                <STRING>&quot;Gravitational force from central body&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "ReadOnly">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "Clonable">
+                                                <BOOL>true</BOOL>
+                                            </VAR>
+                                            <VAR name = "Category">
+                                                <STRING>&quot;Gravity Models&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "IdentifierInformation">
+                                                <SCOPE>
+                                                    <VAR name = "Identifier">
+                                                        <STRING>&quot;{8B7D75FE-1827-984B-9A1C-996B958FDD4A}&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "Version">
+                                                        <STRING>&quot;0&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "SdfInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0.0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Url">
+                                                                <STRING>&quot;&quot;</STRING>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                    <VAR name = "SourceIdentifierInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Identifier">
+                                                                <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "SdfInformation">
+                                                                <SCOPE>
+                                                                    <VAR name = "Version">
+                                                                        <STRING>&quot;0.0&quot;</STRING>
+                                                                    </VAR>
+                                                                    <VAR name = "Url">
+                                                                        <STRING>&quot;&quot;</STRING>
+                                                                    </VAR>
+                                                                </SCOPE>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                            <VAR name = "ShooterControls">
+                                                <LIST />
+                                            </VAR>
+                                            <VAR name = "CentralBody">
+                                                <LINKTOOBJ>
+                                                    <STRING>&quot;Sun&quot;</STRING>
+                                                </LINKTOOBJ>
+                                            </VAR>
+                                            <VAR name = "GravityFile">
+                                                <STRING>&quot;STKData/CentralBodies/Sun/ZonalsToJ4.grv&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Degree">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "Order">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "PartialsDegree">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "PartialsOrder">
+                                                <INT>0</INT>
+                                            </VAR>
+                                            <VAR name = "SolidTideType">
+                                                <STRING>&quot;Permanent tide only&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "IncludeTimeDependentSolidTides">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "TruncateSolidTides">
+                                                <BOOL>true</BOOL>
+                                            </VAR>
+                                            <VAR name = "SolidTideMinAmp">
+                                                <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                                    <REAL>0.0</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "UseOceanTides">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "OceanTideFile">
+                                                <STRING>&quot;STKData/CentralBodies/Earth/FES2014bv1OceanTideModel.txt&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "OceanTideMinAmp">
+                                                <QUANTITY Dimension = "SmallDistanceUnit" Unit = "m">
+                                                    <REAL>0.0</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "OceanTideMaxDegree">
+                                                <INT>4</INT>
+                                            </VAR>
+                                            <VAR name = "OceanTideMaxOrder">
+                                                <INT>4</INT>
+                                            </VAR>
+                                            <VAR name = "MinRadiusPercent">
+                                                <QUANTITY Dimension = "Percent" Unit = "unitValue">
+                                                    <REAL>0.99</REAL>
+                                                </QUANTITY>
+                                            </VAR>
+                                            <VAR name = "UseSecularVariations">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "StochasticParams">
+                                                <SCOPE>
+                                                    <VAR name = "UseProcessNoise">
+                                                        <STRING>&quot;Yes&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "IncludeOmissionErrors">
+                                                        <BOOL>true</BOOL>
+                                                    </VAR>
+                                                    <VAR name = "OmissionScale">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                    <VAR name = "IncludeCommissionErrors">
+                                                        <BOOL>true</BOOL>
+                                                    </VAR>
+                                                    <VAR name = "CommissionScale">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                    <VAR name = "MeanMotionUncertaintyScaling">
+                                                        <REAL>1.0</REAL>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                        </SCOPE>
+                                    </VAR>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                        <VAR name = "Cira72">
+                            <SCOPE Class = "EOMFuncWrapper">
+                                <VAR name = "Version">
+                                    <STRING>&quot;1.0.0 a&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AppVersion">
+                                    <INT>1300</INT>
+                                </VAR>
+                                <VAR name = "Description">
+                                    <STRING>&quot;Drag with Cira 72 Atmospheric Density Model&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Type">
+                                    <STRING>&quot;Cira72Func&quot;</STRING>
+                                </VAR>
+                                <VAR name = "UserComment">
+                                    <STRING>&quot;Drag with Cira 72 Atmospheric Density Model&quot;</STRING>
+                                </VAR>
+                                <VAR name = "ReadOnly">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "Clonable">
+                                    <BOOL>true</BOOL>
+                                </VAR>
+                                <VAR name = "Category">
+                                    <STRING>&quot;Atmospheric Models&quot;</STRING>
+                                </VAR>
+                                <VAR name = "IdentifierInformation">
+                                    <SCOPE>
+                                        <VAR name = "Identifier">
+                                            <STRING>&quot;{675DE229-B0E8-CA40-A09D-C318C3EE3B07}&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Version">
+                                            <STRING>&quot;0&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "SdfInformation">
+                                            <SCOPE>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0.0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Url">
+                                                    <STRING>&quot;&quot;</STRING>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                        <VAR name = "SourceIdentifierInformation">
+                                            <SCOPE>
+                                                <VAR name = "Identifier">
+                                                    <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "Version">
+                                                    <STRING>&quot;0&quot;</STRING>
+                                                </VAR>
+                                                <VAR name = "SdfInformation">
+                                                    <SCOPE>
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;0.0&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Url">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </SCOPE>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "ShooterControls">
+                                    <LIST />
+                                </VAR>
+                                <VAR name = "UseApproximateAltitude">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "DragModelType">
+                                    <STRING>&quot;Spherical&quot;</STRING>
+                                </VAR>
+                                <VAR name = "DragModelPlugin">
+                                    <VAR name = "Drag_Model_Plugin">
+                                        <SCOPE Class = "DragPluginFunc">
+                                            <VAR name = "Version">
+                                                <STRING>&quot;1.0.0 a&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "AppVersion">
+                                                <INT>1300</INT>
+                                            </VAR>
+                                            <VAR name = "Description">
+                                                <STRING>&quot;Drag model that uses a COM interface to compute effective drag area and direction&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "Type">
+                                                <STRING>&quot;DragPluginFunc&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "UserComment">
+                                                <STRING>&quot;Drag model that uses a COM interface to compute effective drag area and direction&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "ReadOnly">
+                                                <BOOL>false</BOOL>
+                                            </VAR>
+                                            <VAR name = "Clonable">
+                                                <BOOL>true</BOOL>
+                                            </VAR>
+                                            <VAR name = "Category">
+                                                <STRING>&quot;@Top&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "IdentifierInformation">
+                                                <SCOPE>
+                                                    <VAR name = "Identifier">
+                                                        <STRING>&quot;{A3EEC125-CE98-42B7-B7E3-10EC8A6D50CE}&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "Version">
+                                                        <STRING>&quot;1&quot;</STRING>
+                                                    </VAR>
+                                                    <VAR name = "SdfInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0.0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Url">
+                                                                <STRING>&quot;&quot;</STRING>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                    <VAR name = "SourceIdentifierInformation">
+                                                        <SCOPE>
+                                                            <VAR name = "Identifier">
+                                                                <STRING>&quot;{00000000-0000-0000-0000-000000000000}&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "Version">
+                                                                <STRING>&quot;0&quot;</STRING>
+                                                            </VAR>
+                                                            <VAR name = "SdfInformation">
+                                                                <SCOPE>
+                                                                    <VAR name = "Version">
+                                                                        <STRING>&quot;0.0&quot;</STRING>
+                                                                    </VAR>
+                                                                    <VAR name = "Url">
+                                                                        <STRING>&quot;&quot;</STRING>
+                                                                    </VAR>
+                                                                </SCOPE>
+                                                            </VAR>
+                                                        </SCOPE>
+                                                    </VAR>
+                                                </SCOPE>
+                                            </VAR>
+                                            <VAR name = "ShooterControls">
+                                                <LIST />
+                                            </VAR>
+                                            <VAR name = "PluginIdentifier">
+                                                <STRING>&quot;&lt;servername&gt;.&lt;objectname&gt;.&lt;version&gt;&quot;</STRING>
+                                            </VAR>
+                                            <VAR name = "PluginConfig">
+                                                <SCOPE />
+                                            </VAR>
+                                            <VAR name = "PluginParameters">
+                                                <LIST />
+                                            </VAR>
+                                        </SCOPE>
+                                    </VAR>
+                                </VAR>
+                                <VAR name = "VariableAreaHistoryFile">
+                                    <STRING>&quot;STKData/Flight_Dynamics/VariableArea_Example.dat&quot;</STRING>
+                                </VAR>
+                                <VAR name = "NPlateDefinitionFile">
+                                    <STRING>&quot;STKData/Flight_Dynamics/Drag_NPlate_Example.nplate&quot;</STRING>
+                                </VAR>
+                                <VAR name = "NPlateList">
+                                    <SCOPE />
+                                </VAR>
+                                <VAR name = "StochasticParams">
+                                    <SCOPE>
+                                        <VAR name = "UseStochasticBallisticCoeff">
+                                            <BOOL>true</BOOL>
+                                        </VAR>
+                                        <VAR name = "DragCorrectionType">
+                                            <STRING>&quot;Ballistic Coeff Relative&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "StochasticModelType">
+                                            <STRING>&quot;Gauss Markov&quot;</STRING>
+                                        </VAR>
+                                        <VAR name = "Sigma">
+                                            <REAL>0.1</REAL>
+                                        </VAR>
+                                        <VAR name = "HalfLife">
+                                            <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                                <REAL>604800.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "SigmaLongTerm">
+                                            <REAL>0.1</REAL>
+                                        </VAR>
+                                        <VAR name = "ErrorThreshold">
+                                            <REAL>1e-09</REAL>
+                                        </VAR>
+                                        <VAR name = "PNStep">
+                                            <REAL>1e-09</REAL>
+                                        </VAR>
+                                        <VAR name = "DiffusionCoefficient">
+                                            <REAL>1e-05</REAL>
+                                        </VAR>
+                                        <VAR name = "UseStochasticDensityCorrection">
+                                            <BOOL>true</BOOL>
+                                        </VAR>
+                                        <VAR name = "DensityCorrHalfLife">
+                                            <QUANTITY Dimension = "TimeUnit" Unit = "sec">
+                                                <REAL>10800.0</REAL>
+                                            </QUANTITY>
+                                        </VAR>
+                                        <VAR name = "DensityCorrSigmaScale">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                        <VAR name = "DensityRatioRoot">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                        <VAR name = "DensityIncreaseThreshold">
+                                            <REAL>1.0</REAL>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "NPlateStochParams">
+                                    <SCOPE>
+                                        <VAR name = "NPlateStochParamsList">
+                                            <LIST>
+                                                <VAR name = "NPlateStochasticParamItem">
+                                                    <SCOPE Class = "NPlateStochasticParamItem">
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;1.0.0 a&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "AppVersion">
+                                                            <INT>1300</INT>
+                                                        </VAR>
+                                                        <VAR name = "Description">
+                                                            <STRING>&quot;-NPlate Stochastic Parameter Item Description-&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Type">
+                                                            <STRING>&quot;NPlateStochasticParamItem&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "UserComment">
+                                                            <STRING>&quot;-NPlate Stochastic Parameter Item Description-&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "ReadOnly">
+                                                            <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Clonable">
+                                                            <BOOL>true</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Category">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Name">
+                                                            <STRING>&quot;SolarPanels&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "NominalValue">
+                                                            <REAL>1.0</REAL>
+                                                        </VAR>
+                                                        <VAR name = "EstimateParameter">
+                                                            <BOOL>true</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "HalfLife">
+                                                            <REAL>86400.0</REAL>
+                                                        </VAR>
+                                                        <VAR name = "Sigma">
+                                                            <REAL>0.1</REAL>
+                                                        </VAR>
+                                                        <VAR name = "LongTermSigma">
+                                                            <REAL>0.2</REAL>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                                <VAR name = "NPlateStochasticParamItem">
+                                                    <SCOPE Class = "NPlateStochasticParamItem">
+                                                        <VAR name = "Version">
+                                                            <STRING>&quot;1.0.0 a&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "AppVersion">
+                                                            <INT>1300</INT>
+                                                        </VAR>
+                                                        <VAR name = "Description">
+                                                            <STRING>&quot;-NPlate Stochastic Parameter Item Description-&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Type">
+                                                            <STRING>&quot;NPlateStochasticParamItem&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "UserComment">
+                                                            <STRING>&quot;-NPlate Stochastic Parameter Item Description-&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "ReadOnly">
+                                                            <BOOL>false</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Clonable">
+                                                            <BOOL>true</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "Category">
+                                                            <STRING>&quot;&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "Name">
+                                                            <STRING>&quot;Body&quot;</STRING>
+                                                        </VAR>
+                                                        <VAR name = "NominalValue">
+                                                            <REAL>1.0</REAL>
+                                                        </VAR>
+                                                        <VAR name = "EstimateParameter">
+                                                            <BOOL>true</BOOL>
+                                                        </VAR>
+                                                        <VAR name = "HalfLife">
+                                                            <REAL>86400.0</REAL>
+                                                        </VAR>
+                                                        <VAR name = "Sigma">
+                                                            <REAL>0.1</REAL>
+                                                        </VAR>
+                                                        <VAR name = "LongTermSigma">
+                                                            <REAL>0.2</REAL>
+                                                        </VAR>
+                                                    </SCOPE>
+                                                </VAR>
+                                            </LIST>
+                                        </VAR>
+                                    </SCOPE>
+                                </VAR>
+                                <VAR name = "AddProcessNoise">
+                                    <BOOL>false</BOOL>
+                                </VAR>
+                                <VAR name = "OutOfPlaneFraction">
+                                    <REAL>0.3</REAL>
+                                </VAR>
+                                <VAR name = "InPlaneFraction">
+                                    <REAL>0.3</REAL>
+                                </VAR>
+                                <VAR name = "SunPosition">
+                                    <STRING>&quot;ApparentSunToTrueCB&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AtmosDataSource">
+                                    <STRING>&quot;Data File&quot;</STRING>
+                                </VAR>
+                                <VAR name = "F10p7">
+                                    <REAL>150.0</REAL>
+                                </VAR>
+                                <VAR name = "F10p7Avg">
+                                    <REAL>150.0</REAL>
+                                </VAR>
+                                <VAR name = "GeomagneticParamType">
+                                    <STRING>&quot;Kp&quot;</STRING>
+                                </VAR>
+                                <VAR name = "Kp">
+                                    <REAL>2.209975772807119</REAL>
+                                </VAR>
+                                <VAR name = "Ap">
+                                    <REAL>8.113124895222496</REAL>
+                                </VAR>
+                                <VAR name = "AtmosDataFile">
+                                    <STRING>&quot;/home/odtk/DynamicEarthData/SpaceWeather-v1.2.txt&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AtmosDataGeoMagFluxSource">
+                                    <STRING>&quot;Read Kp from file&quot;</STRING>
+                                </VAR>
+                                <VAR name = "AtmosDataGeoMagFluxUpdateRate">
+                                    <STRING>&quot;3-Hourly&quot;</STRING>
+                                </VAR>
+                            </SCOPE>
+                        </VAR>
+                    </LIST>
+                </VAR>
+                <VAR name = "UseVOP">
+                    <BOOL>false</BOOL>
+                </VAR>
+                <VAR name = "UseRegularizedTime">
+                    <BOOL>false</BOOL>
+                </VAR>
+                <VAR name = "RegularizedTimeExponent">
+                    <REAL>1.5</REAL>
+                </VAR>
+                <VAR name = "RegularizedTimeStepsPerOrbit">
+                    <INT>90</INT>
+                </VAR>
+            </SCOPE>
+        </VAR>
+    </Data>
+</Component>

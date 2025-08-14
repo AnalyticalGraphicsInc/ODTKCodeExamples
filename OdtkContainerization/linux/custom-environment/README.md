@@ -36,13 +36,24 @@ If you don't need to override the default `pip` repository URL to download Pytho
 
 ### Build the Images
 
-If you need to override the default `pip` repository URL to download Python packages, run `docker build -t ansys/odtk/custom/redhat/ubi8 --build-arg baseImage=redhat/ubi8:latest --build-arg pipIndexUrl=<Your custom pip index url> .` on the command line in this directory.
+1. If you need to override the default `pip` repository URL to download Python packages, run the following in a command line from this directory:
+    ```
+    docker build -t ansys/odtk/custom/redhat/ubi8 --build-arg baseImage=redhat/ubi8:latest --build-arg pipIndexUrl=<Your custom pip index url> .
+    ```
 
-If you do not need to override the default `pip` repository URL, run `docker build -t ansys/odtk/custom/redhat/ubi8:latest --build-arg baseImage=redhat/ubi8:latest .` on the command line in this directory.
+1. If you do not need to override the default `pip` repository URL, run the following in a command line from this directory:
+    ```
+    docker build -t ansys/odtk/custom/redhat/ubi8:latest --build-arg baseImage=redhat/ubi8:latest .
+    ```
 
 ## Method 2 - Docker Compose
 
 ### Build the Images
 
 1. If you need to override the default `pip` repository URL to download Python packages, edit the `docker-compose.yml` file in this directory to set the `pipIndexUrl` for both images.
-2. On the command line, run `docker compose build`. This will produce an image on top of the `redhat/ubi8:latest` baseline image that is needed to build the code samples using `yum` or `pip`.
+1. Run the following command from this directory:
+    ```
+    docker compose build
+    ```
+
+    This will produce an image on top of the `redhat/ubi8:latest` baseline image that is needed to build the code samples using `yum` or `pip`.
