@@ -15,12 +15,12 @@ This Docker image code sample demonstrates how to install the ODTK Runtime Pytho
 ### Build the Image
 
 1. Download version 13.0.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
-1. Unzip this file and copy the `odtk_codesamples_v13.0.0.tgz` into the [`distributions`](./distributions) folder at
+1. Unzip this file and copy the `odtk_codesamples_v13.0.1.tgz` into the [`distributions`](./distributions) folder at
 the same level as this file.
 1. Run the following in a command line from this directory:
 
     ```
-    docker build -t ansys/odtk/odtk-python:13.0.0-ubi8 .
+    docker build -t ansys/odtk/odtk-python:13.0.1-ubi8 .
     ```
 
 
@@ -31,14 +31,14 @@ This image starts the `python` interpreter when starting the container. You can 
 1. Run the following in a command line from this directory:
 
     ```
-    docker run -it --env-file ../configuration/licensing.env --name odtk-python --rm ansys/odtk/odtk-python:13.0.0-ubi8
+    docker run -it --env-file ../configuration/licensing.env --name odtk-python --rm ansys/odtk/odtk-python:13.0.1-ubi8
     ```
 
 1. Execute the following Python commands and verify it returns a valid response:
 
     ```python
     from odtk import Client
-    client = Client()
+    client = Client.create_insecure_client()
     root = client.get_root()
     print(root.application.appVersion.eval())
     ```
@@ -50,7 +50,7 @@ This image starts the `python` interpreter when starting the container. You can 
 ### Build the Image
 
 1. Download version 13.0.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads).
-1. Unzip this file and copy the `odtk_codesamples_v13.0.0.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
+1. Unzip this file and copy the `odtk_codesamples_v13.0.1.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
 1. Run the following in a command line from this directory:
 
     ```
@@ -71,7 +71,7 @@ This image starts the `python` interpreter when starting the container. You can 
 
     ```python
     from odtk import Client
-    client = Client()
+    client = Client.create_insecure_client()
     root = client.get_root()
     print(root.application.appVersion.eval())
     ```

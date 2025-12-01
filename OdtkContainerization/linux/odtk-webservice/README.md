@@ -16,7 +16,7 @@ This Docker image code sample demonstrates how to run ODTK Runtime for Linux thr
 
 ### Build the Image
 
-1. Run `docker build -t ansys/odtk/odtk-webservice:13.0.0-ubi8 .` on the command line in this directory.
+1. Run `docker build -t ansys/odtk/odtk-webservice:13.0.1-ubi8 .` on the command line in this directory.
 
 ### Run the Container
 
@@ -25,7 +25,7 @@ The entrypoint of this container starts the Flask development server in the fore
 1. Run the following in a command line from this directory:
 
     ```
-    docker run -d -p 5000:5000 --env-file ../configuration/licensing.env --name odtk-webservice --rm ansys/odtk/odtk-webservice:13.0.0-ubi8
+    docker run -d -p 5000:5000 --env-file ../configuration/licensing.env --name odtk-webservice --rm ansys/odtk/odtk-webservice:13.0.1-ubi8
     ```
 
     * If port `5000` is already in use on your machine, map a different port (e.g. `1234:5000`).
