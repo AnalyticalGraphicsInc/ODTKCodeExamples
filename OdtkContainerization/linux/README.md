@@ -15,6 +15,9 @@ All of the images are built upon the [Red Hat Universal Base Image 8](https://ca
 
 Further information can be found in the [ODTK Help](https://help.agi.com/odtk/#od/Containerization.htm).
 
+> [!IMPORTANT]
+> If you are building these images on Windows, you need to ensure the git config setting [`core.autocrlf=input`](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings) when cloning this repository. Since the base image is a Linux distribution, shell scripts in your workspace need to have Linux line endings when they are copied into the docker image.
+
 ## Security
 
 ODTK Runtime can be started with various authentication modes including Unix domain socket ("uds"), Mutual Transport Layer Security ("mtls"), and "insecure". For demonstration purposes only, these code examples use the "insecure" mode. In a production environment, make sure that the connection is properly secured by using an appropriate authentication method.
