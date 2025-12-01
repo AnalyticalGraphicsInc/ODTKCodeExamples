@@ -15,6 +15,14 @@ All of the images are built upon the [Red Hat Universal Base Image 8](https://ca
 
 Further information can be found in the [ODTK Help](https://help.agi.com/odtk/#od/Containerization.htm).
 
+> [!IMPORTANT]
+> If you are building these images on Windows, you need to ensure the git config setting [`core.autocrlf=input`](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings) when cloning this repository. Since the base image is a Linux distribution, shell scripts in your workspace need to have Linux line endings when they are copied into the docker image.
+
+
+## Security Considerations
+
+ODTK Runtime can be started with various authentication modes including Unix domain socket ("uds"), Mututal Transport Layer Security ("mtls"), and "insecure". We recommend running ODTK Runtime inside the container in "insecure" mode and securing production deployments of ODTK containers through common container security practices, such as running containers behind a tls-secured reverse proxy or using orchestration tools like Kubernetes.
+
 ## [Custom Environment](custom-environment)
 
 Provides the environment required to communicate with the Yum and Pip package managers in your organization. This is optional if you are directly connected to the internet. It is required if you are using a proxy/firewall or isolated network requiring different certificates, settings, or both.

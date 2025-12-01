@@ -12,12 +12,12 @@ create_log_file() {
 
 start_odtk() {
     echo "Initializing ODTK..."
-    odtkruntime > "${STARTUP_LOG}" 2>&1 &
+    odtkruntime --auth-mode=insecure > "${STARTUP_LOG}" 2>&1 &
 }
 
 wait_for_startup_complete() {
     while true; do
-        if grep -q 'App running' "${STARTUP_LOG}"; then
+        if grep -q 'ODTK initialized' "${STARTUP_LOG}"; then
             break
         fi
 
