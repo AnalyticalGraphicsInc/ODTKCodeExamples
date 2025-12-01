@@ -1,5 +1,5 @@
 # Builder stage
-ARG baseImage=ansys/odtk/odtk-runtime:7.9.0-ubi8
+ARG baseImage=ansys/odtk/odtk-runtime:7.9.1-ubi8
 FROM ${baseImage} AS builder
 
 # Add the ODTK Code Samples package to the builder stage
@@ -22,5 +22,6 @@ ENV PATH="${ODTK_USER_HOME}/.local/bin:${PATH}" \
 
 # Use entrypoint script to run Python commands
 COPY --chown=odtk docker-entrypoint.sh "${ODTK_USER_HOME}/bin/docker-entrypoint.sh"
+COPY --chown=odtk start-odtk.sh "${ODTK_USER_HOME}/bin/start-odtk.sh"
 RUN chmod +x "${ODTK_USER_HOME}/bin/docker-entrypoint.sh"
 ENTRYPOINT [ "docker-entrypoint.sh" ]

@@ -6,12 +6,12 @@ import subprocess
 
 app = Flask(__name__)
 
-odtkProcess = subprocess.Popen(['odtkruntime'], stderr=subprocess.PIPE)
+odtkProcess = subprocess.Popen(['odtkruntime', '--auth-mode=insecure'], stderr=subprocess.PIPE)
 while True:
     if b'ODTK initialized' in odtkProcess.stderr.readline():
         break
 
-client = Client()
+client = Client.create_insecure_client()
 root = client.get_root()
 root.LoadObject('', '/home/odtk/scenario/Baseline.sco')
 
@@ -19,13 +19,13 @@ root.scenario[0].simulator['Simulator'].Go()
 
 @app.route('/version')
 def version_service():
-    client = Client()
+    client = Client.create_insecure_client()
     root = client.get_root()
     return root.application.appVersion.eval()
 
 @app.route('/satellites/<satName>/process')
 def process_simulated_obs(satName):
-    client = Client()
+    client = Client.create_insecure_client()
     root = client.get_root()
     filter = root.scenario[0].filter['Filter']
     filter.SatelliteList.clear()

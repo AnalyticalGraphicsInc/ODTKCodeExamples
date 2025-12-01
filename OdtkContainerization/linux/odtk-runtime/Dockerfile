@@ -79,4 +79,4 @@ WORKDIR "${ODTK_USER_HOME}"
 # Expose port for ODTK
 EXPOSE 9393/tcp
 
-ENTRYPOINT odtkruntime --address=0.0.0.0
+ENTRYPOINT odtkruntime --auth-mode=insecure --allow-remote-hosts --address=0.0.0.0
