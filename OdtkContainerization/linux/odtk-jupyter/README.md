@@ -17,7 +17,7 @@ This Docker image code sample demonstrates how to run ODTK Runtime for Linux usi
 1. Run the following in a command line from this directory:
 
     ```
-    docker build -t ansys/odtk/odtk-jupyter:13.0.1-ubi8 .
+    docker build -t ansys/odtk/odtk-jupyter:13.1.0-ubi8 .
     ```
 
 ### Run the Container
@@ -27,7 +27,7 @@ The entrypoint of this container starts the Jupyter Lab server in the foreground
 1. Run the following in a command line from this directory:
 
     ```
-    docker run -d -e JUPYTER_LAB_TOKEN=ansys-odtk -p 8888:8888 -v <ABSOLUTE PATH TO THIS DIRECTORY>/notebooks:/home/odtk/notebooks -v <ABSOLUTE PATH TO THIS DIRECTORY>/data:/home/odtk/data --env-file ../configuration/licensing.env --init --name odtk-jupyter --rm ansys/odtk/odtk-jupyter:13.0.1-ubi8
+    docker run -d -e JUPYTER_LAB_TOKEN=ansys-odtk -p 8888:8888 -v <ABSOLUTE PATH TO THIS DIRECTORY>/notebooks:/home/odtk/notebooks -v <ABSOLUTE PATH TO THIS DIRECTORY>/data:/home/odtk/data --env-file ../configuration/licensing.env --init --name odtk-jupyter --rm ansys/odtk/odtk-jupyter:13.1.0-ubi8
     ```
 
     * If port `8888` is already in use on your machine, map a different port (e.g. `1234:8888`).

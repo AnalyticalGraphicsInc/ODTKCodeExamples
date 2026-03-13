@@ -3,11 +3,11 @@
 
 [![Documentation](https://img.shields.io/badge/documentation-D9D8D6?style=for-the-badge&labelColor=373A36)](https://help.agi.com/odtk)
 [![Support](https://img.shields.io/badge/email%20support-898A8D?style=for-the-badge&labelColor=373A36)](mailto:support@agi.com)
-[![Download](https://img.shields.io/badge/download%2013.0.1-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/downloads/)
+[![Download](https://img.shields.io/badge/download%2013.1.0-FFB71B?style=for-the-badge&labelColor=373A36)](https://support.agi.com/download-center/)
 
 Welcome to the ODTKCodeExamples repository, where we share code examples from our favorite utilities and demos from Orbit Determination Tool Kit (ODTK), a commercial software application from ANSYS, Inc.
 
-The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [AGI's website](https://support.agi.com/downloads/ "AGI's Downloads")
+The repository offers fully functional tools and libraries of example code that you can refactor to fit your needs. These code samples require a legally licensed local copy of the ODTK application; you must obtain ODTK from [Ansys Part of Synopsys Download Center](https://support.agi.com/download-center/ "AGI Downloads"). Select "DME Products" on the left.
 
 ----
 

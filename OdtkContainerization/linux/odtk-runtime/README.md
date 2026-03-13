@@ -9,7 +9,7 @@ This Docker image code sample demonstrates how to install ODTK Runtime for Linux
 * Docker must be installed and running on your system.
 * By default, this sample uses the `redhat/ubi8:latest` Docker image as its baseline. If you are not able to pull images directly from Dockerhub on your system, you must load the baseline OS image on your system before building this image.
 * Access to an Ansys Licensing Server with a valid ODTK license. Edit the [`licensing.env`](../configuration/licensing.env) file to ensure the `ANSYSLMD_LICENSE_FILE` environment variable has your Ansys License Server information.
-* Download version 13.0.1 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads). Unzip this file and copy the `odtk_binaries_v13.0.1.tgz` and `odtk_data_v13.0.1.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
+* Download version 13.1.0 or later of ODTK for Linux from [AGI Downloads](https://support.agi.com/downloads). Unzip this file and copy the `odtk_binaries_v13.1.0.tgz` and `odtk_data_v13.1.0.tgz` into the [`distributions`](./distributions) folder at the same level as this file.
 * Download Python source code from https://www.python.org/ftp/python/3.13.5/Python-3.13.5.tgz and copy the file into the [`distributions`](./distributions) folder at the same level as this file.
 > [!NOTE]
 > ODTK requires Python version 3.9 or later to run properly. We recommend using a 3.13.X version, since we test with 3.13.5. Follow instructions on downloading the Python source code below. If you do not want to use the default version, you can do one of the following:
@@ -28,13 +28,13 @@ This image is built using the `yum` and `pip` tools to install package dependenc
 1. If you did not build the `custom-environment` image described above, run the following in a command line from this directory:
 
     ```
-    docker build -t ansys/odtk/odtk-runtime:13.0.1-ubi8 .
+    docker build -t ansys/odtk/odtk-runtime:13.1.0-ubi8 .
     ```
 
 1. If you did build the `custom-environment` image described above, run the following in a command line from this directory:
 
     ```
-    docker build -t ansys/odtk/odtk-runtime:13.0.1-ubi8 --build-arg baseImage=ansys/odtk/custom/redhat/ubi8:latest .
+    docker build -t ansys/odtk/odtk-runtime:13.1.0-ubi8 --build-arg baseImage=ansys/odtk/custom/redhat/ubi8:latest .
     ```
 
 
@@ -45,7 +45,7 @@ This image starts the ODTK runtime application listening for connections on port
 1. Run the following in a command line from this directory:
 
     ```
-    docker run -d -it -p 9393:9393 --env-file ../configuration/licensing.env --name odtk-runtime --rm ansys/odtk/odtk-runtime:13.0.1-ubi8
+    docker run -d -it -p 9393:9393 --env-file ../configuration/licensing.env --name odtk-runtime --rm ansys/odtk/odtk-runtime:13.1.0-ubi8
     ```
 
     * If port `9393` is already in use on your machine, map a different port (e.g. `1234:9393`).

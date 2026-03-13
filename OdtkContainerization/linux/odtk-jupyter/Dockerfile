@@ -1,4 +1,4 @@
-ARG baseImage=ansys/odtk/odtk-python:13.0.1-ubi8
+ARG baseImage=ansys/odtk/odtk-python:13.1.0-ubi8
 FROM ${baseImage}
 
 LABEL JUPYTER_LAB_TOKEN='The token used to initially authenticate with the jupyter lab application. Required.'
