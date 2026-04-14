@@ -1,6 +1,6 @@
 services:
     odtk-runtime:
-        image: ansys/odtk/odtk-runtime:13.0.1-ubi8
+        image: ansys/odtk/odtk-runtime:13.1.0-ubi8
         build:
             context: .
             args:

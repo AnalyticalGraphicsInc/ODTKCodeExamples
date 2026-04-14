@@ -1,10 +1,10 @@
 services:
     odtk-webservice:
-        image: ansys/odtk/odtk-webservice:13.0.1-ubi8
+        image: ansys/odtk/odtk-webservice:13.1.0-ubi8
         build:
             context: .
             args:
-                baseImage: ansys/odtk/odtk-python:13.0.1-ubi8
+                baseImage: ansys/odtk/odtk-python:13.1.0-ubi8
         env_file: ../configuration/licensing.env
         ports:
             - 5000:5000
