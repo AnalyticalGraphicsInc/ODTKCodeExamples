@@ -45,7 +45,7 @@ For more information, please visit the [AGI website](https://www.agi.com "AGI's 
 [![Youtube URL](https://img.shields.io/badge/youtube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/ansysinc)
 [![Linkedin URL](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/ansys-inc)
 
-![AGI Logo Dark](icons/AGI-Logo_2C-W.svg#gh-dark-mode-only)
-![AGI Logo Light](icons/AGI-Logo_2C-K.svg#gh-light-mode-only)
+![AGI Logo Dark](icons/AGI-Logo-White.png#gh-dark-mode-only)
+![AGI Logo Light](icons/AGI-Logo-Black.png#gh-light-mode-only)
 
 
